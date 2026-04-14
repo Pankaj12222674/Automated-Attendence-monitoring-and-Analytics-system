@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API_URL;
 
 const Icons = {
   ArrowLeft: () => (
@@ -153,7 +153,7 @@ export default function AttendanceHistory() {
 
         for (const endpoint of endpoints) {
           try {
-            const res = await axios.get(endpoint, { headers });
+            const res = await API.get(endpoint, { headers });
             payload =
               res.data?.history ||
               res.data?.records ||
@@ -162,7 +162,7 @@ export default function AttendanceHistory() {
             loaded = true;
             break;
           } catch (err) {
-            // try next endpoint
+            
           }
         }
 

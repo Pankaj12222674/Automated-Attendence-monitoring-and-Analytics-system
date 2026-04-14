@@ -264,7 +264,7 @@ function Register() {
         formData.append("profileImage", imageFile);
       }
 
-      await axios.post(`${API}/auth/register`, formData);
+      await API.post("/api/auth/register", formData);
 
       setSuccess("Registration successful. Redirecting to login...");
       stopCamera();

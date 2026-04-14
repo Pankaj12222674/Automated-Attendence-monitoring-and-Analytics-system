@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
 import axios from "axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+const API = import.meta.env.VITE_API_URL;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -15,6 +16,7 @@ const Icons = {
 };
 
 const FaceAttendance = () => {
+  
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
@@ -82,10 +84,9 @@ const FaceAttendance = () => {
   const loadStudents = async () => {
     setLoadingMsg("Downloading Cohort Face Vectors...");
     try {
-      const res = await axios.get(
-        `http://localhost:8000/api/class/students/${classId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await API.get(`/api/class/students/${classId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
       const students = res.data.students || [];
       const labeledDescriptors = [];
@@ -184,9 +185,7 @@ const FaceAttendance = () => {
             if (prev.includes(studentId)) return prev;
 
             // Fire API call asynchronously
-            axios.post(
-              "http://localhost:8000/api/attendance/face-attendance",
-              {
+            API.post("/api/attendance/face-attendance", {
                 studentId,
                 classId,
                 subjectId,

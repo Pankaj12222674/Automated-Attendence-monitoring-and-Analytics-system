@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -48,8 +50,8 @@ export default function ManualAttendance() {
 
     const loadStudents = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8000/api/class/students/${classId}`,
+        const res = await API.get(`/api/class/students/${classId}`,
+           //API.get(`/api/class/students/${classId}`)
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -124,9 +126,8 @@ export default function ManualAttendance() {
     }));
 
     try {
-      await axios.post(
-        "http://localhost:8000/api/attendance/mark",
-        {
+      await API.post("/api/attendance/mark", {
+        
           classId,
           subjectId,
           date,

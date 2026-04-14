@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Html5QrcodeScanner } from "html5-qrcode";
 
+const API = import.meta.env.VITE_API_URL;
+
 export default function StudentQRScanner() {
   const [message, setMessage] = useState("");
   const token = localStorage.getItem("token");
@@ -16,8 +18,7 @@ export default function StudentQRScanner() {
     scanner.render(
       async (decodedText) => {
         try {
-          await axios.post(
-            "http://localhost:8000/api/qr/scan",
+          await API.post("/api/qr/scan",
             { token: decodedText },
             { headers: { Authorization: `Bearer ${token}` } }
           );

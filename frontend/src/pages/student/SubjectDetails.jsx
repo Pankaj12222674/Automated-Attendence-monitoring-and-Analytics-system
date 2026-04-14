@@ -10,7 +10,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API_URL;
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -211,7 +211,7 @@ export default function SubjectDetails() {
 
         // fallback if localStorage.id is missing
         if (!resolvedStudentId) {
-          const userRes = await axios.get(`${API}/auth/me`, { headers });
+          const userRes = await API.get("/api/auth/me", { headers });
           const user = userRes.data.user || userRes.data;
           resolvedStudentId = user?._id || user?.id || "";
           if (resolvedStudentId) {

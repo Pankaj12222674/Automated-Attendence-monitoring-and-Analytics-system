@@ -22,6 +22,7 @@ export default function StudentQRScanner() {
   const [gpsCoords, setGpsCoords] = useState(null);
   
   const scannerInstance = useRef(null);
+  const API = import.meta.env.VITE_API_URL;
 
   /* ===============================
         GEOFENCING / GPS LOGIC
@@ -84,9 +85,8 @@ export default function StudentQRScanner() {
 
             // 2. Send token AND location to the backend
             try {
-              const res = await axios.post(
-                "http://localhost:8000/api/qr/scan",
-                { 
+              const res = await API.post("/api/qr/scan", {
+                
                   studentId: studentId,
                   token: decodedText,
                   location: gpsCoords // Sends exact coordinates for Geofence validation

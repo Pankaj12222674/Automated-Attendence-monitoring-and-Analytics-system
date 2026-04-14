@@ -330,7 +330,7 @@ export default function TeacherDashboard() {
       let mounted = true;
 
       try {
-        const userRes = await axios.get(`${API}/auth/me`, { headers });
+        const userRes = await axios.get(`${API}/api/auth/me`, { headers });
         if (!mounted) return;
 
         const user = userRes.data.user || userRes.data;

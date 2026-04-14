@@ -14,6 +14,7 @@ const Icons = {
 };
 
 export default function GenerateQR() {
+  const API = import.meta.env.VITE_API_URL;
   const query = useQuery();
   const navigate = useNavigate();
 
@@ -71,8 +72,7 @@ export default function GenerateQR() {
     if (!classId || !subjectId) return alert("Missing Cohort Details!");
 
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/qr/generate",
+      const res = await API.post("/api/qr/generate",
         { 
           classId, 
           subjectId, 
