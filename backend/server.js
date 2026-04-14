@@ -25,16 +25,7 @@ const app = express();
       MIDDLEWARE
 ========================= */
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:3000",
-      "https://attendance-system.vercel.app"
-    ],
-    credentials: true
-  })
-);
+app.use(cors());
 
 /* ⭐ IMPORTANT LIMIT FIX */
 app.use(express.json({ limit: "10mb" }));
