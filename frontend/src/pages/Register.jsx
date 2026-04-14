@@ -2,8 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import * as faceapi from "face-api.js";
 import { useNavigate, Link } from "react-router-dom";
-
-const API = import.meta.env.VITE_API_URL;
+import API from '../utils/api'
 
 const Icons = {
   Academic: () => (
