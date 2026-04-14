@@ -99,7 +99,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API}/auth/login`, {
+      const res = await axios.post(`${API}/api/auth/login`, {
         email,
         password,
       });
