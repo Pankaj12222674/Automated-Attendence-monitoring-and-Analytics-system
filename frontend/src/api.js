@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000", // use Vite env if set
+  baseURL: "https://automated-attendence-monitoring-and.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
