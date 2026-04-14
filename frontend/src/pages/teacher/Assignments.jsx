@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -18,7 +18,6 @@ const Icons = {
 export default function TeacherAssignments() {
   const query = useQuery();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   // Cohort & Subject Context
   const classId = query.get("classId");
@@ -52,9 +51,8 @@ export default function TeacherAssignments() {
 
     const fetchAssignments = async () => {
       try {
-        const res = await axios.get(`http://localhost:8000/api/assignments/class/${classId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        // Headers handled automatically by api interceptor
+        const res = await api.get(`/api/assignments/class/${classId}`);
         
         // Filter to only show assignments for this specific subject
         const courseAssignments = (res.data.assignments || []).filter(
@@ -70,7 +68,7 @@ export default function TeacherAssignments() {
     };
 
     fetchAssignments();
-  }, [classId, subjectId, token]);
+  }, [classId, subjectId]);
 
   /* ===============================
         PUBLISH NEW ASSIGNMENT
@@ -80,11 +78,15 @@ export default function TeacherAssignments() {
     setIsPublishing(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:8000/api/assignments/create",
-        { title, description, classId, subjectId, dueDate, totalMarks },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Headers handled automatically by api interceptor
+      const res = await api.post("/api/assignments/create", { 
+        title, 
+        description, 
+        classId, 
+        subjectId, 
+        dueDate, 
+        totalMarks 
+      });
 
       // Add to UI immediately
       setAssignments([...assignments, res.data.assignment]);
@@ -110,9 +112,8 @@ export default function TeacherAssignments() {
     setLoadingSubmissions(true);
 
     try {
-      const res = await axios.get(`http://localhost:8000/api/assignments/submissions/${assignment._id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Headers handled automatically by api interceptor
+      const res = await api.get(`/api/assignments/submissions/${assignment._id}`);
       
       const subs = res.data.submissions || [];
       setSubmissions(subs);
@@ -145,11 +146,11 @@ export default function TeacherAssignments() {
     }
 
     try {
-      const res = await axios.put(
-        `http://localhost:8000/api/assignments/grade/${submissionId}`,
-        { marksObtained: Number(data.marksObtained), feedback: data.feedback },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Headers handled automatically by api interceptor
+      const res = await api.put(`/api/assignments/grade/${submissionId}`, { 
+        marksObtained: Number(data.marksObtained), 
+        feedback: data.feedback 
+      });
 
       // Update the local submission state so the UI reflects "graded"
       setSubmissions(submissions.map(sub => 

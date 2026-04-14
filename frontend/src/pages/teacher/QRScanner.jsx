@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { Html5Qrcode } from "html5-qrcode";
 import { useNavigate, Link } from "react-router-dom";
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 const Icons = {
   ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>,
@@ -11,7 +11,6 @@ const Icons = {
 };
 
 export default function StudentQRScanner() {
-  const token = localStorage.getItem("token");
   const studentId = localStorage.getItem("id");
   const navigate = useNavigate();
 
@@ -22,7 +21,6 @@ export default function StudentQRScanner() {
   const [gpsCoords, setGpsCoords] = useState(null);
   
   const scannerInstance = useRef(null);
-  const API = import.meta.env.VITE_API_URL;
 
   /* ===============================
         GEOFENCING / GPS LOGIC
@@ -85,14 +83,12 @@ export default function StudentQRScanner() {
 
             // 2. Send token AND location to the backend
             try {
-              const res = await API.post("/api/qr/scan", {
-                
-                  studentId: studentId,
-                  token: decodedText,
-                  location: gpsCoords // Sends exact coordinates for Geofence validation
-                },
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
+              // Centralized api instance automatically handles base URL and token headers
+              const res = await api.post("/api/qr/scan", {
+                studentId: studentId,
+                token: decodedText,
+                location: gpsCoords // Sends exact coordinates for Geofence validation
+              });
 
               setStatusType("success");
               setStatus(res.data?.message || "Attendance Validated Successfully! 🎉");
@@ -127,7 +123,7 @@ export default function StudentQRScanner() {
         scannerInstance.current.stop().catch(() => {});
       }
     };
-  }, [statusType, gpsCoords, navigate, studentId, token]);
+  }, [statusType, gpsCoords, navigate, studentId]);
 
   /* ===============================
         UI RENDERING HELPERS

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -50,10 +48,8 @@ export default function ManualAttendance() {
 
     const loadStudents = async () => {
       try {
-        const res = await API.get(`/api/class/students/${classId}`,
-           //API.get(`/api/class/students/${classId}`)
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        // Headers handled automatically by api interceptor
+        const res = await api.get(`/api/class/students/${classId}`);
 
         const list = res.data.students || [];
         setStudents(list);
@@ -126,17 +122,15 @@ export default function ManualAttendance() {
     }));
 
     try {
-      await API.post("/api/attendance/mark", {
-        
-          classId,
-          subjectId,
-          date,
-          sessionType, // Sending the university session type
-          method: "manual",
-          records
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Headers handled automatically by api interceptor
+      await api.post("/api/attendance/mark", {
+        classId,
+        subjectId,
+        date,
+        sessionType, // Sending the university session type
+        method: "manual",
+        records
+      });
 
       alert("Attendance saved successfully to university records.");
       navigate("/teacher/dashboard");

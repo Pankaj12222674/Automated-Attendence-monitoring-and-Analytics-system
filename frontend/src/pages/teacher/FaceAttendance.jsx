@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
-import axios from "axios";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -16,7 +15,6 @@ const Icons = {
 };
 
 const FaceAttendance = () => {
-  
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const intervalRef = useRef(null);
@@ -84,9 +82,8 @@ const FaceAttendance = () => {
   const loadStudents = async () => {
     setLoadingMsg("Downloading Cohort Face Vectors...");
     try {
-      const res = await API.get(`/api/class/students/${classId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Using centralized api instance, headers handled automatically
+      const res = await api.get(`/api/class/students/${classId}`);
 
       const students = res.data.students || [];
       const labeledDescriptors = [];
@@ -184,15 +181,14 @@ const FaceAttendance = () => {
           setMarkedStudents(prev => {
             if (prev.includes(studentId)) return prev;
 
-            // Fire API call asynchronously
-            API.post("/api/attendance/face-attendance", {
+            // Fire API call asynchronously using centralized api instance
+            api.post("/api/attendance/face-attendance", {
                 studentId,
                 classId,
                 subjectId,
-                sessionType // NEW: Pass the university session type
-              },
-              { headers: { Authorization: `Bearer ${token}` } }
-            ).catch(err => console.log("Silent API fail or already marked", err));
+                sessionType // Pass the university session type
+              })
+              .catch(err => console.log("Silent API fail or already marked", err));
 
             // Return new array with this student
             return [...prev, studentId];

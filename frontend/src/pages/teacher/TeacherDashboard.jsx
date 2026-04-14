@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 const Icons = {
   Class: () => (
@@ -247,11 +245,6 @@ export default function TeacherDashboard() {
     { day: "Thursday", time: "10:00 - 12:00", location: "Virtual (Zoom)" },
   ]);
 
-  const headers = useMemo(
-    () => (token ? { Authorization: `Bearer ${token}` } : {}),
-    [token]
-  );
-
   const currentDay = useMemo(
     () => new Date().toLocaleString("en-US", { weekday: "long" }),
     []
@@ -330,7 +323,8 @@ export default function TeacherDashboard() {
       let mounted = true;
 
       try {
-        const userRes = await axios.get(`${API}/api/auth/me`, { headers });
+        // Handled entirely by centralized api interceptor
+        const userRes = await api.get("/api/auth/me");
         if (!mounted) return;
 
         const user = userRes.data.user || userRes.data;
@@ -345,10 +339,11 @@ export default function TeacherDashboard() {
           return;
         }
 
+        // Send all subsequent requests using relative paths through api instance
         const [classRes, timeRes, analyticsRes] = await Promise.allSettled([
-          axios.get(`${API}/class/teacher/${teacherId}`, { headers }),
-          axios.get(`${API}/admin/teacher-timetable/${teacherId}`, { headers }),
-          axios.get(`${API}/attendance/teacher/classes`, { headers }),
+          api.get(`/api/class/teacher/${teacherId}`),
+          api.get(`/api/admin/teacher-timetable/${teacherId}`),
+          api.get(`/api/attendance/teacher/classes`),
         ]);
 
         if (!mounted) return;
@@ -396,7 +391,7 @@ export default function TeacherDashboard() {
         mounted = false;
       };
     },
-    [headers, navigate, token]
+    [navigate, token]
   );
 
   useEffect(() => {

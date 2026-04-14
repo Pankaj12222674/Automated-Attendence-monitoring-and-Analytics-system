@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import APIClient from "../../api";
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 const Icons = {
   Dashboard: () => (
@@ -270,14 +270,14 @@ export default function AdminDashboard() {
         auditRes,
         settingsRes,
       ] = await Promise.allSettled([
-        APIClient.get("/api/admin/stats"),
-        APIClient.get("/api/class/admin/all"),
-        APIClient.get("/api/admin/pending-users"),
-        APIClient.get("/api/admin/full-data"),
-        APIClient.get("/api/university/all"),
-        APIClient.get("/api/admin/announcements"),
-        APIClient.get("/api/admin/audit-logs"),
-        APIClient.get("/api/admin/settings"),
+        api.get("/api/admin/stats"),
+        api.get("/api/class/admin/all"),
+        api.get("/api/admin/pending-users"),
+        api.get("/api/admin/full-data"),
+        api.get("/api/university/all"),
+        api.get("/api/admin/announcements"),
+        api.get("/api/admin/audit-logs"),
+        api.get("/api/admin/settings"),
       ]);
 
       let nextTeachers = [];
@@ -377,7 +377,7 @@ export default function AdminDashboard() {
 
     const res = await safeRequest(
       () =>
-        APIClient.post("/api/university/create-department", {
+        api.post("/api/university/create-department", {
           name: departmentName,
           head: departmentHead || null,
         }),
@@ -402,7 +402,7 @@ export default function AdminDashboard() {
 
     const res = await safeRequest(
       () =>
-        APIClient.post("/api/university/create-program", {
+        api.post("/api/university/create-program", {
           name: programName,
           departmentId: programDept,
         }),
@@ -427,7 +427,7 @@ export default function AdminDashboard() {
 
     const res = await safeRequest(
       () =>
-        APIClient.post("/api/university/enroll-student", {
+        api.post("/api/university/enroll-student", {
           name: studentName,
           email: studentEmail,
           classId: studentClass,
@@ -451,7 +451,7 @@ export default function AdminDashboard() {
 
     const res = await safeRequest(
       () =>
-        APIClient.post("/api/admin/teachers", {
+        api.post("/api/admin/teachers", {
           name: teacherName,
           email: teacherEmail,
           departmentId: teacherDepartment,
@@ -474,7 +474,7 @@ export default function AdminDashboard() {
   const deleteTeacher = async (id) => {
     if (!window.confirm("Delete this teacher?")) return;
 
-    await safeRequest(() => APIClient.delete(`/api/admin/teachers/${id}`), "Failed to delete teacher");
+    await safeRequest(() => api.delete(`/api/admin/teachers/${id}`), "Failed to delete teacher");
 
     setTeachers((prev) => prev.filter((t) => t._id !== id));
   };
@@ -482,7 +482,7 @@ export default function AdminDashboard() {
   const createClass = async () => {
     if (!className.trim()) return alert("Enter class name");
 
-    await safeRequest(() => APIClient.post("/api/class/create-class", { name: className }), "Failed to create class");
+    await safeRequest(() => api.post("/api/class/create-class", { name: className }), "Failed to create class");
 
     setClassName("");
     loadAdminData();
@@ -493,7 +493,7 @@ export default function AdminDashboard() {
 
     await safeRequest(
       () =>
-        APIClient.put("/api/class/assign-teacher", {
+        api.put("/api/class/assign-teacher", {
           classId: assignClass,
           teacherId: assignTeacher,
         }),
@@ -513,7 +513,7 @@ export default function AdminDashboard() {
 
     await safeRequest(
       () =>
-        APIClient.post("/api/class/create-subject", {
+        api.post("/api/class/create-subject", {
           name: subjectName,
           classId: selectedClass,
           teacherId: selectedTeacher,
@@ -534,7 +534,7 @@ export default function AdminDashboard() {
 
     await safeRequest(
       () =>
-        APIClient.post("/api/admin/create-timetable", {
+        api.post("/api/admin/create-timetable", {
           day,
           time,
           subjectId: timeSubject,
@@ -552,14 +552,14 @@ export default function AdminDashboard() {
   };
 
   const approveUser = async (id) => {
-    await safeRequest(() => APIClient.put(`/api/admin/approve/${id}`), "Failed to approve user");
+    await safeRequest(() => api.put(`/api/admin/approve/${id}`), "Failed to approve user");
     loadAdminData();
   };
 
   const rejectUser = async (id) => {
     if (!window.confirm("Reject this user request?")) return;
 
-    await safeRequest(() => APIClient.put(`/api/admin/reject/${id}`), "Failed to reject user");
+    await safeRequest(() => api.put(`/api/admin/reject/${id}`), "Failed to reject user");
     loadAdminData();
   };
 
@@ -568,7 +568,7 @@ export default function AdminDashboard() {
 
     await safeRequest(
       () =>
-        APIClient.post("/api/admin/announcements", {
+        api.post("/api/admin/announcements", {
           message: newAnnouncement,
           target: announcementTarget,
         }),
@@ -581,14 +581,14 @@ export default function AdminDashboard() {
   };
 
   const saveSettings = async () => {
-    await safeRequest(() => APIClient.put("/api/admin/settings", settings), "Failed to save settings");
+    await safeRequest(() => api.put("/api/admin/settings", settings), "Failed to save settings");
     alert("Settings saved");
   };
 
   const updateFeeStatus = async (feeId, status) => {
     await safeRequest(
       () =>
-        APIClient.put(`/api/admin/fees/${feeId}`, {
+        api.put(`/api/admin/fees/${feeId}`, {
           status,
         }),
       "Failed to update fee status"
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-4 min-w-0">
              <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.35)] shrink-0">
                <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400 text-2xl font-black">
-                  SA
+                 SA
                </div>
             </div>
             <div className="min-w-0">

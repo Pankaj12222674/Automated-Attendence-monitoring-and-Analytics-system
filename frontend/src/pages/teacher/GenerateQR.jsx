@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -14,7 +14,6 @@ const Icons = {
 };
 
 export default function GenerateQR() {
-  const API = import.meta.env.VITE_API_URL;
   const query = useQuery();
   const navigate = useNavigate();
 
@@ -72,16 +71,14 @@ export default function GenerateQR() {
     if (!classId || !subjectId) return alert("Missing Cohort Details!");
 
     try {
-      const res = await API.post("/api/qr/generate",
-        { 
-          classId, 
-          subjectId, 
-          expiresIn: REFRESH_INTERVAL,
-          sessionType,
-          location: gpsCoords // Sends professor's location to tie to the token
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Centralized api instance handles token and base URL
+      const res = await api.post("/api/qr/generate", { 
+        classId, 
+        subjectId, 
+        expiresIn: REFRESH_INTERVAL,
+        sessionType,
+        location: gpsCoords // Sends professor's location to tie to the token
+      });
 
       setQrImage(res.data.qr);
       setTimeLeft(REFRESH_INTERVAL); // Reset the visual countdown
@@ -201,7 +198,7 @@ export default function GenerateQR() {
             </div>
 
             {/* Session Type */}
-            <div>
+            <div className="mb-6">
               <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Session Type</label>
               <select
                 className="w-full bg-slate-950 border border-slate-800 text-white p-4 rounded-2xl focus:border-indigo-500 outline-none transition"
