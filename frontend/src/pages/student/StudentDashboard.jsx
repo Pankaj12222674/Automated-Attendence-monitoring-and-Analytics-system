@@ -11,8 +11,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import axios from "axios";
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 const Icons = {
   Book: () => (
@@ -166,12 +165,13 @@ const toneClasses = {
 const getTodayName = () =>
   new Date().toLocaleString("en-US", { weekday: "long" });
 
-async function fetchFirstSuccessful(api, endpoints, config = {}) {
+// Helper to fetch endpoints
+async function fetchFirstSuccessful(apiInstance, endpoints, config = {}) {
   let lastError = null;
 
   for (const endpoint of endpoints) {
     try {
-      return await api.get(endpoint, config);
+      return await apiInstance.get(endpoint, config);
     } catch (err) {
       lastError = err;
       if (err?.response?.status === 401) throw err;
@@ -211,15 +211,7 @@ function SkeletonBlock({ className = "" }) {
 }
 
 export default function StudentDashboard() {
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
-
-  const api = useMemo(() => {
-    return axios.create({
-      baseURL: API,
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
-    });
-  }, [token]);
 
   const [profile, setProfile] = useState(null);
   const [summary, setSummary] = useState({});
@@ -280,7 +272,8 @@ export default function StudentDashboard() {
 
   const loadData = useCallback(
     async ({ silent = false, signal } = {}) => {
-      if (!token) {
+      // Check token exists in storage before attempting call
+      if (!localStorage.getItem("token")) {
         navigate("/login");
         return;
       }
@@ -291,7 +284,7 @@ export default function StudentDashboard() {
       setPageError("");
 
       try {
-        const userRes = await api.get("/auth/me", { signal });
+        const userRes = await api.get("/api/auth/me", { signal });
         const userData = userRes.data.user || userRes.data;
         setProfile(userData);
 
@@ -302,30 +295,31 @@ export default function StudentDashboard() {
           throw new Error("Student ID missing from profile.");
         }
 
+        // Firing parallel requests using the refactored endpoints
         const requests = [
-          classId ? api.get(`/class/subjects/${classId}`, { signal }) : Promise.resolve(null),
-          classId ? api.get(`/assignments/class/${classId}`, { signal }) : Promise.resolve(null),
+          classId ? api.get(`/api/class/subjects/${classId}`, { signal }) : Promise.resolve(null),
+          classId ? api.get(`/api/assignments/class/${classId}`, { signal }) : Promise.resolve(null),
           classId
             ? fetchFirstSuccessful(
                 api,
                 [
-                  `/admin/student-timetable/${classId}`,
-                  `/student/timetable/${classId}`,
-                  `/admin/class-timetable/${classId}`,
-                  `/admin/teacher-timetable/${classId}`,
+                  `/api/admin/student-timetable/${classId}`,
+                  `/api/student/timetable/${classId}`,
+                  `/api/admin/class-timetable/${classId}`,
+                  `/api/admin/teacher-timetable/${classId}`,
                 ],
                 { signal }
               )
             : Promise.resolve(null),
           fetchFirstSuccessful(
             api,
-            ["/admin/announcements", "/announcements", "/student/announcements"],
+            ["/api/admin/announcements", "/api/announcements", "/api/student/announcements"],
             { signal }
           ),
-          api.get(`/student/attendance/summary/${studentId}`, { signal }),
-          api.get(`/student/attendance/history/${studentId}`, { signal }),
-          api.get(`/student/attendance/analytics/${studentId}`, { signal }),
-          api.get(`/fees/my-fees`, { signal }),
+          api.get(`/api/student/attendance/summary/${studentId}`, { signal }),
+          api.get(`/api/student/attendance/history/${studentId}`, { signal }),
+          api.get(`/api/student/attendance/analytics/${studentId}`, { signal }),
+          api.get(`/api/fees/my-fees`, { signal }),
         ];
 
         const [
@@ -432,7 +426,8 @@ export default function StudentDashboard() {
           console.error("Fees load failed", feesRes.reason);
         }
       } catch (err) {
-        if (axios.isCancel?.(err) || err?.name === "CanceledError") return;
+        // Native abort error check (no raw axios needed)
+        if (err?.name === "CanceledError" || err?.name === "AbortError") return;
 
         console.error(err);
         setPageError("Unable to load dashboard data. Please try refreshing.");
@@ -446,7 +441,7 @@ export default function StudentDashboard() {
         setRefreshing(false);
       }
     },
-    [api, navigate, token]
+    [navigate]
   );
 
   useEffect(() => {

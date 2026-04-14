@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Html5QrcodeScanner } from "html5-qrcode";
-
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // Adjust the import path as needed
 
 export default function StudentQRScanner() {
   const [message, setMessage] = useState("");
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -18,13 +15,12 @@ export default function StudentQRScanner() {
     scanner.render(
       async (decodedText) => {
         try {
-          await API.post("/api/qr/scan",
-            { token: decodedText },
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
+          // Token and Base URL are now handled automatically by the api instance
+          await api.post("/api/qr/scan", { token: decodedText });
 
           setMessage("✅ Attendance Marked Successfully!");
 
+          // Clear the scanner after a successful read
           setTimeout(() => {
             scanner.clear();
           }, 500);
@@ -35,10 +31,13 @@ export default function StudentQRScanner() {
       (error) => console.log("Scan Error:", error)
     );
 
+    // Cleanup function
     return () => {
       try {
         scanner.clear();
-      } catch {}
+      } catch (err) {
+        console.error("Failed to clear scanner on unmount:", err);
+      }
     };
   }, []);
 

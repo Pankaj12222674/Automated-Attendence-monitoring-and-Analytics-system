@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
-const API = import.meta.env.VITE_API_URL;
 const Icons = {
   ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>,
   Document: () => <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
@@ -29,9 +28,7 @@ export default function Assignments() {
     const fetchLMSData = async () => {
       try {
         // 1. Get User Profile for classId
-        const userRes = await API.get("/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const userRes = await api.get("/api/auth/me");
         const userData = userRes.data.user || userRes.data;
         setProfile(userData);
 
@@ -39,15 +36,11 @@ export default function Assignments() {
 
         if (classId) {
           // 2. Fetch all assignments for this cohort
-          const assignRes = await API.get(`/api/assignments/class/${classId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const assignRes = await api.get(`/api/assignments/class/${classId}`);
           setAssignments(assignRes.data.assignments || []);
 
           // 3. Fetch student's specific submissions (to check what is done vs pending)
-          const subRes = await API.get("/api/assignments/my-submissions", {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const subRes = await api.get("/api/assignments/my-submissions");
           setSubmissions(subRes.data.submissions || []);
         }
       } catch (err) {
@@ -84,10 +77,10 @@ export default function Assignments() {
     setIsSubmitting(true);
 
     try {
-      const res = await API.post("/api/assignments/submit", 
-        { assignmentId: selectedTask._id, fileUrl },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await api.post("/api/assignments/submit", { 
+        assignmentId: selectedTask._id, 
+        fileUrl 
+      });
       
       // Update local state without reloading
       setSubmissions([...submissions, res.data.submission]);

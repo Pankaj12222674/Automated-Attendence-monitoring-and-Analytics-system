@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 const Icons = {
   ArrowLeft: () => <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>,
@@ -11,7 +11,6 @@ const Icons = {
 };
 
 export default function BursarPortal() {
-  const token = localStorage.getItem("token");
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
@@ -20,9 +19,8 @@ export default function BursarPortal() {
   useEffect(() => {
     const fetchFees = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/fees/my-fees", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        // Automatically uses base URL and attaches token via interceptor
+        const res = await api.get("/api/fees/my-fees");
         setInvoices(res.data.fees || []);
       } catch (err) {
         console.error("Financial Sync Error:", err);
@@ -31,16 +29,16 @@ export default function BursarPortal() {
       }
     };
     fetchFees();
-  }, [token]);
+  }, []);
 
   const handlePayment = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `http://localhost:8000/api/fees/pay/${selectedInvoice._id}`,
-        { amount: payAmount, method: "Credit Card" },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      // Automatically uses base URL and attaches token via interceptor
+      await api.post(`/api/fees/pay/${selectedInvoice._id}`, {
+        amount: payAmount,
+        method: "Credit Card",
+      });
       alert("Payment successful. Your academic standing has been updated.");
       window.location.reload(); // Refresh to show new balance
     } catch (err) {

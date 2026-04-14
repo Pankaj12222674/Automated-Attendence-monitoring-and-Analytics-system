@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import {
   AreaChart,
   Area,
@@ -10,7 +9,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -183,11 +182,6 @@ export default function SubjectDetails() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
 
-  const headers = useMemo(
-    () => (token ? { Authorization: `Bearer ${token}` } : {}),
-    [token]
-  );
-
   const loadData = useCallback(
     async ({ silent = false } = {}) => {
       if (!token) {
@@ -211,7 +205,8 @@ export default function SubjectDetails() {
 
         // fallback if localStorage.id is missing
         if (!resolvedStudentId) {
-          const userRes = await API.get("/api/auth/me", { headers });
+          // Headers handled automatically by api interceptor
+          const userRes = await api.get("/api/auth/me");
           const user = userRes.data.user || userRes.data;
           resolvedStudentId = user?._id || user?.id || "";
           if (resolvedStudentId) {
@@ -223,10 +218,8 @@ export default function SubjectDetails() {
           throw new Error("Student Authentication Error");
         }
 
-        const res = await axios.get(
-          `${API}/student/attendance/history/${resolvedStudentId}`,
-          { headers }
-        );
+        // Headers handled automatically by api interceptor
+        const res = await api.get(`/api/student/attendance/history/${resolvedStudentId}`);
 
         const allRecords = Array.isArray(res.data) ? res.data : [];
 
@@ -270,7 +263,7 @@ export default function SubjectDetails() {
         setRefreshing(false);
       }
     },
-    [headers, navigate, studentId, subjectNameFromUrl, token]
+    [navigate, studentId, subjectNameFromUrl, token]
   );
 
   useEffect(() => {
@@ -559,4 +552,3 @@ export default function SubjectDetails() {
     </div>
   );
 }
-

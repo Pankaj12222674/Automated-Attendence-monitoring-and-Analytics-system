@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 const Icons = {
   ArrowLeft: () => (
@@ -83,11 +81,6 @@ export default function AttendanceHistory() {
   const subjectId = query.get("subjectId");
   const subjectName = query.get("subjectName") || "Subject";
 
-  const headers = useMemo(
-    () => (token ? { Authorization: `Bearer ${token}` } : {}),
-    [token]
-  );
-
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -143,9 +136,9 @@ export default function AttendanceHistory() {
          * This makes the page more tolerant to backend naming differences.
          */
         const endpoints = [
-          `${API}/attendance/history?classId=${classId}&subjectId=${subjectId}`,
-          `${API}/attendance/subject-history?classId=${classId}&subjectId=${subjectId}`,
-          `${API}/teacher/attendance-history?classId=${classId}&subjectId=${subjectId}`,
+          `/api/attendance/history?classId=${classId}&subjectId=${subjectId}`,
+          `/api/attendance/subject-history?classId=${classId}&subjectId=${subjectId}`,
+          `/api/teacher/attendance-history?classId=${classId}&subjectId=${subjectId}`,
         ];
 
         let loaded = false;
@@ -153,7 +146,8 @@ export default function AttendanceHistory() {
 
         for (const endpoint of endpoints) {
           try {
-            const res = await API.get(endpoint, { headers });
+            // Using centralized api instance
+            const res = await api.get(endpoint);
             payload =
               res.data?.history ||
               res.data?.records ||
@@ -162,7 +156,7 @@ export default function AttendanceHistory() {
             loaded = true;
             break;
           } catch (err) {
-            
+            // Silently fail and try the next endpoint
           }
         }
 
@@ -187,7 +181,7 @@ export default function AttendanceHistory() {
         setRefreshing(false);
       }
     },
-    [token, navigate, classId, subjectId, headers]
+    [token, navigate, classId, subjectId]
   );
 
   useEffect(() => {

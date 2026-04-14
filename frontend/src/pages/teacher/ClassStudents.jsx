@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-
-const API = import.meta.env.VITE_API_URL;
+import api from "../utils/api"; // <-- Using the centralized axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -35,7 +33,6 @@ export default function ClassStudents() {
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
-  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!classId || !token) {
@@ -45,18 +42,14 @@ export default function ClassStudents() {
 
     const loadClassData = async () => {
       try {
-        // 1. Get Students in Class
-        const studentsRes = await API.get(`/api/class/students/${classId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        // 1. Get Students in Class (Headers automatically handled by interceptor)
+        const studentsRes = await api.get(`/api/class/students/${classId}`);
         const studentList = studentsRes.data.students || [];
         setStudents(studentList);
         setFilteredStudents(studentList);
 
         // 2. NEW: Get Attendance % for each student in this class
-        const analyticsRes = await API.get(`/api/attendance/class-analytics/${classId}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const analyticsRes = await api.get(`/api/attendance/class-analytics/${classId}`);
         setStudentAnalytics(analyticsRes.data || {});
 
       } catch (err) {
@@ -199,7 +192,7 @@ export default function ClassStudents() {
                         </td>
                         <td className="px-8 py-6 text-center">
                           <button
-                            onClick={() => navigate(`/student/details?subject=All&studentId=${student._id}`)} // You can improve this later
+                            onClick={() => navigate(`/student/details?subject=All&studentId=${student._id}`)}
                             className="text-blue-400 hover:text-blue-500 text-sm font-medium transition"
                           >
                             View History →
