@@ -3,21 +3,89 @@ import { useNavigate } from "react-router-dom";
 import APIClient from "../../api";
 
 const Icons = {
-  Dashboard: () => <span className="text-lg">🧭</span>,
-  Users: () => <span className="text-lg">👥</span>,
-  Faculty: () => <span className="text-lg">🧑‍🏫</span>,
-  Class: () => <span className="text-lg">🏫</span>,
-  Book: () => <span className="text-lg">📚</span>,
-  Bell: () => <span className="text-lg">🔔</span>,
-  TrendingUp: () => <span className="text-lg">📈</span>,
-  University: () => <span className="text-lg">🎓</span>,
-  Alert: () => <span className="text-lg">⚠️</span>,
-  ShieldCheck: () => <span className="text-lg">🛡️</span>,
-  Money: () => <span className="text-lg">💳</span>,
-  Settings: () => <span className="text-lg">⚙️</span>,
-  Report: () => <span className="text-lg">📄</span>,
-  Refresh: () => <span className="text-lg">🔄</span>,
-  Spark: () => <span className="text-lg">✨</span>,
+  Dashboard: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+    </svg>
+  ),
+  Users: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+  ),
+  Faculty: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  ),
+  Class: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    </svg>
+  ),
+  Book: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+    </svg>
+  ),
+  Bell: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+  ),
+  TrendingUp: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-9 9-4-4-6 6" />
+    </svg>
+  ),
+  University: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path d="M12 14l9-5-9-5-9 5 9 5z" />
+      <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0v6" />
+    </svg>
+  ),
+  Alert: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86l-7.5 13A1 1 0 003.65 18h16.7a1 1 0 00.86-1.5l-7.5-13a1 1 0 00-1.72 0z" />
+    </svg>
+  ),
+  ShieldCheck: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+    </svg>
+  ),
+  Money: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  Settings: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  Report: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  ),
+  Refresh: ({ spinning = false }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M20 20v-5h-5M5.636 18.364A9 9 0 1020 12" />
+    </svg>
+  ),
+  Spark: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+    </svg>
+  ),
+  Search: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+  ),
 };
 
 const tabs = [
@@ -37,12 +105,12 @@ const tabs = [
 
 const SectionCard = ({ title, subtitle, action, children, className = "" }) => (
   <div
-    className={`bg-slate-900/65 backdrop-blur-xl border border-white/[0.06] rounded-[2rem] shadow-xl ${className}`}
+    className={`bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] shadow-xl hover:border-cyan-500/20 transition-colors duration-500 ${className}`}
   >
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-6 md:px-8 pt-6 md:pt-8 mb-5">
       <div>
         <h3 className="text-white text-lg font-bold tracking-tight">{title}</h3>
-        {subtitle ? <p className="text-sm text-slate-500 mt-1">{subtitle}</p> : null}
+        {subtitle ? <p className="text-sm text-slate-400 mt-1">{subtitle}</p> : null}
       </div>
       {action}
     </div>
@@ -51,14 +119,14 @@ const SectionCard = ({ title, subtitle, action, children, className = "" }) => (
 );
 
 const EmptyState = ({ text }) => (
-  <div className="bg-slate-950/50 border border-white/5 rounded-2xl p-8 text-center text-slate-500">
+  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 shadow-inner">
     {text}
   </div>
 );
 
 const StatTile = ({ label, value, icon, accent, color }) => (
   <div
-    className={`bg-gradient-to-br ${accent} bg-slate-900/60 border border-white/[0.06] rounded-[2rem] p-6 shadow-xl hover:-translate-y-1 transition`}
+    className={`bg-gradient-to-br ${accent} bg-slate-900/40 border border-slate-700/50 rounded-[2rem] p-6 shadow-xl hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition-all duration-300`}
   >
     <div className="flex justify-between items-start">
       <div>
@@ -68,7 +136,7 @@ const StatTile = ({ label, value, icon, accent, color }) => (
         <p className="text-3xl md:text-4xl font-black text-white">{value}</p>
       </div>
       <div
-        className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-950/60 border border-white/10 ${color}`}
+        className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-950/60 border border-white/10 shadow-inner ${color}`}
       >
         {icon}
       </div>
@@ -151,7 +219,7 @@ export default function AdminDashboard() {
   const [newAnnouncement, setNewAnnouncement] = useState("");
 
   const [settings, setSettings] = useState({
-    universityName: "My University",
+    universityName: "SmartAttendance University",
     currentSession: "2025-2026",
     attendanceThreshold: 75,
     currency: "INR",
@@ -601,35 +669,35 @@ export default function AdminDashboard() {
       title: "Enroll Student",
       subtitle: "Create student profile + fees",
       tab: "users",
-      color: "from-emerald-500/20 to-emerald-700/5",
+      color: "from-emerald-500/20 to-teal-600/5 hover:border-emerald-500/30",
     },
     {
       title: "Add Faculty",
       subtitle: "Provision a teacher account",
       tab: "faculty",
-      color: "from-purple-500/20 to-purple-700/5",
+      color: "from-blue-500/20 to-indigo-600/5 hover:border-blue-500/30",
     },
     {
       title: "Create Program",
       subtitle: "Expand university structure",
       tab: "university",
-      color: "from-blue-500/20 to-blue-700/5",
+      color: "from-cyan-500/20 to-blue-600/5 hover:border-cyan-500/30",
     },
     {
       title: "Schedule Lecture",
       subtitle: "Add timetable block",
       tab: "academics",
-      color: "from-amber-500/20 to-amber-700/5",
+      color: "from-amber-500/20 to-orange-600/5 hover:border-amber-500/30",
     },
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0b0f19] text-white flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto w-14 h-14 rounded-full border-4 border-violet-500/20 border-t-violet-500 animate-spin" />
-          <p className="mt-5 text-sm uppercase tracking-[0.25em] text-violet-400 font-bold">
-            Booting University Command Center
+          <div className="mx-auto w-14 h-14 rounded-full border-4 border-cyan-500/20 border-t-cyan-500 animate-spin" />
+          <p className="mt-5 text-sm uppercase tracking-[0.25em] text-cyan-400 font-bold animate-pulse">
+            Booting Command Center
           </p>
         </div>
       </div>
@@ -637,30 +705,33 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 overflow-hidden relative selection:bg-violet-500/20">
-      {/* Background FX */}
+    <div className="min-h-screen bg-slate-950 text-slate-200 overflow-hidden relative selection:bg-cyan-500/20 font-sans">
+      {/* Background FX matching the SmartAttendance glassmorphism theme */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-24 -right-20 w-[28rem] h-[28rem] bg-violet-600/15 blur-[130px] rounded-full" />
-        <div className="absolute bottom-0 -left-24 w-[32rem] h-[32rem] bg-blue-600/10 blur-[150px] rounded-full" />
-        <div className="absolute top-1/3 left-1/3 w-40 h-40 bg-fuchsia-500/10 blur-[90px] rounded-full" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 animate-float-slow" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 animate-float-delayed" />
+        <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 animate-float-slow" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmurlCtncmlkKSIvPjwvc3ZnPg==')] opacity-50 z-0" />
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-white/5 bg-slate-950/50 backdrop-blur-2xl">
+      <header className="sticky top-0 z-40 border-b border-slate-700/50 bg-slate-900/70 backdrop-blur-2xl">
         <div className="max-w-[98rem] mx-auto px-4 md:px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 min-w-0">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-[0_0_25px_rgba(139,92,246,0.35)] text-2xl font-black">
-              U
+             <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.35)] shrink-0">
+               <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400 text-2xl font-black">
+                  SA
+               </div>
             </div>
             <div className="min-w-0">
               <h1 className="text-white font-black text-xl tracking-tight truncate">
-                {settings.universityName || "University"} • Admin OS
+                {settings.universityName || "SmartAttendance"} • Admin OS
               </h1>
               <div className="flex flex-wrap items-center gap-3 mt-1">
                 <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-slate-400">
                   Session {settings.currentSession}
                 </span>
-                <span className="px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                <span className="px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(16,185,129,0.1)]">
                   System Online
                 </span>
               </div>
@@ -671,10 +742,10 @@ export default function AdminDashboard() {
             <button
               onClick={loadAdminData}
               disabled={busy}
-              className="px-4 py-2.5 rounded-xl border border-white/10 bg-slate-900 hover:bg-slate-800 text-sm font-bold transition disabled:opacity-60"
+              className="px-4 py-2.5 rounded-xl border border-slate-600 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-sm font-bold transition disabled:opacity-60 shadow-inner"
             >
               <span className="inline-flex items-center gap-2">
-                <Icons.Refresh /> Refresh
+                <Icons.Refresh spinning={busy} /> <span className="hidden sm:inline">Refresh</span>
               </span>
             </button>
 
@@ -683,7 +754,7 @@ export default function AdminDashboard() {
                 localStorage.clear();
                 navigate("/login");
               }}
-              className="px-4 md:px-6 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 text-sm font-bold transition"
+              className="px-4 md:px-6 py-2.5 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 border border-slate-600 text-slate-200 text-sm font-bold transition shadow-inner"
             >
               Logout
             </button>
@@ -693,17 +764,17 @@ export default function AdminDashboard() {
 
       <div className="max-w-[98rem] mx-auto px-4 md:px-6 py-6 md:py-8 relative z-10">
         {/* Top banner */}
-        <div className="mb-6 bg-gradient-to-r from-violet-600/15 via-indigo-600/10 to-cyan-500/10 border border-white/[0.06] rounded-[2rem] p-6 md:p-8 shadow-xl overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-56 h-56 bg-violet-500/10 rounded-full blur-[90px]" />
+        <div className="mb-6 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-6 md:p-8 shadow-2xl overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-56 h-56 bg-cyan-500/10 rounded-full blur-[90px] pointer-events-none" />
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
-              <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-black uppercase tracking-[0.25em] text-violet-300 mb-4">
+              <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-black uppercase tracking-[0.25em] text-cyan-400 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
                 <Icons.Spark /> Command Center
               </p>
               <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">
-                Advanced University Administration Dashboard
+                Advanced Administration Dashboard
               </h2>
-              <p className="text-slate-300 max-w-3xl mt-3 text-sm md:text-base leading-relaxed">
+              <p className="text-slate-400 max-w-3xl mt-3 text-sm md:text-base leading-relaxed font-medium">
                 Manage academic operations, enrollments, faculty, attendance trends, financial
                 records, and global announcements from one premium control surface.
               </p>
@@ -714,10 +785,10 @@ export default function AdminDashboard() {
                 <button
                   key={idx}
                   onClick={() => setActiveTab(item.tab)}
-                  className={`text-left rounded-2xl p-4 border border-white/10 bg-gradient-to-br ${item.color} hover:-translate-y-0.5 transition shadow-lg`}
+                  className={`text-left rounded-2xl p-4 border border-slate-700/50 bg-gradient-to-br bg-slate-900/40 hover:bg-slate-900/60 ${item.color} transition-all duration-300 shadow-lg`}
                 >
                   <p className="text-white font-bold text-sm">{item.title}</p>
-                  <p className="text-slate-400 text-xs mt-1">{item.subtitle}</p>
+                  <p className="text-slate-400 text-xs mt-1 font-medium">{item.subtitle}</p>
                 </button>
               ))}
             </div>
@@ -725,22 +796,22 @@ export default function AdminDashboard() {
         </div>
 
         {error && (
-          <div className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-500/10 text-rose-300 px-5 py-4">
+          <div className="mb-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-300 px-5 py-4 font-medium shadow-[0_0_15px_rgba(244,63,94,0.1)]">
             {error}
           </div>
         )}
 
         {/* Tabs */}
         <div className="mb-8 overflow-x-auto hide-scrollbar">
-          <div className="inline-flex gap-2 p-1.5 rounded-2xl bg-slate-950/50 border border-white/[0.06] backdrop-blur-xl">
+          <div className="inline-flex gap-2 p-1.5 rounded-2xl bg-slate-900/40 border border-slate-700/50 backdrop-blur-xl shadow-inner">
             {tabs.map((tab) => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`inline-flex items-center gap-2 px-4 md:px-5 py-3 rounded-xl text-sm font-bold transition-all ${
+                className={`inline-flex items-center gap-2 px-4 md:px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${
                   activeTab === tab.key
-                    ? "bg-violet-600 text-white shadow-[0_0_18px_rgba(139,92,246,0.35)]"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-transparent"
+                    : "text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50"
                 }`}
               >
                 {tab.icon}
@@ -759,57 +830,57 @@ export default function AdminDashboard() {
                   label: "Total Students",
                   value: stats.totalStudents,
                   icon: <Icons.Users />,
-                  accent: "from-blue-500/15 to-blue-700/5",
-                  color: "text-blue-400",
+                  accent: "from-cyan-500/10 to-blue-600/5",
+                  color: "text-cyan-400",
                 },
                 {
                   label: "Total Faculty",
                   value: stats.totalTeachers,
                   icon: <Icons.Faculty />,
-                  accent: "from-purple-500/15 to-purple-700/5",
-                  color: "text-purple-400",
+                  accent: "from-blue-500/10 to-indigo-600/5",
+                  color: "text-blue-400",
                 },
                 {
                   label: "Active Classes",
                   value: stats.totalClasses,
                   icon: <Icons.Class />,
-                  accent: "from-emerald-500/15 to-emerald-700/5",
+                  accent: "from-emerald-500/10 to-teal-600/5",
                   color: "text-emerald-400",
                 },
                 {
                   label: "Attendance",
                   value: `${stats.overallAttendance || 0}%`,
                   icon: <Icons.TrendingUp />,
-                  accent: "from-amber-500/15 to-amber-700/5",
+                  accent: "from-amber-500/10 to-orange-600/5",
                   color: "text-amber-400",
                 },
                 {
                   label: "Departments",
                   value: stats.totalDepartments,
                   icon: <Icons.University />,
-                  accent: "from-cyan-500/15 to-cyan-700/5",
-                  color: "text-cyan-400",
+                  accent: "from-indigo-500/10 to-purple-600/5",
+                  color: "text-indigo-400",
                 },
                 {
                   label: "Programs",
                   value: stats.totalPrograms,
                   icon: <Icons.Book />,
-                  accent: "from-pink-500/15 to-pink-700/5",
-                  color: "text-pink-400",
+                  accent: "from-purple-500/10 to-pink-600/5",
+                  color: "text-purple-400",
                 },
                 {
                   label: "Pending Approvals",
                   value: stats.pendingApprovals,
                   icon: <Icons.Alert />,
-                  accent: "from-rose-500/15 to-rose-700/5",
+                  accent: "from-rose-500/10 to-red-600/5",
                   color: "text-rose-400",
                 },
                 {
                   label: "Fees Collected",
                   value: `₹${Math.max(stats.collectedFees || 0, feeSummary.paid).toLocaleString()}`,
                   icon: <Icons.Money />,
-                  accent: "from-green-500/15 to-green-700/5",
-                  color: "text-green-400",
+                  accent: "from-emerald-500/10 to-green-600/5",
+                  color: "text-emerald-400",
                 },
               ].map((card, i) => (
                 <StatTile key={i} {...card} />
@@ -821,7 +892,7 @@ export default function AdminDashboard() {
                 title="Pending Access Approvals"
                 subtitle="Review and authorize new account requests."
                 action={
-                  <span className="px-3 py-1 rounded-lg bg-amber-500/15 text-amber-400 text-xs font-black">
+                  <span className="px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-black shadow-inner">
                     {pendingUsers.length} Pending
                   </span>
                 }
@@ -833,24 +904,24 @@ export default function AdminDashboard() {
                     {pendingUsers.slice(0, 5).map((user) => (
                       <div
                         key={user._id}
-                        className="flex items-center justify-between gap-3 rounded-2xl border border-white/5 bg-slate-950/50 p-4"
+                        className="flex items-center justify-between gap-3 rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
                       >
                         <div className="min-w-0">
                           <p className="font-bold text-white truncate">{user.name}</p>
-                          <p className="text-xs text-slate-400 font-mono truncate">{user.email}</p>
+                          <p className="text-xs text-slate-500 font-mono truncate">{user.email}</p>
                         </div>
 
                         <div className="flex gap-2 shrink-0">
                           <button
                             onClick={() => approveUser(user._id)}
-                            className="px-3 py-2 rounded-xl bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 text-xs font-black"
+                            className="px-3 py-2 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 text-xs font-black transition-colors"
                           >
                             Approve
                           </button>
 
                           <button
                             onClick={() => rejectUser(user._id)}
-                            className="px-3 py-2 rounded-xl bg-rose-600/20 border border-rose-500/30 text-rose-400 text-xs font-black"
+                            className="px-3 py-2 rounded-xl bg-rose-600/10 hover:bg-rose-600/20 border border-rose-500/30 hover:border-rose-500/50 text-rose-400 text-xs font-black transition-colors"
                           >
                             Reject
                           </button>
@@ -869,14 +940,14 @@ export default function AdminDashboard() {
                     {lowAttendance.slice(0, 6).map((s) => (
                       <div
                         key={s._id}
-                        className="rounded-2xl border border-white/5 bg-slate-950/50 p-4 flex justify-between items-center"
+                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 flex justify-between items-center shadow-inner"
                       >
                         <div>
                           <p className="font-bold text-white">{s.name}</p>
                           <p className="text-xs text-slate-500">{s.email}</p>
                         </div>
 
-                        <span className="px-3 py-1 rounded-lg bg-rose-500/15 text-rose-400 text-xs font-black">
+                        <span className="px-3 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-black shadow-inner">
                           {s.attendance}%
                         </span>
                       </div>
@@ -893,9 +964,9 @@ export default function AdminDashboard() {
                     {recentActivities.slice(0, 6).map((log, i) => (
                       <div
                         key={i}
-                        className="rounded-2xl border border-white/5 bg-slate-950/50 p-4"
+                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
                       >
-                        <p className="text-white text-sm">{log.message || "Activity logged"}</p>
+                        <p className="text-white text-sm font-medium">{log.message || "Activity logged"}</p>
                         <p className="text-xs text-slate-500 mt-1">{formatDate(log.createdAt)}</p>
                       </div>
                     ))}
@@ -912,20 +983,20 @@ export default function AdminDashboard() {
             <div className="grid lg:grid-cols-2 gap-6">
               <SectionCard title="Create Department" subtitle="Define a new academic department.">
                 <input
-                  className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-4 outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                   placeholder="Department Name"
                   value={departmentName}
                   onChange={(e) => setDepartmentName(e.target.value)}
                 />
 
                 <select
-                  className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-6 outline-none focus:border-violet-500"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-6 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
                   value={departmentHead}
                   onChange={(e) => setDepartmentHead(e.target.value)}
                 >
-                  <option value="">Head of Department (Optional)</option>
+                  <option className="bg-slate-900" value="">Head of Department (Optional)</option>
                   {teachers.map((t) => (
-                    <option key={t._id} value={t._id}>
+                    <option className="bg-slate-900" key={t._id} value={t._id}>
                       {t.name}
                     </option>
                   ))}
@@ -933,7 +1004,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={createDepartment}
-                  className="w-full py-3.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold transition"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
                 >
                   Create Department
                 </button>
@@ -941,20 +1012,20 @@ export default function AdminDashboard() {
 
               <SectionCard title="Create Program" subtitle="Add a new program under a department.">
                 <input
-                  className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-4 outline-none focus:border-blue-500"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                   placeholder="Program Name"
                   value={programName}
                   onChange={(e) => setProgramName(e.target.value)}
                 />
 
                 <select
-                  className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-6 outline-none focus:border-blue-500"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-6 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
                   value={programDept}
                   onChange={(e) => setProgramDept(e.target.value)}
                 >
-                  <option value="">Select Department</option>
+                  <option className="bg-slate-900" value="">Select Department</option>
                   {departments.map((d) => (
-                    <option key={d._id} value={d._id}>
+                    <option className="bg-slate-900" key={d._id} value={d._id}>
                       {d.name}
                     </option>
                   ))}
@@ -962,7 +1033,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={createProgram}
-                  className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition"
+                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300"
                 >
                   Create Program
                 </button>
@@ -976,7 +1047,7 @@ export default function AdminDashboard() {
                 action={
                   <button
                     onClick={() => exportCSV("departments", departments)}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-sm"
+                    className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
                   >
                     Export CSV
                   </button>
@@ -989,10 +1060,10 @@ export default function AdminDashboard() {
                     {departments.map((dept) => (
                       <div
                         key={dept._id}
-                        className="rounded-2xl border border-white/5 bg-slate-950/50 p-4"
+                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
                       >
                         <p className="text-white font-bold">{dept.name}</p>
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs font-medium text-slate-500 mt-1">
                           Programs:{" "}
                           {
                             programs.filter(
@@ -1013,7 +1084,7 @@ export default function AdminDashboard() {
                 action={
                   <button
                     onClick={() => exportCSV("programs", programs)}
-                    className="px-4 py-2 rounded-xl bg-slate-800 text-sm"
+                    className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
                   >
                     Export CSV
                   </button>
@@ -1026,10 +1097,10 @@ export default function AdminDashboard() {
                     {programs.map((program) => (
                       <div
                         key={program._id}
-                        className="rounded-2xl border border-white/5 bg-slate-950/50 p-4"
+                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
                       >
                         <p className="text-white font-bold">{program.name}</p>
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs font-medium text-slate-500 mt-1">
                           Department:{" "}
                           {departments.find(
                             (d) =>
@@ -1051,40 +1122,40 @@ export default function AdminDashboard() {
             <SectionCard title="Enroll Student" subtitle="Create a student profile and attach it to a class and program.">
               <div className="grid md:grid-cols-5 gap-4">
                 <input
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                   placeholder="Full Name"
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
                 />
 
                 <input
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                   placeholder="University Email"
                   value={studentEmail}
                   onChange={(e) => setStudentEmail(e.target.value)}
                 />
 
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
                   value={studentClass}
                   onChange={(e) => setStudentClass(e.target.value)}
                 >
-                  <option value="">Select Class</option>
+                  <option className="bg-slate-900" value="">Select Class</option>
                   {classes.map((c) => (
-                    <option key={c._id} value={c._id}>
+                    <option className="bg-slate-900" key={c._id} value={c._id}>
                       {c.name}
                     </option>
                   ))}
                 </select>
 
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
                   value={studentProgram}
                   onChange={(e) => setStudentProgram(e.target.value)}
                 >
-                  <option value="">Select Program</option>
+                  <option className="bg-slate-900" value="">Select Program</option>
                   {programs.map((p) => (
-                    <option key={p._id} value={p._id}>
+                    <option className="bg-slate-900" key={p._id} value={p._id}>
                       {p.name}
                     </option>
                   ))}
@@ -1092,7 +1163,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={addStudent}
-                  className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5"
+                  className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300"
                 >
                   Enroll
                 </button>
@@ -1104,15 +1175,20 @@ export default function AdminDashboard() {
               subtitle="Search and export student records."
               action={
                 <div className="flex flex-col md:flex-row gap-3">
-                  <input
-                    placeholder="Search student..."
-                    value={studentSearch}
-                    onChange={(e) => setStudentSearch(e.target.value)}
-                    className="bg-slate-950 border border-white/10 px-4 py-2.5 rounded-xl text-white"
-                  />
+                  <div className="relative">
+                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                        <Icons.Search />
+                     </span>
+                     <input
+                        placeholder="Search student..."
+                        value={studentSearch}
+                        onChange={(e) => setStudentSearch(e.target.value)}
+                        className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm w-full md:w-auto"
+                     />
+                  </div>
                   <button
                     onClick={() => exportCSV("students", filteredStudents)}
-                    className="bg-slate-800 px-4 py-2.5 rounded-xl text-sm"
+                    className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 transition-colors shadow-inner"
                   >
                     Export CSV
                   </button>
@@ -1126,18 +1202,18 @@ export default function AdminDashboard() {
                   {filteredStudents.map((s) => (
                     <div
                       key={s._id}
-                      className="rounded-[2rem] border border-white/5 bg-slate-950/45 p-5 shadow-lg"
+                      className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-5 shadow-lg hover:border-cyan-500/30 transition-colors duration-300"
                     >
-                      <p className="font-bold text-white text-lg">{s.name}</p>
-                      <p className="text-xs text-slate-500 mt-1 font-mono">{s.email}</p>
+                      <p className="font-bold text-white text-lg truncate">{s.name}</p>
+                      <p className="text-xs text-slate-400 mt-1 font-mono truncate">{s.email}</p>
 
                       <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
-                        <div className="rounded-xl bg-slate-900/80 p-3 border border-white/5">
-                          <p className="text-slate-500">Reg No</p>
-                          <p className="text-white font-bold mt-1">{s.roll || "N/A"}</p>
+                        <div className="rounded-xl bg-slate-950/70 p-3 border border-slate-800 shadow-inner">
+                          <p className="text-slate-500 font-medium">Reg No</p>
+                          <p className="text-cyan-400 font-bold mt-1 truncate">{s.roll || "N/A"}</p>
                         </div>
-                        <div className="rounded-xl bg-slate-900/80 p-3 border border-white/5">
-                          <p className="text-slate-500">Semester</p>
+                        <div className="rounded-xl bg-slate-950/70 p-3 border border-slate-800 shadow-inner">
+                          <p className="text-slate-500 font-medium">Semester</p>
                           <p className="text-white font-bold mt-1">{s.currentSemester || 1}</p>
                         </div>
                       </div>
@@ -1155,27 +1231,27 @@ export default function AdminDashboard() {
             <SectionCard title="Add Teacher / Faculty" subtitle="Create a faculty profile and assign department.">
               <div className="grid md:grid-cols-4 gap-4">
                 <input
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
                   placeholder="Full Name"
                   value={teacherName}
                   onChange={(e) => setTeacherName(e.target.value)}
                 />
 
                 <input
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
                   placeholder="Email"
                   value={teacherEmail}
                   onChange={(e) => setTeacherEmail(e.target.value)}
                 />
 
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium appearance-none"
                   value={teacherDepartment}
                   onChange={(e) => setTeacherDepartment(e.target.value)}
                 >
-                  <option value="">Select Department</option>
+                  <option className="bg-slate-900" value="">Select Department</option>
                   {departments.map((d) => (
-                    <option key={d._id} value={d._id}>
+                    <option className="bg-slate-900" key={d._id} value={d._id}>
                       {d.name}
                     </option>
                   ))}
@@ -1183,7 +1259,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={addTeacher}
-                  className="rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5"
+                  className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300"
                 >
                   Add Faculty
                 </button>
@@ -1194,16 +1270,21 @@ export default function AdminDashboard() {
               title="Faculty Directory"
               subtitle="Search, review, and export faculty profiles."
               action={
-                <div className="flex gap-3">
-                  <input
-                    placeholder="Search teacher..."
-                    value={teacherSearch}
-                    onChange={(e) => setTeacherSearch(e.target.value)}
-                    className="bg-slate-950 border border-white/10 px-4 py-2.5 rounded-xl text-white"
-                  />
+                <div className="flex flex-col md:flex-row gap-3">
+                   <div className="relative">
+                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                        <Icons.Search />
+                     </span>
+                     <input
+                        placeholder="Search faculty..."
+                        value={teacherSearch}
+                        onChange={(e) => setTeacherSearch(e.target.value)}
+                        className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm w-full md:w-auto"
+                     />
+                  </div>
                   <button
                     onClick={() => exportCSV("teachers", filteredTeachers)}
-                    className="bg-slate-800 px-4 py-2.5 rounded-xl text-sm"
+                    className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 transition-colors shadow-inner"
                   >
                     Export CSV
                   </button>
@@ -1217,17 +1298,19 @@ export default function AdminDashboard() {
                   {filteredTeachers.map((t) => (
                     <div
                       key={t._id}
-                      className="rounded-[2rem] border border-white/5 bg-slate-950/45 p-5 shadow-lg"
+                      className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-5 shadow-lg hover:border-blue-500/30 transition-colors duration-300 flex flex-col justify-between"
                     >
-                      <p className="text-white font-bold text-lg">{t.name}</p>
-                      <p className="text-xs text-slate-500 mt-1 font-mono">{t.email}</p>
+                      <div>
+                         <p className="text-white font-bold text-lg truncate">{t.name}</p>
+                         <p className="text-xs text-slate-400 mt-1 font-mono truncate">{t.email}</p>
+                      </div>
 
                       <div className="mt-5 flex justify-end">
                         <button
                           onClick={() => deleteTeacher(t._id)}
-                          className="px-4 py-2 rounded-xl bg-rose-600/20 text-rose-400 text-xs font-bold"
+                          className="px-4 py-2 rounded-xl bg-rose-600/10 hover:bg-rose-600/20 border border-rose-500/30 hover:border-rose-500/50 text-rose-400 text-xs font-bold transition-colors shadow-inner"
                         >
-                          Delete
+                          Remove
                         </button>
                       </div>
                     </div>
@@ -1243,7 +1326,7 @@ export default function AdminDashboard() {
           <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 animate-fadeUp">
             <SectionCard title="Create Class / Cohort" subtitle="Provision a new class container.">
               <input
-                className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-5"
+                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-5 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                 placeholder="Class / Cohort Name"
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
@@ -1251,7 +1334,7 @@ export default function AdminDashboard() {
 
               <button
                 onClick={createClass}
-                className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5"
+                className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
               >
                 Create Class
               </button>
@@ -1259,26 +1342,26 @@ export default function AdminDashboard() {
 
             <SectionCard title="Assign Teacher to Class" subtitle="Link a faculty member to a cohort.">
               <select
-                className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-4"
+                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium appearance-none"
                 value={assignClass}
                 onChange={(e) => setAssignClass(e.target.value)}
               >
-                <option value="">Select Class</option>
+                <option className="bg-slate-900" value="">Select Class</option>
                 {classes.map((c) => (
-                  <option key={c._id} value={c._id}>
+                  <option className="bg-slate-900" key={c._id} value={c._id}>
                     {c.name}
                   </option>
                 ))}
               </select>
 
               <select
-                className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-5"
+                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium appearance-none"
                 value={assignTeacher}
                 onChange={(e) => setAssignTeacher(e.target.value)}
               >
-                <option value="">Select Teacher</option>
+                <option className="bg-slate-900" value="">Select Teacher</option>
                 {teachers.map((t) => (
-                  <option key={t._id} value={t._id}>
+                  <option className="bg-slate-900" key={t._id} value={t._id}>
                     {t.name}
                   </option>
                 ))}
@@ -1286,41 +1369,41 @@ export default function AdminDashboard() {
 
               <button
                 onClick={assignTeacherToClass}
-                className="w-full rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5"
+                className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all duration-300"
               >
-                Assign
+                Assign Faculty
               </button>
             </SectionCard>
 
             <SectionCard title="Create Subject" subtitle="Attach a subject to class and faculty.">
               <input
-                className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-4"
+                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium"
                 placeholder="Subject Name"
                 value={subjectName}
                 onChange={(e) => setSubjectName(e.target.value)}
               />
 
               <select
-                className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-4"
+                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium appearance-none"
                 value={selectedClass}
                 onChange={(e) => setSelectedClass(e.target.value)}
               >
-                <option value="">Select Class</option>
+                <option className="bg-slate-900" value="">Select Class</option>
                 {classes.map((c) => (
-                  <option key={c._id} value={c._id}>
+                  <option className="bg-slate-900" key={c._id} value={c._id}>
                     {c.name}
                   </option>
                 ))}
               </select>
 
               <select
-                className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white mb-5"
+                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-5 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium appearance-none"
                 value={selectedTeacher}
                 onChange={(e) => setSelectedTeacher(e.target.value)}
               >
-                <option value="">Select Teacher</option>
+                <option className="bg-slate-900" value="">Select Teacher</option>
                 {teachers.map((t) => (
-                  <option key={t._id} value={t._id}>
+                  <option className="bg-slate-900" key={t._id} value={t._id}>
                     {t.name}
                   </option>
                 ))}
@@ -1328,7 +1411,7 @@ export default function AdminDashboard() {
 
               <button
                 onClick={createSubject}
-                className="w-full rounded-xl bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5"
+                className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300"
               >
                 Create Subject
               </button>
@@ -1341,13 +1424,13 @@ export default function AdminDashboard() {
             >
               <div className="grid md:grid-cols-5 gap-4">
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium appearance-none"
                   value={day}
                   onChange={(e) => setDay(e.target.value)}
                 >
-                  <option value="">Select Day</option>
+                  <option className="bg-slate-900" value="">Select Day</option>
                   {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((d) => (
-                    <option key={d} value={d}>
+                    <option className="bg-slate-900" key={d} value={d}>
                       {d}
                     </option>
                   ))}
@@ -1355,34 +1438,34 @@ export default function AdminDashboard() {
 
                 <input
                   type="time"
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium"
                   value={time}
                   onChange={(e) => setTime(e.target.value)}
                 />
 
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium appearance-none"
                   value={timeClass}
                   onChange={(e) => setTimeClass(e.target.value)}
                 >
-                  <option value="">Select Class</option>
+                  <option className="bg-slate-900" value="">Select Class</option>
                   {classes.map((c) => (
-                    <option key={c._id} value={c._id}>
+                    <option className="bg-slate-900" key={c._id} value={c._id}>
                       {c.name}
                     </option>
                   ))}
                 </select>
 
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium appearance-none"
                   value={timeSubject}
                   onChange={(e) => setTimeSubject(e.target.value)}
                 >
-                  <option value="">Select Subject</option>
+                  <option className="bg-slate-900" value="">Select Subject</option>
                   {subjects
                     .filter((s) => String(s.classId?._id || s.classId) === String(timeClass))
                     .map((s) => (
-                      <option key={s._id} value={s._id}>
+                      <option className="bg-slate-900" key={s._id} value={s._id}>
                         {s.name}
                       </option>
                     ))}
@@ -1390,7 +1473,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={createTimetable}
-                  className="rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5"
+                  className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300"
                 >
                   Save Entry
                 </button>
@@ -1409,18 +1492,18 @@ export default function AdminDashboard() {
                 <div className="space-y-5">
                   {attendanceTrend.map((t, i) => (
                     <div key={i} className="flex items-center gap-4">
-                      <span className="w-24 text-xs font-bold uppercase tracking-widest text-slate-500">
+                      <span className="w-24 text-xs font-bold uppercase tracking-widest text-slate-400">
                         {t.month}
                       </span>
 
-                      <div className="flex-1 rounded-full h-3 bg-slate-950 border border-white/5 overflow-hidden">
+                      <div className="flex-1 rounded-full h-3 bg-slate-950/70 border border-slate-800 shadow-inner overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-400"
+                          className="h-full rounded-full bg-gradient-to-r from-cyan-600 to-blue-400 transition-all duration-1000"
                           style={{ width: `${t.value}%` }}
                         />
                       </div>
 
-                      <span className="w-12 text-right text-emerald-400 font-black">
+                      <span className="w-12 text-right text-cyan-400 font-black">
                         {t.value}%
                       </span>
                     </div>
@@ -1435,7 +1518,7 @@ export default function AdminDashboard() {
               action={
                 <button
                   onClick={() => exportCSV("low_attendance", lowAttendance)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-sm"
+                  className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
                 >
                   Export CSV
                 </button>
@@ -1448,14 +1531,16 @@ export default function AdminDashboard() {
                   {lowAttendance.map((s) => (
                     <div
                       key={s._id}
-                      className="rounded-2xl border border-white/5 bg-slate-950/50 p-4 flex justify-between items-center"
+                      className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 flex justify-between items-center shadow-inner"
                     >
-                      <div>
-                        <p className="text-white font-bold">{s.name}</p>
-                        <p className="text-xs text-slate-500">{s.email}</p>
+                      <div className="min-w-0">
+                        <p className="text-white font-bold truncate">{s.name}</p>
+                        <p className="text-xs text-slate-500 font-mono truncate">{s.email}</p>
                       </div>
 
-                      <span className="text-rose-400 font-black">{s.attendance}%</span>
+                      <span className="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-black shadow-inner shrink-0">
+                        {s.attendance}%
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -1478,11 +1563,11 @@ export default function AdminDashboard() {
                 {students.map((s) => (
                   <div
                     key={s._id}
-                    className="rounded-[2rem] border border-white/5 bg-slate-950/45 p-6"
+                    className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-6 hover:border-cyan-500/30 transition-colors duration-300"
                   >
-                    <p className="text-white font-black text-xl">
+                    <p className="text-white font-black text-xl flex items-center flex-wrap gap-3">
                       {s.name}
-                      <span className="ml-3 px-3 py-1 rounded-lg border border-white/10 text-xs text-slate-400 font-mono">
+                      <span className="px-3 py-1 rounded-lg border border-slate-700 bg-slate-950/70 text-xs text-slate-400 font-mono shadow-inner">
                         {s.email}
                       </span>
                     </p>
@@ -1492,7 +1577,7 @@ export default function AdminDashboard() {
                         <button
                           key={sub._id}
                           onClick={() => alert(`Open marks entry for ${s.name} - ${sub.name}`)}
-                          className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-indigo-600/20 border border-white/10 text-xs font-bold uppercase tracking-widest text-slate-300 hover:text-indigo-400"
+                          className="px-4 py-2.5 rounded-xl bg-slate-800/50 hover:bg-cyan-600/20 border border-slate-600 hover:border-cyan-500/50 text-xs font-bold uppercase tracking-widest text-slate-300 hover:text-cyan-400 transition-all shadow-inner"
                         >
                           Enter Marks: {sub.name}
                         </button>
@@ -1509,23 +1594,25 @@ export default function AdminDashboard() {
         {activeTab === "fees" && (
           <div className="space-y-6 animate-fadeUp">
             <div className="grid md:grid-cols-3 gap-5">
-              <div className="rounded-[2rem] bg-slate-900/65 border border-white/[0.06] p-6 shadow-xl">
-                <p className="text-slate-400 text-sm">Total Fees</p>
+              <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 p-6 shadow-xl">
+                <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Total Fees</p>
                 <p className="text-3xl font-black text-white mt-2">
                   ₹{feeSummary.total.toLocaleString()}
                 </p>
               </div>
 
-              <div className="rounded-[2rem] bg-slate-900/65 border border-white/[0.06] p-6 shadow-xl">
-                <p className="text-slate-400 text-sm">Collected</p>
-                <p className="text-3xl font-black text-emerald-400 mt-2">
+              <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-emerald-500/30 p-6 shadow-[0_0_20px_rgba(16,185,129,0.1)] relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
+                <p className="text-emerald-400/80 text-sm font-bold uppercase tracking-widest relative z-10">Collected</p>
+                <p className="text-3xl font-black text-emerald-400 mt-2 relative z-10">
                   ₹{feeSummary.paid.toLocaleString()}
                 </p>
               </div>
 
-              <div className="rounded-[2rem] bg-slate-900/65 border border-white/[0.06] p-6 shadow-xl">
-                <p className="text-slate-400 text-sm">Pending</p>
-                <p className="text-3xl font-black text-rose-400 mt-2">
+              <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-rose-500/30 p-6 shadow-[0_0_20px_rgba(244,63,94,0.1)] relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl"></div>
+                <p className="text-rose-400/80 text-sm font-bold uppercase tracking-widest relative z-10">Pending</p>
+                <p className="text-3xl font-black text-rose-400 mt-2 relative z-10">
                   ₹{feeSummary.pending.toLocaleString()}
                 </p>
               </div>
@@ -1539,78 +1626,83 @@ export default function AdminDashboard() {
                   {fees.map((f) => (
                     <div
                       key={f._id}
-                      className="rounded-[2rem] border border-white/5 bg-slate-950/45 p-6 relative overflow-hidden"
+                      className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-6 relative overflow-hidden shadow-lg hover:border-cyan-500/20 transition-colors"
                     >
                       <div
-                        className={`absolute -top-8 -right-8 w-28 h-28 blur-[60px] rounded-full ${
+                        className={`absolute -top-8 -right-8 w-28 h-28 blur-[50px] rounded-full ${
                           f.status === "paid"
-                            ? "bg-emerald-500/20"
+                            ? "bg-emerald-500/30"
                             : f.status === "partial"
-                            ? "bg-amber-500/20"
-                            : "bg-rose-500/20"
+                            ? "bg-amber-500/30"
+                            : "bg-rose-500/30"
                         }`}
                       />
 
                       <div className="relative z-10">
-                        <p className="text-white font-black text-lg">
+                        <p className="text-white font-black text-lg truncate">
                           {f.studentName || "Student"}
                         </p>
 
-                        <p className="text-xs text-slate-500 mt-1 font-mono">
+                        <p className="text-xs text-slate-400 mt-1 font-mono truncate">
                           {f.studentEmail || ""}
                         </p>
 
-                        <p className="text-sm text-slate-400 mt-3">
-                          Amount: ₹{(f.amount || f.totalAmount || 0).toLocaleString()}
-                        </p>
+                        <div className="mt-4 space-y-2">
+                           <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                              <p className="text-xs font-bold text-slate-500">Amount:</p>
+                              <p className="text-sm font-black text-white">₹{(f.amount || f.totalAmount || 0).toLocaleString()}</p>
+                           </div>
+                           
+                           <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                              <p className="text-xs font-bold text-slate-500">Paid:</p>
+                              <p className="text-sm font-black text-emerald-400">₹{(f.amountPaid || 0).toLocaleString()}</p>
+                           </div>
 
-                        <p className="text-xs text-slate-500 mt-2">
-                          Paid: ₹{(f.amountPaid || 0).toLocaleString()}
-                        </p>
+                           <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                              <p className="text-xs font-bold text-slate-500">Balance:</p>
+                              <p className="text-sm font-black text-rose-400">₹{Math.max((f.totalAmount || f.amount || 0) - (f.amountPaid || 0), 0).toLocaleString()}</p>
+                           </div>
+                        </div>
 
-                        <p className="text-xs text-slate-500 mt-1">
-                          Balance: ₹
-                          {Math.max((f.totalAmount || f.amount || 0) - (f.amountPaid || 0), 0).toLocaleString()}
-                        </p>
-
-                        <p className="text-xs text-slate-500 mt-1">Due: {formatDate(f.dueDate)}</p>
-
-                        <p className="text-xs text-slate-500 mt-1">Class: {f.className || "—"}</p>
+                        <div className="flex justify-between items-center mt-3">
+                           <p className="text-xs font-medium text-slate-500">Due: {formatDate(f.dueDate)}</p>
+                           <p className="text-xs font-medium text-slate-500">Class: {f.className || "—"}</p>
+                        </div>
 
                         <span
-                          className={`inline-block mt-5 px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest border ${
+                          className={`inline-block mt-4 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-inner ${
                             f.status === "paid"
                               ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                               : f.status === "partial"
                               ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                               : f.status === "overdue"
                               ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                              : "bg-slate-500/10 text-slate-300 border-slate-500/20"
+                              : "bg-slate-800/80 text-slate-300 border-slate-600"
                           }`}
                         >
                           {f.status}
                         </span>
 
-                        <div className="mt-5 flex gap-2 flex-wrap">
+                        <div className="mt-5 grid grid-cols-2 gap-2">
                           <button
                             onClick={() => updateFeeStatus(f._id, "paid")}
-                            className="px-4 py-2 rounded-xl bg-emerald-600/20 text-emerald-400 text-xs font-bold"
+                            className="px-3 py-2.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 hover:border-emerald-500/40 text-emerald-400 text-[10px] uppercase tracking-widest font-black transition-all"
                           >
-                            Mark Paid
-                          </button>
-
-                          <button
-                            onClick={() => updateFeeStatus(f._id, "pending")}
-                            className="px-4 py-2 rounded-xl bg-slate-700/50 text-slate-200 text-xs font-bold"
-                          >
-                            Reset Pending
+                            Set Paid
                           </button>
 
                           <button
                             onClick={() => updateFeeStatus(f._id, "partial")}
-                            className="px-4 py-2 rounded-xl bg-amber-600/20 text-amber-400 text-xs font-bold"
+                            className="px-3 py-2.5 rounded-xl bg-amber-600/10 hover:bg-amber-600/20 border border-amber-500/20 hover:border-amber-500/40 text-amber-400 text-[10px] uppercase tracking-widest font-black transition-all"
                           >
-                            Mark Partial
+                            Set Partial
+                          </button>
+                          
+                          <button
+                            onClick={() => updateFeeStatus(f._id, "pending")}
+                            className="col-span-2 px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-300 text-[10px] uppercase tracking-widest font-black transition-all shadow-inner"
+                          >
+                            Reset to Pending
                           </button>
                         </div>
                       </div>
@@ -1635,16 +1727,16 @@ export default function AdminDashboard() {
             ].map((r, i) => (
               <div
                 key={i}
-                className="rounded-[2rem] bg-slate-900/65 border border-white/[0.06] p-6 shadow-xl"
+                className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 p-6 shadow-xl hover:border-cyan-500/30 transition-colors group"
               >
-                <h3 className="text-white font-bold text-lg">{r.title}</h3>
-                <p className="text-slate-400 text-sm mt-2 mb-6">{r.desc}</p>
+                <h3 className="text-white font-bold text-lg group-hover:text-cyan-50 transition-colors">{r.title}</h3>
+                <p className="text-slate-400 font-medium text-sm mt-2 mb-6">{r.desc}</p>
 
                 <button
                   onClick={() => exportCSV(r.name, r.rows)}
-                  className="px-5 py-3 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-bold"
+                  className="w-full px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-cyan-600/20 border border-slate-600 hover:border-cyan-500/50 text-slate-200 hover:text-cyan-400 text-sm font-black uppercase tracking-widest transition-all shadow-inner"
                 >
-                  Export CSV
+                  Download CSV
                 </button>
               </div>
             ))}
@@ -1657,7 +1749,7 @@ export default function AdminDashboard() {
             <SectionCard title="Broadcast Announcement" subtitle="Send institution-wide or targeted notices.">
               <textarea
                 rows={6}
-                className="w-full rounded-2xl bg-slate-950 border border-white/10 px-4 py-4 text-white resize-none mb-4 outline-none focus:border-violet-500"
+                className="w-full rounded-2xl bg-slate-950/50 border border-slate-700/50 px-4 py-4 text-white resize-none mb-4 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                 placeholder="Write announcement message..."
                 value={newAnnouncement}
                 onChange={(e) => setNewAnnouncement(e.target.value)}
@@ -1665,19 +1757,19 @@ export default function AdminDashboard() {
 
               <div className="grid md:grid-cols-[1fr_auto] gap-4">
                 <select
-                  className="rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
                   value={announcementTarget}
                   onChange={(e) => setAnnouncementTarget(e.target.value)}
                 >
-                  <option value="all">All Users</option>
-                  <option value="students">Students</option>
-                  <option value="teachers">Faculty</option>
-                  <option value="admins">Admins</option>
+                  <option className="bg-slate-900" value="all">All Users</option>
+                  <option className="bg-slate-900" value="students">Students</option>
+                  <option className="bg-slate-900" value="teachers">Faculty</option>
+                  <option className="bg-slate-900" value="admins">Admins</option>
                 </select>
 
                 <button
                   onClick={sendAnnouncement}
-                  className="rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold px-6 py-3.5"
+                  className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm px-6 py-3.5 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
                 >
                   Send Announcement
                 </button>
@@ -1692,16 +1784,16 @@ export default function AdminDashboard() {
                   {announcements.map((item, idx) => (
                     <div
                       key={item._id || idx}
-                      className="rounded-2xl border border-white/5 bg-slate-950/50 p-4"
+                      className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
                     >
                       <div className="flex items-center justify-between gap-3 mb-2">
-                        <span className="px-2.5 py-1 rounded-full bg-violet-500/10 border border-violet-500/20 text-violet-300 text-[10px] font-black uppercase tracking-widest">
+                        <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black uppercase tracking-widest">
                           {item.target || "all"}
                         </span>
-                        <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>
+                        <span className="text-xs font-medium text-slate-500">{formatDate(item.createdAt)}</span>
                       </div>
 
-                      <p className="text-white text-sm leading-relaxed">
+                      <p className="text-white text-sm font-medium leading-relaxed">
                         {item.message || item.title || "Announcement"}
                       </p>
                     </div>
@@ -1721,7 +1813,7 @@ export default function AdminDashboard() {
             action={
               <button
                 onClick={() => exportCSV("audit_logs", auditLogs)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-sm"
+                className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
               >
                 Export CSV
               </button>
@@ -1734,17 +1826,17 @@ export default function AdminDashboard() {
                 {auditLogs.map((log, idx) => (
                   <div
                     key={log._id || idx}
-                    className="rounded-2xl border border-white/5 bg-slate-950/50 p-4"
+                    className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner hover:border-cyan-500/20 transition-colors"
                   >
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                       <div>
-                        <p className="text-white font-semibold">{log.action || log.message || "Audit event"}</p>
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-white font-bold">{log.action || log.message || "Audit event"}</p>
+                        <p className="text-xs font-medium text-slate-500 mt-1">
                           {log.actorName || log.user?.name || log.email || "System"} • {formatDate(log.createdAt)}
                         </p>
                       </div>
 
-                      <span className="px-3 py-1 rounded-lg bg-slate-800 border border-white/5 text-xs font-mono text-slate-400">
+                      <span className="px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-[10px] uppercase font-black tracking-widest text-slate-400 shadow-inner">
                         {log.module || log.type || "general"}
                       </span>
                     </div>
@@ -1759,13 +1851,13 @@ export default function AdminDashboard() {
         {activeTab === "settings" && (
           <div className="grid lg:grid-cols-2 gap-6 animate-fadeUp">
             <SectionCard title="Platform Settings" subtitle="Update institutional display and policy values.">
-              <div className="grid gap-4">
+              <div className="grid gap-5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
                     University Name
                   </label>
                   <input
-                    className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                     value={settings.universityName}
                     onChange={(e) =>
                       setSettings((prev) => ({ ...prev, universityName: e.target.value }))
@@ -1774,11 +1866,11 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
                     Current Session
                   </label>
                   <input
-                    className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                     value={settings.currentSession}
                     onChange={(e) =>
                       setSettings((prev) => ({ ...prev, currentSession: e.target.value }))
@@ -1787,12 +1879,12 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
-                    Attendance Threshold
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
+                    Attendance Threshold (%)
                   </label>
                   <input
                     type="number"
-                    className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
                     value={settings.attendanceThreshold}
                     onChange={(e) =>
                       setSettings((prev) => ({
@@ -1804,55 +1896,55 @@ export default function AdminDashboard() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
                     Currency
                   </label>
                   <select
-                    className="w-full rounded-xl bg-slate-950 border border-white/10 px-4 py-3.5 text-white"
+                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
                     value={settings.currency}
                     onChange={(e) =>
                       setSettings((prev) => ({ ...prev, currency: e.target.value }))
                     }
                   >
-                    <option value="INR">INR</option>
-                    <option value="USD">USD</option>
-                    <option value="EUR">EUR</option>
+                    <option className="bg-slate-900" value="INR">INR</option>
+                    <option className="bg-slate-900" value="USD">USD</option>
+                    <option className="bg-slate-900" value="EUR">EUR</option>
                   </select>
                 </div>
 
                 <button
                   onClick={saveSettings}
-                  className="w-full mt-2 py-3.5 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold transition"
+                  className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
                 >
-                  Save Settings
+                  Save Global Settings
                 </button>
               </div>
             </SectionCard>
 
             <SectionCard title="System Overview" subtitle="Administrative configuration summary and reminders.">
               <div className="space-y-4">
-                <div className="rounded-2xl border border-white/5 bg-slate-950/50 p-4">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
                     Current Session
                   </p>
                   <p className="text-white font-bold text-lg">{settings.currentSession}</p>
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-slate-950/50 p-4">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
                     Attendance Threshold
                   </p>
-                  <p className="text-white font-bold text-lg">{settings.attendanceThreshold}%</p>
+                  <p className="text-cyan-400 font-bold text-lg">{settings.attendanceThreshold}%</p>
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-slate-950/50 p-4">
-                  <p className="text-xs uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner">
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
                     Reporting Currency
                   </p>
                   <p className="text-white font-bold text-lg">{settings.currency}</p>
                 </div>
 
-                <div className="rounded-2xl border border-indigo-500/10 bg-indigo-500/5 p-4 text-sm text-slate-400 leading-relaxed">
+                <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-5 text-sm font-medium text-cyan-200/80 leading-relaxed shadow-inner">
                   These settings are used across administrative displays and downstream modules.
                   Saving updates here will keep the dashboard aligned with the active institutional configuration.
                 </div>
@@ -1865,10 +1957,20 @@ export default function AdminDashboard() {
       <style
         dangerouslySetInnerHTML={{
           __html: `
+            @keyframes float-slow {
+              0%, 100% { transform: translateY(0px) scale(1); }
+              50% { transform: translateY(-30px) scale(1.05); }
+            }
+            @keyframes float-delayed {
+              0%, 100% { transform: translateY(0px) scale(1); }
+              50% { transform: translateY(40px) scale(0.95); }
+            }
             @keyframes fadeUp {
               0% { opacity: 0; transform: translateY(16px); }
               100% { opacity: 1; transform: translateY(0); }
             }
+            .animate-float-slow { animation: float-slow 10s ease-in-out infinite; }
+            .animate-float-delayed { animation: float-delayed 12s ease-in-out infinite 2s; }
             .animate-fadeUp { animation: fadeUp .45s ease-out both; }
             .hide-scrollbar::-webkit-scrollbar { display: none; }
             .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

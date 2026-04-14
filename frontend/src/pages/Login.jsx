@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API_URL;
 
 const Icons = {
   Academic: () => (
@@ -13,23 +13,23 @@ const Icons = {
     </svg>
   ),
   Mail: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
   ),
   Lock: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
     </svg>
   ),
   Eye: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
     </svg>
   ),
   EyeOff: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.477 10.48a3 3 0 104.243 4.242M9.88 5.09A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.297 5.135M6.228 6.228A9.956 9.956 0 002.458 12c1.274 4.057 5.064 7 9.542 7a9.96 9.96 0 005.08-1.39" />
     </svg>
@@ -45,12 +45,12 @@ const Icons = {
     </svg>
   ),
   ArrowRight: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
     </svg>
   ),
   SSO: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
     </svg>
   ),
@@ -132,125 +132,117 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060913] text-slate-200 overflow-hidden relative">
-      {/* Premium Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(79,70,229,0.18),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(139,92,246,0.12),_transparent_30%)]" />
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle,_#4f46e5_1px,_transparent_1px)] bg-[size:28px_28px]" />
-      <div className="absolute top-0 left-1/4 w-[28rem] h-[28rem] bg-indigo-600/20 rounded-full blur-[110px]" />
-      <div className="absolute bottom-0 right-1/4 w-[28rem] h-[28rem] bg-violet-600/10 rounded-full blur-[110px]" />
+    <div className="min-h-screen bg-slate-950 text-slate-200 overflow-hidden relative font-sans">
+      {/* Colorful Animated Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none" />
+      <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none" />
+      
+      {/* Subtle Grid Overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmurlCtncmlkKSIvPjwvc3ZnPg==')] opacity-50 pointer-events-none" />
 
-      <div className="relative z-10 min-h-screen grid lg:grid-cols-2">
+      <div className="relative z-10 min-h-screen grid lg:grid-cols-2 max-w-7xl mx-auto">
         {/* Left Info Panel */}
-        <div className="hidden lg:flex flex-col justify-between p-10 xl:p-14 border-r border-white/5">
+        <div className="hidden lg:flex flex-col justify-between p-10 xl:p-14">
           <div>
-            <div className="inline-flex items-center gap-3 mb-8">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_30px_rgba(79,70,229,0.12)]">
-                <Icons.Academic />
+            <div className="inline-flex items-center gap-3 mb-10">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+                <div className="w-full h-full rounded-2xl bg-slate-950 flex items-center justify-center text-cyan-400">
+                  <Icons.Academic />
+                </div>
               </div>
               <div>
-                <p className="text-white font-black text-xl tracking-tight">
-                  Central<span className="text-indigo-400 font-light">Portal</span>
+                <p className="text-white font-black text-2xl tracking-tight">
+                  Smart<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Attendance</span>
                 </p>
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500 font-bold">
-                  Secure Academic Access
+                <p className="text-xs uppercase tracking-[0.2em] text-cyan-500/80 font-bold mt-1">
+                  Automated Monitoring System
                 </p>
               </div>
             </div>
 
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 text-[10px] font-black uppercase tracking-[0.22em] mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-8 shadow-[0_0_20px_rgba(6,182,212,0.15)]">
                 <Icons.Sparkles />
-                Enterprise-ready Identity Gateway
+                Secure Portal Access
               </div>
 
-              <h1 className="text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight">
-                Welcome back to your university command space.
+              <h1 className="text-5xl xl:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                Welcome back to your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">academic workspace.</span>
               </h1>
 
-              <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-2xl">
-                Access academic records, attendance systems, learning modules, and
-                faculty operations through one secure institutional portal.
+              <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
+                Access live attendance analytics, student records, and faculty monitoring dashboards through one secure institutional gateway.
               </p>
 
-              <div className="grid sm:grid-cols-3 gap-4 mt-10">
-                <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+              <div className="grid sm:grid-cols-3 gap-5 mt-12">
+                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-md hover:bg-slate-900/60 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-500 font-bold mb-3">
                     Security
                   </p>
-                  <p className="text-white font-bold">Protected Route Control</p>
-                  <p className="text-xs text-slate-500 mt-2">Role-aware institutional access.</p>
+                  <p className="text-slate-200 font-bold">Protected Routing</p>
+                  <p className="text-xs text-slate-500 mt-2">Role-aware infrastructure.</p>
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-md hover:bg-slate-900/60 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-blue-500 font-bold mb-3">
                     Access
                   </p>
-                  <p className="text-white font-bold">Students • Faculty • Admin</p>
-                  <p className="text-xs text-slate-500 mt-2">Unified sign-in experience.</p>
+                  <p className="text-slate-200 font-bold">Unified Login</p>
+                  <p className="text-xs text-slate-500 mt-2">Students, Faculty, & Admin.</p>
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-md hover:bg-slate-900/60 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-emerald-500 font-bold mb-3">
                     Reliability
                   </p>
-                  <p className="text-white font-bold">Session-aware routing</p>
-                  <p className="text-xs text-slate-500 mt-2">Returns users to intended pages.</p>
+                  <p className="text-slate-200 font-bold">Session State</p>
+                  <p className="text-xs text-slate-500 mt-2">Smart redirect tracking.</p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-white/5 bg-white/[0.03] p-5 backdrop-blur-sm max-w-xl">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 text-emerald-400">
-                <Icons.Shield />
-              </div>
-              <div>
-                <p className="text-white font-semibold">Institution-grade access control</p>
-                <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                  Your credentials are used to authenticate access by role and redirect you to
-                  the correct protected workspace after successful login.
-                </p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Right Auth Panel */}
-        <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10">
+        <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10 relative z-20">
           <div className="w-full max-w-md">
-            <div className="bg-slate-900/90 border border-white/5 shadow-2xl p-8 sm:p-10 rounded-[2rem] backdrop-blur-xl">
+            {/* Glassmorphism Card */}
+            <div className="bg-slate-900/70 border border-slate-700/50 shadow-2xl p-8 sm:p-10 rounded-[2.5rem] backdrop-blur-xl">
+              
               {/* Mobile Brand */}
-              <div className="flex justify-center lg:hidden mb-6">
-                <div className="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-500">
-                  <Icons.Academic />
+              <div className="flex justify-center lg:hidden mb-8">
+                <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl">
+                  <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400">
+                    <Icons.Academic />
+                  </div>
                 </div>
               </div>
 
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-black text-white tracking-tight">
-                  Central Auth Portal
-                </h1>
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-black text-white tracking-tight">
+                  Central Auth
+                </h2>
                 <p className="text-slate-400 text-sm mt-2">
-                  Secure login for students, faculty, and staff
+                  Secure login for institutional users
                 </p>
               </div>
 
-              {error ? (
-                <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-300 text-sm font-medium flex items-start gap-3">
+              {error && (
+                <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-rose-300 text-sm font-medium flex items-start gap-3 shadow-[0_0_15px_rgba(244,63,94,0.1)]">
                   <Icons.Alert />
-                  <span>{error}</span>
+                  <span className="pt-0.5">{error}</span>
                 </div>
-              ) : null}
+              )}
 
-              <form onSubmit={loginUser}>
+              <form onSubmit={loginUser} className="space-y-5">
                 {/* EMAIL */}
-                <div className="mb-4">
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                     University Email
                   </label>
-                  <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-4 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
-                    <div className="mr-2">
+                  <div className="flex items-center bg-slate-950/50 border border-slate-700/80 rounded-2xl px-4 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500 transition-all duration-300">
+                    <div className="mr-3">
                       <Icons.Mail />
                     </div>
                     <input
@@ -258,7 +250,7 @@ function Login() {
                       required
                       autoComplete="email"
                       placeholder="netid@university.edu"
-                      className="w-full py-3.5 bg-transparent text-white placeholder-slate-600 outline-none text-sm"
+                      className="w-full py-4 bg-transparent text-white placeholder-slate-600 outline-none text-sm font-medium"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
@@ -266,12 +258,12 @@ function Login() {
                 </div>
 
                 {/* PASSWORD */}
-                <div className="mb-2">
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                     Password
                   </label>
-                  <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-4 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
-                    <div className="mr-2">
+                  <div className="flex items-center bg-slate-950/50 border border-slate-700/80 rounded-2xl px-4 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500 transition-all duration-300">
+                    <div className="mr-3">
                       <Icons.Lock />
                     </div>
                     <input
@@ -279,14 +271,14 @@ function Login() {
                       required
                       autoComplete="current-password"
                       placeholder="••••••••"
-                      className="w-full py-3.5 bg-transparent text-white placeholder-slate-600 outline-none text-sm"
+                      className="w-full py-4 bg-transparent text-white placeholder-slate-600 outline-none text-sm font-medium"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword((v) => !v)}
-                      className="text-slate-500 hover:text-slate-300 transition"
+                      className="text-slate-500 hover:text-cyan-400 transition-colors ml-2"
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <Icons.EyeOff /> : <Icons.Eye />}
@@ -295,78 +287,85 @@ function Login() {
                 </div>
 
                 {/* REMEMBER + FORGOT */}
-                <div className="flex items-center justify-between gap-3 mb-8 mt-3">
-                  <label className="inline-flex items-center gap-2 text-sm text-slate-400 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500/40"
-                    />
-                    Remember me
+                <div className="flex items-center justify-between gap-3 pt-2 pb-2">
+                  <label className="inline-flex items-center gap-2 text-sm text-slate-400 cursor-pointer select-none group">
+                    <div className="relative flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                        className="peer appearance-none w-5 h-5 rounded border border-slate-600 bg-slate-900 checked:bg-cyan-500 checked:border-cyan-500 transition-all cursor-pointer"
+                      />
+                      <svg className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 14" fill="none">
+                        <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" stroke="currentColor"/>
+                      </svg>
+                    </div>
+                    <span className="group-hover:text-slate-300 transition-colors">Remember me</span>
                   </label>
 
                   <Link
                     to="/forgot-password"
-                    className="text-xs text-indigo-400 font-medium hover:text-indigo-300 transition"
+                    className="text-xs text-cyan-400 font-bold hover:text-cyan-300 transition-colors"
                   >
                     Forgot Password?
                   </Link>
                 </div>
 
                 {/* LOGIN BUTTON */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-indigo-900/20 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <>
-                      Access Portal
-                      <Icons.ArrowRight />
-                    </>
-                  )}
-                </button>
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-4 rounded-2xl font-black text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-[0_0_35px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 text-sm tracking-wider uppercase"
+                  >
+                    {loading ? (
+                      <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    ) : (
+                      <>
+                        Access Dashboard
+                        <Icons.ArrowRight />
+                      </>
+                    )}
+                  </button>
+                </div>
               </form>
 
               {/* SSO */}
-              <div className="mt-8 pt-6 border-t border-slate-800">
-                <p className="text-center text-slate-500 text-xs mb-4 uppercase tracking-wider font-bold">
-                  Alternative Institutional Sign-In
-                </p>
-
+              <div className="mt-8 pt-6 border-t border-slate-700/50">
                 <button
                   type="button"
-                  className="w-full py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-200 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-3 group"
                 >
-                  <Icons.SSO />
+                  <div className="text-slate-400 group-hover:text-cyan-400 transition-colors">
+                    <Icons.SSO />
+                  </div>
                   Login via University SSO
                 </button>
 
-                <div className="mt-4 rounded-xl border border-indigo-500/10 bg-indigo-500/5 p-3 text-xs text-slate-400 flex items-start gap-2">
-                  <div className="text-indigo-400 mt-0.5">
+                <div className="mt-5 rounded-2xl border border-cyan-500/10 bg-cyan-500/5 p-4 text-xs text-slate-400 flex items-start gap-3">
+                  <div className="text-cyan-400 mt-0.5 shrink-0">
                     <Icons.Shield />
                   </div>
-                  <p>
-                    Your portal uses role-based routing after authentication and preserves
-                    protected-route redirects when applicable.
+                  <p className="leading-relaxed">
+                    Your portal securely tracks your active session and uses role-based routing to direct you to your designated dashboard upon authentication.
                   </p>
                 </div>
               </div>
             </div>
 
             {/* REGISTER */}
-            <p className="text-center text-slate-400 text-sm mt-8">
-              New admission or faculty transfer?
-              <Link
-                to="/register"
-                className="text-indigo-400 font-bold ml-1 hover:text-indigo-300 transition"
-              >
-                Register here
-              </Link>
-            </p>
+            <div className="mt-8 text-center">
+              <p className="text-slate-400 text-sm font-medium">
+                New admission or faculty transfer?
+                <Link
+                  to="/register"
+                  className="text-cyan-400 font-bold ml-2 hover:text-cyan-300 hover:underline underline-offset-4 transition-all"
+                >
+                  Register Here
+                </Link>
+              </p>
+            </div>
+
           </div>
         </div>
       </div>

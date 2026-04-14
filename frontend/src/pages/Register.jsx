@@ -3,7 +3,7 @@ import axios from "axios";
 import * as faceapi from "face-api.js";
 import { useNavigate, Link } from "react-router-dom";
 
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API_URL;
 
 const Icons = {
   Academic: () => (
@@ -14,44 +14,44 @@ const Icons = {
     </svg>
   ),
   User: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
     </svg>
   ),
   Mail: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
   ),
   Lock: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
     </svg>
   ),
   Eye: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
     </svg>
   ),
   EyeOff: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.477 10.48a3 3 0 104.243 4.242M9.88 5.09A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.97 9.97 0 01-4.297 5.135M6.228 6.228A9.956 9.956 0 002.458 12c1.274 4.057 5.064 7 9.542 7a9.96 9.96 0 005.08-1.39" />
     </svg>
   ),
   Camera: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h4l2-2h6l2 2h4v12H3V7zm9 10a4 4 0 100-8 4 4 0 000 8z" />
     </svg>
   ),
   Face: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
   Shield: () => (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
     </svg>
   ),
@@ -281,140 +281,132 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060913] text-slate-200 overflow-hidden relative">
-      {/* Premium Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(79,70,229,0.18),_transparent_35%),radial-gradient(circle_at_bottom_right,_rgba(139,92,246,0.12),_transparent_30%)]" />
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle,_#4f46e5_1px,_transparent_1px)] bg-[size:28px_28px]" />
-      <div className="absolute top-0 left-1/4 w-[28rem] h-[28rem] bg-indigo-600/20 rounded-full blur-[110px]" />
-      <div className="absolute bottom-0 right-1/4 w-[28rem] h-[28rem] bg-violet-600/10 rounded-full blur-[110px]" />
+    <div className="min-h-screen bg-slate-950 text-slate-200 overflow-hidden relative font-sans">
+      {/* Colorful Animated Background Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70" />
+      <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50" />
+      
+      {/* Subtle Grid Overlay */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50" />
 
-      <div className="relative z-10 min-h-screen grid lg:grid-cols-2">
+      <div className="relative z-10 min-h-screen grid lg:grid-cols-2 max-w-7xl mx-auto">
         {/* Left Info Panel */}
-        <div className="hidden lg:flex flex-col justify-between p-10 xl:p-14 border-r border-white/5">
+        <div className="hidden lg:flex flex-col justify-between p-10 xl:p-14">
           <div>
-            <div className="inline-flex items-center gap-3 mb-8">
-              <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shadow-[0_0_30px_rgba(79,70,229,0.12)]">
-                <Icons.Academic />
+            <div className="inline-flex items-center gap-3 mb-10">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+                <div className="w-full h-full rounded-2xl bg-slate-950 flex items-center justify-center text-cyan-400">
+                  <Icons.Academic />
+                </div>
               </div>
               <div>
-                <p className="text-white font-black text-xl tracking-tight">
-                  Central<span className="text-indigo-400 font-light">Portal</span>
+                <p className="text-white font-black text-2xl tracking-tight">
+                  Smart<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Attendance</span>
                 </p>
-                <p className="text-xs uppercase tracking-[0.22em] text-slate-500 font-bold">
-                  Identity Enrollment Gateway
+                <p className="text-xs uppercase tracking-[0.2em] text-cyan-500/80 font-bold mt-1">
+                  Automated Monitoring System
                 </p>
               </div>
             </div>
 
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 text-[10px] font-black uppercase tracking-[0.22em] mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-300 text-xs font-bold uppercase tracking-widest mb-8 shadow-[0_0_20px_rgba(6,182,212,0.15)]">
                 <Icons.Sparkles />
-                Biometric-ready Registration
+                Biometric Enrollment Active
               </div>
 
-              <h1 className="text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight">
-                Establish your verified academic identity.
+              <h1 className="text-5xl xl:text-6xl font-black text-white leading-[1.1] tracking-tight">
+                Establish your verified <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">academic identity.</span>
               </h1>
 
-              <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-2xl">
-                Create your institutional access profile with secure credentials and biometric
-                face enrollment for modern attendance workflows.
+              <p className="mt-6 text-slate-400 text-lg leading-relaxed max-w-lg">
+                Create your institutional profile with highly secure credentials and automated biometric face enrollment for seamless attendance tracking.
               </p>
 
-              <div className="grid sm:grid-cols-3 gap-4 mt-10">
-                <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
-                    Enrollment
+              <div className="grid sm:grid-cols-3 gap-5 mt-12">
+                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-md hover:bg-slate-900/60 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-500 font-bold mb-3">
+                    Unified Access
                   </p>
-                  <p className="text-white font-bold">Student • Faculty • Admin</p>
-                  <p className="text-xs text-slate-500 mt-2">Unified identity creation flow.</p>
+                  <p className="text-slate-200 font-bold">Role Based</p>
+                  <p className="text-xs text-slate-500 mt-2">Designed for Students, Faculty, and Admins.</p>
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-md hover:bg-slate-900/60 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-blue-500 font-bold mb-3">
                     Biometrics
                   </p>
-                  <p className="text-white font-bold">Face descriptor capture</p>
-                  <p className="text-xs text-slate-500 mt-2">Used for advanced attendance systems.</p>
+                  <p className="text-slate-200 font-bold">Face Capture</p>
+                  <p className="text-xs text-slate-500 mt-2">Powers the automated attendance workflow.</p>
                 </div>
 
-                <div className="rounded-2xl border border-white/5 bg-white/[0.03] p-4 backdrop-blur-sm">
-                  <p className="text-[10px] uppercase tracking-[0.22em] text-slate-500 font-black mb-2">
+                <div className="rounded-2xl border border-white/10 bg-slate-900/40 p-5 backdrop-blur-md hover:bg-slate-900/60 transition-colors">
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-emerald-500 font-bold mb-3">
                     Security
                   </p>
-                  <p className="text-white font-bold">Protected onboarding</p>
-                  <p className="text-xs text-slate-500 mt-2">Credential + image registration flow.</p>
+                  <p className="text-slate-200 font-bold">Encrypted</p>
+                  <p className="text-xs text-slate-500 mt-2">Credentials paired with biometric data safely.</p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-white/5 bg-white/[0.03] p-5 backdrop-blur-sm max-w-xl">
-            <div className="flex items-start gap-3">
-              <div className="mt-0.5 text-emerald-400">
-                <Icons.Shield />
-              </div>
-              <div>
-                <p className="text-white font-semibold">Identity verification workflow</p>
-                <p className="text-sm text-slate-500 mt-1 leading-relaxed">
-                  Complete your profile, initialize the camera, capture your face, and then
-                  submit your registration to establish institutional identity.
-                </p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Right Register Panel */}
-        <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10">
+        <div className="flex items-center justify-center p-6 sm:p-8 lg:p-10 relative z-20">
           <div className="w-full max-w-xl">
-            <div className="bg-slate-900/90 border border-white/5 shadow-2xl p-8 sm:p-10 rounded-[2rem] backdrop-blur-xl">
+            {/* Glassmorphism Card */}
+            <div className="bg-slate-900/70 border border-slate-700/50 shadow-2xl p-8 sm:p-10 rounded-[2.5rem] backdrop-blur-xl">
+              
               {/* Mobile Brand */}
-              <div className="flex justify-center lg:hidden mb-6">
-                <div className="w-16 h-16 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-500">
-                  <Icons.Academic />
+              <div className="flex justify-center lg:hidden mb-8">
+                <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl">
+                  <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400">
+                    <Icons.Academic />
+                  </div>
                 </div>
               </div>
 
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-black text-white tracking-tight">
+              <div className="text-center mb-10">
+                <h2 className="text-3xl font-black text-white tracking-tight">
                   Create Account
-                </h1>
+                </h2>
                 <p className="text-slate-400 text-sm mt-2">
-                  Register with credentials and biometric face capture
+                  Complete your registration with biometric verification
                 </p>
               </div>
 
-              {error ? (
-                <div className="mb-5 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-300 text-sm font-medium flex items-start gap-3">
+              {error && (
+                <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/30 rounded-2xl text-rose-300 text-sm font-medium flex items-start gap-3 shadow-[0_0_15px_rgba(244,63,94,0.1)]">
                   <Icons.Alert />
-                  <span>{error}</span>
+                  <span className="pt-0.5">{error}</span>
                 </div>
-              ) : null}
+              )}
 
-              {success ? (
-                <div className="mb-5 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-300 text-sm font-medium flex items-start gap-3">
+              {success && (
+                <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl text-emerald-300 text-sm font-medium flex items-start gap-3 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                   <Icons.Check />
-                  <span>{success}</span>
+                  <span className="pt-0.5">{success}</span>
                 </div>
-              ) : null}
+              )}
 
-              <form onSubmit={registerUser}>
-                <div className="grid sm:grid-cols-2 gap-4">
+              <form onSubmit={registerUser} className="space-y-5">
+                <div className="grid sm:grid-cols-2 gap-5">
                   {/* NAME */}
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <div className="sm:col-span-2 space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                       Full Name
                     </label>
-                    <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-4 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
-                      <div className="mr-2">
+                    <div className="flex items-center bg-slate-950/50 border border-slate-700/80 rounded-2xl px-4 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500 transition-all duration-300">
+                      <div className="mr-3">
                         <Icons.User />
                       </div>
                       <input
                         type="text"
                         required
-                        placeholder="Full Name"
-                        className="w-full py-3.5 bg-transparent text-white placeholder-slate-600 outline-none text-sm"
+                        placeholder="John Doe"
+                        className="w-full py-4 bg-transparent text-white placeholder-slate-600 outline-none text-sm font-medium"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                       />
@@ -422,19 +414,19 @@ function Register() {
                   </div>
 
                   {/* EMAIL */}
-                  <div className="sm:col-span-2">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <div className="sm:col-span-2 space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                       University Email
                     </label>
-                    <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-4 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
-                      <div className="mr-2">
+                    <div className="flex items-center bg-slate-950/50 border border-slate-700/80 rounded-2xl px-4 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500 transition-all duration-300">
+                      <div className="mr-3">
                         <Icons.Mail />
                       </div>
                       <input
                         type="email"
                         required
-                        placeholder="netid@university.edu"
-                        className="w-full py-3.5 bg-transparent text-white placeholder-slate-600 outline-none text-sm"
+                        placeholder="student@university.edu"
+                        className="w-full py-4 bg-transparent text-white placeholder-slate-600 outline-none text-sm font-medium"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
@@ -442,26 +434,26 @@ function Register() {
                   </div>
 
                   {/* PASSWORD */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                       Password
                     </label>
-                    <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-4 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
-                      <div className="mr-2">
+                    <div className="flex items-center bg-slate-950/50 border border-slate-700/80 rounded-2xl px-4 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500 transition-all duration-300">
+                      <div className="mr-3">
                         <Icons.Lock />
                       </div>
                       <input
                         type={showPassword ? "text" : "password"}
                         required
                         placeholder="••••••••"
-                        className="w-full py-3.5 bg-transparent text-white placeholder-slate-600 outline-none text-sm"
+                        className="w-full py-4 bg-transparent text-white placeholder-slate-600 outline-none text-sm font-medium"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword((v) => !v)}
-                        className="text-slate-500 hover:text-slate-300 transition"
+                        className="text-slate-500 hover:text-cyan-400 transition-colors ml-2"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                       >
                         {showPassword ? <Icons.EyeOff /> : <Icons.Eye />}
@@ -470,174 +462,147 @@ function Register() {
                   </div>
 
                   {/* ROLE */}
-                  <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">
                       Role
                     </label>
-                    <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-4 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
-                      <div className="mr-2 text-slate-500">
+                    <div className="flex items-center bg-slate-950/50 border border-slate-700/80 rounded-2xl px-4 focus-within:border-cyan-500 focus-within:ring-1 focus-within:ring-cyan-500 transition-all duration-300">
+                      <div className="mr-3">
                         <Icons.Academic />
                       </div>
                       <select
-                        className="w-full py-3.5 bg-transparent text-white outline-none text-sm"
+                        className="w-full py-4 bg-transparent text-white outline-none text-sm font-medium appearance-none cursor-pointer"
                         value={role}
                         onChange={(e) => setRole(e.target.value)}
                       >
-                        <option className="text-black" value="student">
-                          Student
-                        </option>
-                        <option className="text-black" value="teacher">
-                          Teacher
-                        </option>
-                        <option className="text-black" value="admin">
-                          Admin
-                        </option>
+                        <option className="bg-slate-900 text-white" value="student">Student</option>
+                        <option className="bg-slate-900 text-white" value="teacher">Faculty</option>
+                        <option className="bg-slate-900 text-white" value="admin">Admin</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
-                {/* MODEL STATUS */}
-                <div className="mt-5 rounded-xl border border-white/5 bg-slate-950/80 p-3 text-sm">
-                  <div className="flex items-center justify-between gap-3 flex-wrap">
-                    <span className="text-slate-400 font-medium">Face recognition models</span>
+                {/* BIOMETRIC SECTION */}
+                <div className="mt-8 pt-6 border-t border-slate-700/50">
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="text-white font-bold text-sm">Biometric Configuration</h3>
+                      <p className="text-xs text-slate-500 mt-1">Status of AI recognition modules</p>
+                    </div>
                     <span
-                      className={`text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
+                      className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border flex items-center gap-1.5 ${
                         modelsLoaded
-                          ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/20"
+                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]"
                           : modelsLoading
-                          ? "bg-amber-500/10 text-amber-300 border-amber-500/20"
-                          : "bg-rose-500/10 text-rose-300 border-rose-500/20"
+                          ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                          : "bg-rose-500/10 text-rose-400 border-rose-500/20"
                       }`}
                     >
-                      {modelsLoaded ? "Ready" : modelsLoading ? "Loading" : "Unavailable"}
+                      {modelsLoaded ? (
+                        <><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div> Ready</>
+                      ) : modelsLoading ? (
+                        "Loading..."
+                      ) : (
+                        "Unavailable"
+                      )}
                     </span>
                   </div>
-                </div>
 
-                {/* CAMERA BOX */}
-                <div className="mt-5 bg-slate-950/80 border border-white/5 rounded-2xl p-4">
-                  <div className="flex items-center justify-between gap-3 mb-3">
-                    <div>
-                      <p className="text-white font-semibold">Biometric Capture</p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Position your face inside the frame and look straight ahead.
-                      </p>
+                  {/* CAMERA BOX */}
+                  <div className="bg-slate-950/60 border border-slate-700/80 rounded-3xl p-5">
+                    <div className="flex items-center justify-between mb-4">
+                      <p className="text-slate-300 text-sm font-medium">Live Feed</p>
+                      {faceDescriptor && (
+                        <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                          Capture Success
+                        </span>
+                      )}
                     </div>
 
-                    {faceDescriptor ? (
-                      <span className="text-[10px] font-black uppercase tracking-[0.22em] px-2.5 py-1 rounded-full border bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
-                        Captured
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="bg-black/50 border border-white/5 rounded-xl overflow-hidden relative aspect-video flex items-center justify-center">
-                    <video
-                      ref={videoRef}
-                      autoPlay
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                    />
-                    {!cameraStarted ? (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-                        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 mb-3">
-                          <Icons.Camera />
+                    <div className="bg-black/80 border border-slate-800 rounded-2xl overflow-hidden relative aspect-video flex items-center justify-center shadow-inner">
+                      <video
+                        ref={videoRef}
+                        autoPlay
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                      />
+                      {!cameraStarted && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/50 backdrop-blur-sm">
+                          <div className="w-16 h-16 rounded-3xl bg-slate-800/50 border border-slate-700 flex items-center justify-center text-slate-500 mb-4">
+                            <Icons.Camera />
+                          </div>
+                          <p className="text-slate-400 text-sm font-medium">
+                            Camera feed offline.<br/>Click initialize to begin.
+                          </p>
                         </div>
-                        <p className="text-slate-400 text-sm">
-                          Camera not initialized yet.
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-
-                  <canvas ref={canvasRef} className="hidden" />
-
-                  <div className="grid sm:grid-cols-2 gap-3 mt-4">
-                    <button
-                      type="button"
-                      onClick={startCamera}
-                      disabled={modelsLoading}
-                      className="py-3 rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 border border-indigo-500/30 transition font-bold text-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      <Icons.Camera />
-                      Initialize Camera
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={captureFace}
-                      disabled={!cameraStarted || !modelsLoaded || capturing}
-                      className="py-3 rounded-xl text-white bg-emerald-600 hover:bg-emerald-700 border border-emerald-500/30 transition font-bold text-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {capturing ? (
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      ) : (
-                        <Icons.Face />
                       )}
-                      Capture Face
-                    </button>
+                    </div>
+
+                    <canvas ref={canvasRef} className="hidden" />
+
+                    <div className="grid sm:grid-cols-2 gap-3 mt-5">
+                      <button
+                        type="button"
+                        onClick={startCamera}
+                        disabled={modelsLoading}
+                        className="py-3.5 rounded-2xl text-white bg-slate-800 hover:bg-slate-700 border border-slate-600 transition-colors font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        <Icons.Camera />
+                        Initialize Camera
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={captureFace}
+                        disabled={!cameraStarted || !modelsLoaded || capturing}
+                        className="relative overflow-hidden py-3.5 rounded-2xl text-white bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 border border-transparent shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] transition-all font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
+                      >
+                        {capturing ? (
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <Icons.Face />
+                        )}
+                        Capture Face
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* REGISTER */}
-                <button
-                  type="submit"
-                  disabled={registering || !faceDescriptor}
-                  className="w-full mt-6 py-3.5 rounded-xl font-bold text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 transition duration-300 shadow-lg shadow-indigo-900/20 disabled:opacity-60 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-                >
-                  {registering ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  ) : (
-                    <>
-                      Register & Establish Identity
-                      <Icons.Shield />
-                    </>
-                  )}
-                </button>
+                {/* REGISTER SUBMIT */}
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={registering || !faceDescriptor}
+                    className="w-full py-4 rounded-2xl font-black text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:shadow-[0_0_35px_rgba(6,182,212,0.5)] disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-3 text-sm tracking-wider uppercase"
+                  >
+                    {registering ? (
+                      <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    ) : (
+                      <>
+                        Complete Registration
+                        <Icons.Shield />
+                      </>
+                    )}
+                  </button>
+                </div>
               </form>
 
-              {/* SSO / alt actions */}
-              <div className="mt-8 pt-6 border-t border-slate-800">
-                <p className="text-center text-slate-500 text-xs mb-4 uppercase tracking-wider font-bold">
-                  Alternative Institutional Enrollment
+              {/* LOGIN LINK */}
+              <div className="mt-8 text-center">
+                <p className="text-slate-400 text-sm font-medium">
+                  Already have an identity enrolled?
+                  <Link
+                    to="/login"
+                    className="text-cyan-400 font-bold ml-2 hover:text-cyan-300 hover:underline underline-offset-4 transition-all"
+                  >
+                    Log In Here
+                  </Link>
                 </p>
-
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  <button type="button" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl text-sm font-medium text-slate-300 transition">
-                    Google
-                  </button>
-                  <button type="button" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl text-sm font-medium text-slate-300 transition">
-                    Microsoft
-                  </button>
-                  <button type="button" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 p-3 rounded-xl text-sm font-medium text-slate-300 transition">
-                    SSO
-                  </button>
-                </div>
-
-                <div className="rounded-xl border border-indigo-500/10 bg-indigo-500/5 p-3 text-xs text-slate-400 flex items-start gap-2">
-                  <div className="text-indigo-400 mt-0.5">
-                    <Icons.Shield />
-                  </div>
-                  <p>
-                    Your face descriptor and profile capture are included in registration to
-                    support modern attendance verification workflows.
-                  </p>
-                </div>
               </div>
-            </div>
 
-            {/* LOGIN */}
-            <p className="text-center text-slate-400 text-sm mt-8">
-              Already have an account?
-              <Link
-                to="/login"
-                className="text-indigo-400 font-bold ml-1 hover:text-indigo-300 transition"
-              >
-                Log In
-              </Link>
-            </p>
+            </div>
           </div>
         </div>
       </div>

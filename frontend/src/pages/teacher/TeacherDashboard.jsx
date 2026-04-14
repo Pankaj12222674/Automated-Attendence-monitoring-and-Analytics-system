@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API = "http://localhost:8000/api";
+const API = import.meta.env.VITE_API_URL;
 
 const Icons = {
   Class: () => (
@@ -124,7 +124,7 @@ function cn(...classes) {
 function getAvatar(profile) {
   if (profile?.profileImage) return profile.profileImage;
   const name = encodeURIComponent(profile?.name || "Professor");
-  return `https://ui-avatars.com/api/?name=${name}&background=4f46e5&color=fff`;
+  return `https://ui-avatars.com/api/?name=${name}&background=0ea5e9&color=fff`;
 }
 
 function getMetricValue(item) {
@@ -146,17 +146,17 @@ function matchBySubject(item, subject) {
   );
 }
 
-function StatCard({ icon, label, value, subtext, accent = "indigo" }) {
+function StatCard({ icon, label, value, subtext, accent = "cyan" }) {
   const accentMap = {
-    indigo: "from-indigo-500/20 to-violet-500/5 border-indigo-500/20 text-indigo-300",
-    purple: "from-purple-500/20 to-fuchsia-500/5 border-purple-500/20 text-purple-300",
+    cyan: "from-cyan-500/20 to-blue-500/5 border-cyan-500/20 text-cyan-300",
+    blue: "from-blue-500/20 to-indigo-500/5 border-blue-500/20 text-blue-300",
     emerald: "from-emerald-500/20 to-teal-500/5 border-emerald-500/20 text-emerald-300",
     amber: "from-amber-500/20 to-orange-500/5 border-amber-500/20 text-amber-300",
     rose: "from-rose-500/20 to-red-500/5 border-rose-500/20 text-rose-300",
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[1.75rem] border border-white/5 bg-slate-900/60 backdrop-blur-xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300">
+    <div className="relative overflow-hidden rounded-[1.75rem] border border-slate-700/50 bg-slate-900/40 backdrop-blur-xl p-6 shadow-xl hover:-translate-y-1 transition-all duration-300">
       <div className={cn("absolute inset-0 bg-gradient-to-br opacity-40", accentMap[accent])} />
       <div className="relative z-10 flex items-start justify-between gap-4">
         <div>
@@ -174,7 +174,7 @@ function StatCard({ icon, label, value, subtext, accent = "indigo" }) {
 
 function SectionShell({ title, icon, right, children }) {
   return (
-    <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-[2rem] p-6 shadow-xl">
+    <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-6 shadow-xl">
       <div className="flex items-center justify-between gap-4 mb-5">
         <h2 className="text-lg font-bold text-white flex items-center gap-2">
           {icon}
@@ -189,13 +189,13 @@ function SectionShell({ title, icon, right, children }) {
 
 function EmptyState({ title, description, actionLabel, onAction }) {
   return (
-    <div className="rounded-3xl border border-white/5 bg-slate-950/70 p-8 text-center">
+    <div className="rounded-3xl border border-slate-700/50 bg-slate-950/70 p-8 text-center shadow-inner">
       <p className="text-white font-bold text-lg mb-2">{title}</p>
-      <p className="text-sm text-slate-500 max-w-md mx-auto">{description}</p>
+      <p className="text-sm text-slate-400 max-w-md mx-auto">{description}</p>
       {actionLabel && onAction ? (
         <button
           onClick={onAction}
-          className="mt-5 px-5 py-3 bg-indigo-600/20 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-300 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+          className="mt-5 px-5 py-3 bg-cyan-600/10 hover:bg-cyan-600 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all"
         >
           {actionLabel}
         </button>
@@ -204,15 +204,15 @@ function EmptyState({ title, description, actionLabel, onAction }) {
   );
 }
 
-function InsightCard({ title, body, tone = "indigo" }) {
+function InsightCard({ title, body, tone = "cyan" }) {
   const tones = {
-    indigo: "border-indigo-500/20 bg-indigo-500/10 text-indigo-300",
+    cyan: "border-cyan-500/20 bg-cyan-500/10 text-cyan-300",
     amber: "border-amber-500/20 bg-amber-500/10 text-amber-300",
     emerald: "border-emerald-500/20 bg-emerald-500/10 text-emerald-300",
   };
 
   return (
-    <div className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+    <div className="rounded-2xl bg-slate-950/70 border border-slate-700/50 p-4 shadow-inner">
       <div className={cn("inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.22em] px-2.5 py-1 rounded-full border mb-3", tones[tone])}>
         <Icons.Sparkles />
         {title}
@@ -464,11 +464,11 @@ export default function TeacherDashboard() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0b0f19]">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950">
         <div className="relative w-20 h-20">
-          <div className="absolute inset-0 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
         </div>
-        <p className="text-indigo-400 font-medium mt-6 tracking-widest uppercase text-sm animate-pulse">
+        <p className="text-cyan-400 font-medium mt-6 tracking-widest uppercase text-sm animate-pulse">
           Initializing Faculty Command V2...
         </p>
       </div>
@@ -476,23 +476,24 @@ export default function TeacherDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans selection:bg-indigo-500/30 overflow-hidden relative">
-      {/* Ambient background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-float-slow"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-emerald-600/10 rounded-full blur-[150px] mix-blend-screen animate-float-delayed"></div>
-        <div className="absolute top-[30%] left-[35%] w-[350px] h-[350px] bg-purple-600/10 rounded-full blur-[120px] mix-blend-screen animate-float-middle"></div>
-      </div>
+    <div className="min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30 overflow-hidden relative">
+      {/* Floating 3D Background Orbs & Grid */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" />
+      <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-middle" />
+      <div className="fixed inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmurlCtncmlkKSIvPjwvc3ZnPg==')] opacity-50 pointer-events-none z-0" />
 
       {/* Top nav */}
-      <nav className="relative z-50 bg-slate-900/60 backdrop-blur-2xl border-b border-white/5 shadow-2xl">
+      <nav className="relative z-50 bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 shadow-2xl">
         <div className="max-w-[92rem] mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-xl flex items-center justify-center text-white shadow-[0_0_20px_rgba(99,102,241,0.4)] shrink-0">
-              <Icons.Briefcase />
+             <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.4)] shrink-0">
+               <div className="w-full h-full bg-slate-950 rounded-xl flex items-center justify-center text-cyan-400">
+                  <Icons.Briefcase />
+               </div>
             </div>
-            <span className="text-xl font-bold tracking-tight text-white hidden sm:block truncate">
-              Faculty<span className="text-indigo-400 font-light">Command V2</span>
+            <span className="text-xl font-black tracking-tight text-white hidden sm:block truncate">
+              Smart<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Attendance</span>
             </span>
           </div>
 
@@ -501,7 +502,7 @@ export default function TeacherDashboard() {
               onClick={handleRefresh}
               title="Refresh dashboard"
               aria-label="Refresh dashboard"
-              className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-medium rounded-xl transition backdrop-blur-sm inline-flex items-center gap-2"
+              className="px-4 py-2 bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-200 text-sm font-bold rounded-xl transition-all inline-flex items-center gap-2 shadow-inner"
             >
               <Icons.Refresh spinning={refreshing} />
               Refresh
@@ -512,7 +513,7 @@ export default function TeacherDashboard() {
                 localStorage.clear();
                 navigate("/login");
               }}
-              className="px-5 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 text-rose-400 text-sm font-bold rounded-xl transition backdrop-blur-sm"
+              className="px-5 py-2 bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 border border-slate-600 text-slate-200 text-sm font-bold rounded-xl transition-all shadow-inner"
             >
               End Session
             </button>
@@ -522,7 +523,7 @@ export default function TeacherDashboard() {
 
       <div className="relative z-10 max-w-[92rem] mx-auto px-6 pt-8">
         {pageError ? (
-          <div className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-200 flex items-center gap-2">
+          <div className="mb-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-200 flex items-center gap-2 shadow-[0_0_15px_rgba(244,63,94,0.1)]">
             <Icons.Alert />
             {pageError}
           </div>
@@ -530,21 +531,20 @@ export default function TeacherDashboard() {
 
         {/* HERO */}
         <div
-          className="relative mb-8 rounded-[2.75rem] p-8 md:p-12 overflow-hidden bg-gradient-to-br from-slate-900 to-[#12182b] border-t border-l border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-transform duration-500 will-change-transform"
+          className="relative mb-8 rounded-[2.75rem] p-8 md:p-12 overflow-hidden bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-2xl transition-transform duration-500 will-change-transform"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-indigo-500/5 to-transparent pointer-events-none"></div>
-          <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-blue-500/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/5 to-transparent pointer-events-none"></div>
 
           <div className="relative z-10 grid xl:grid-cols-[1fr_360px] gap-8 items-start">
             <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 min-w-0">
               <div className="relative group shrink-0">
-                <div className="absolute inset-0 bg-indigo-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-cyan-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
                 <img
                   src={getAvatar(profile)}
                   alt={`${profile?.name || "Faculty"} profile`}
-                  className="relative w-32 h-32 rounded-3xl object-cover border-2 border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                  className="relative w-32 h-32 rounded-3xl object-cover border-2 border-slate-700/80 shadow-2xl group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full border-[4px] border-[#0b0f19] flex items-center justify-center">
                   <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
@@ -552,27 +552,24 @@ export default function TeacherDashboard() {
               </div>
 
               <div className="min-w-0">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 text-[10px] font-black uppercase tracking-[0.22em] mb-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-300 text-[10px] font-black uppercase tracking-[0.22em] mb-4">
                   <Icons.Sparkles />
-                  Premium Faculty Console
+                  Faculty Command Active
                 </div>
 
                 <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-tight leading-tight">
                   Prof. {profile?.name || "Faculty Member"}
                 </h1>
 
-                <p className="text-indigo-400 text-lg font-medium mt-3">
+                <p className="text-cyan-400 text-lg font-bold mt-3">
                   {profile?.department || "Department of Academic Staff"}
                 </p>
 
                 <div className="mt-5 flex flex-wrap gap-3">
-                  <span className="px-4 py-1.5 bg-slate-950/50 backdrop-blur-md border border-white/5 rounded-lg text-xs font-bold text-slate-300">
-                    Faculty Console Active
-                  </span>
-                  <span className="px-4 py-1.5 bg-indigo-500/20 backdrop-blur-md border border-indigo-500/30 rounded-lg text-xs font-black uppercase tracking-widest text-indigo-300">
+                  <span className="px-4 py-1.5 bg-slate-950/50 backdrop-blur-md border border-slate-700/50 rounded-lg text-xs font-bold text-slate-300 shadow-inner">
                     Operational Mode
                   </span>
-                  <span className="px-4 py-1.5 bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 rounded-lg text-xs font-bold text-emerald-400">
+                  <span className="px-4 py-1.5 bg-cyan-500/10 backdrop-blur-md border border-cyan-500/20 rounded-lg text-xs font-bold text-cyan-400">
                     Research Active
                   </span>
                 </div>
@@ -580,16 +577,16 @@ export default function TeacherDashboard() {
             </div>
 
             <div className="grid sm:grid-cols-2 xl:grid-cols-1 gap-4">
-              <div className="rounded-[1.75rem] p-5 bg-slate-950/45 border border-white/5 backdrop-blur-md">
+              <div className="rounded-[1.75rem] p-5 bg-slate-950/70 border border-slate-700/50 backdrop-blur-md shadow-inner">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Faculty Alias</p>
                 <p className="text-xl font-black text-white">{facultyFirstName}</p>
-                <p className="text-xs text-slate-500 mt-1">Command access authenticated</p>
+                <p className="text-xs font-medium text-slate-400 mt-1">Command access authenticated</p>
               </div>
 
-              <div className="rounded-[1.75rem] p-5 bg-slate-950/45 border border-white/5 backdrop-blur-md">
+              <div className="rounded-[1.75rem] p-5 bg-slate-950/70 border border-slate-700/50 backdrop-blur-md shadow-inner">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Today’s Load</p>
                 <p className="text-xl font-black text-white">{lecturesToday} lecture{lecturesToday !== 1 ? "s" : ""}</p>
-                <p className="text-xs text-slate-500 mt-1">{currentDay}</p>
+                <p className="text-xs font-medium text-slate-400 mt-1">{currentDay}</p>
               </div>
             </div>
           </div>
@@ -602,14 +599,14 @@ export default function TeacherDashboard() {
             label="Active Courses"
             value={classes.length}
             subtext="Assigned cohorts"
-            accent="indigo"
+            accent="cyan"
           />
           <StatCard
             icon={<Icons.Book />}
             label="Subjects Taught"
             value={subjects.length}
             subtext="Teaching load"
-            accent="purple"
+            accent="blue"
           />
           <StatCard
             icon={<Icons.Clock />}
@@ -630,7 +627,7 @@ export default function TeacherDashboard() {
             label="Avg Attendance"
             value={`${averageAttendance}%`}
             subtext={lowCoverageClasses ? `${lowCoverageClasses} attention item(s)` : "Healthy monitored classes"}
-            accent={lowCoverageClasses ? "amber" : "indigo"}
+            accent={lowCoverageClasses ? "amber" : "cyan"}
           />
         </div>
 
@@ -645,17 +642,17 @@ export default function TeacherDashboard() {
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <Icons.Search />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                       <Icons.Search />
                     </span>
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Search subjects, code, cohort..."
-                      className="w-[260px] max-w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/70 border border-white/5 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40"
+                      className="w-[260px] max-w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/50 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all"
                     />
                   </div>
-                  <span className="hidden md:inline-flex text-[10px] px-2.5 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 font-black uppercase tracking-widest">
+                  <span className="hidden md:inline-flex text-[10px] px-2.5 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-400 font-black uppercase tracking-widest">
                     {filteredSubjects.length} visible
                   </span>
                 </div>
@@ -703,28 +700,28 @@ export default function TeacherDashboard() {
                     return (
                       <div
                         key={s._id}
-                        className="relative overflow-hidden bg-slate-900/80 backdrop-blur-md border-t border-l border-white/5 rounded-[2rem] p-7 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] transition-all duration-500 flex flex-col group"
+                        className="relative overflow-hidden bg-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-7 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)] hover:border-cyan-500/30 transition-all duration-500 flex flex-col group"
                       >
                         <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/[0.02] to-transparent pointer-events-none"></div>
 
                         <div className="relative z-10 flex justify-between items-start gap-4 mb-6">
                           <div className="min-w-0">
-                            <span className="inline-block px-3 py-1 mb-3 text-[10px] font-black uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 rounded-lg shadow-inner">
+                            <span className="inline-block px-3 py-1 mb-3 text-[10px] font-black uppercase tracking-widest text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 rounded-lg shadow-inner">
                               {s.classId?.name || "COHORT"}
                             </span>
 
-                            <h3 className="text-2xl md:text-3xl font-black text-white leading-tight break-words">
+                            <h3 className="text-2xl md:text-3xl font-black text-white leading-tight break-words group-hover:text-cyan-50 transition-colors">
                               {s.name}
                             </h3>
 
-                            <p className="text-slate-500 text-sm mt-2">
+                            <p className="text-slate-400 text-sm font-bold mt-2">
                               {s.code || "NO-CODE"} • {s.credits || 0} credits
                             </p>
                           </div>
 
                           <button
                             onClick={() => handleGradeExams(s.classId?._id, s._id, s.name)}
-                            className="flex flex-col items-center justify-center p-3 bg-indigo-600/10 hover:bg-indigo-600 border border-indigo-500/30 hover:border-indigo-400 text-indigo-400 hover:text-white rounded-2xl transition-all duration-300 shadow-[0_0_15px_rgba(99,102,241,0.15)] group shrink-0"
+                            className="flex flex-col items-center justify-center p-3 bg-slate-800/50 hover:bg-cyan-600 border border-slate-600 hover:border-cyan-400 text-slate-300 hover:text-white rounded-2xl transition-all duration-300 shadow-inner hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] shrink-0"
                             title="Open LMS Grading Portal"
                             aria-label={`Open LMS grading portal for ${s.name}`}
                           >
@@ -734,18 +731,18 @@ export default function TeacherDashboard() {
                         </div>
 
                         <div className="relative z-10 grid sm:grid-cols-3 gap-3 mb-5">
-                          <div className="rounded-2xl bg-slate-950/80 border border-white/5 p-4">
+                          <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Class</p>
                             <p className="text-sm font-bold text-white truncate">{s.classId?.name || "Unassigned"}</p>
                           </div>
 
-                          <div className="rounded-2xl bg-slate-950/80 border border-white/5 p-4">
+                          <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Attendance</p>
                             <p
                               className={cn(
                                 "text-sm font-black",
                                 healthTone === "excellent" && "text-emerald-400",
-                                healthTone === "good" && "text-indigo-300",
+                                healthTone === "good" && "text-cyan-300",
                                 healthTone === "warning" && "text-amber-400",
                                 healthTone === "pending" && "text-slate-400"
                               )}
@@ -754,7 +751,7 @@ export default function TeacherDashboard() {
                             </p>
                           </div>
 
-                          <div className="rounded-2xl bg-slate-950/80 border border-white/5 p-4">
+                          <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                             <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Timetable</p>
                             <p className="text-sm font-bold text-white">{relatedSlots.length} slot{relatedSlots.length !== 1 ? "s" : ""}</p>
                           </div>
@@ -762,18 +759,18 @@ export default function TeacherDashboard() {
 
                         <div className="relative z-10 mb-6">
                           <div className="flex items-center justify-between mb-2">
-                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Engagement Pulse</p>
-                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Engagement Pulse</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                               {typeof safePercent === "number" ? `${safePercent}%` : "No signal"}
                             </p>
                           </div>
 
-                          <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                          <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800 shadow-inner">
                             <div
                               className={cn(
                                 "h-full rounded-full transition-all duration-1000",
                                 healthTone === "excellent" && "bg-gradient-to-r from-emerald-600 to-teal-400",
-                                healthTone === "good" && "bg-gradient-to-r from-indigo-600 to-indigo-400",
+                                healthTone === "good" && "bg-gradient-to-r from-cyan-600 to-blue-400",
                                 healthTone === "warning" && "bg-gradient-to-r from-amber-600 to-orange-400",
                                 healthTone === "pending" && "bg-gradient-to-r from-slate-700 to-slate-600"
                               )}
@@ -785,7 +782,7 @@ export default function TeacherDashboard() {
                         </div>
 
                         <div className="relative z-10 mt-auto">
-                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                             <span className="w-1.5 h-1.5 bg-slate-500 rounded-full"></span>
                             Secure Check-In Systems
                           </p>
@@ -793,7 +790,7 @@ export default function TeacherDashboard() {
                           <div className="grid grid-cols-2 gap-3">
                             <button
                               onClick={() => goManual(s.classId?._id, s._id, s.name)}
-                              className="py-3.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-xl text-xs font-bold transition shadow-lg flex items-center justify-center gap-2"
+                              className="py-3.5 bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-white rounded-xl text-xs font-bold transition-colors shadow-inner flex items-center justify-center gap-2"
                             >
                               <Icons.UserGroup />
                               Roll Call
@@ -801,7 +798,7 @@ export default function TeacherDashboard() {
 
                             <button
                               onClick={() => generateQR(s.classId?._id, s._id, s.name)}
-                              className="relative overflow-hidden py-3.5 bg-indigo-600/20 hover:bg-indigo-600 border border-indigo-500/30 text-indigo-400 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg group flex items-center justify-center gap-2"
+                              className="relative overflow-hidden py-3.5 bg-cyan-600/10 hover:bg-cyan-600 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(6,182,212,0.1)] group flex items-center justify-center gap-2"
                             >
                               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 group-hover:animate-pulse"></div>
                               <Icons.QR />
@@ -810,7 +807,7 @@ export default function TeacherDashboard() {
 
                             <button
                               onClick={() => goFace(s.classId?._id, s._id, s.name)}
-                              className="col-span-2 py-4 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white rounded-xl text-sm font-black uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 group overflow-hidden relative"
+                              className="col-span-2 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl text-sm font-black uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] flex items-center justify-center gap-2 group overflow-hidden relative"
                             >
                               <div className="absolute left-0 w-full h-0.5 bg-white/50 blur-[1px] group-hover:animate-[scan_1.5s_ease-in-out_infinite]"></div>
                               <Icons.FaceScan />
@@ -819,14 +816,14 @@ export default function TeacherDashboard() {
 
                             <button
                               onClick={() => viewHistory(s.classId?._id, s._id, s.name)}
-                              className="py-3 bg-slate-950 hover:bg-slate-800 border border-white/5 text-slate-300 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                              className="py-3 bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-black uppercase tracking-widest transition-colors shadow-inner"
                             >
                               Attendance Logs
                             </button>
 
                             <button
                               onClick={() => viewStudents(s.classId?._id, s.classId?.name || s.name)}
-                              className="py-3 bg-slate-950 hover:bg-slate-800 border border-white/5 text-slate-300 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
+                              className="py-3 bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 rounded-xl text-xs font-black uppercase tracking-widest transition-colors shadow-inner"
                             >
                               Student Roster
                             </button>
@@ -854,17 +851,17 @@ export default function TeacherDashboard() {
               {todaySchedule.length > 0 ? (
                 <div className="space-y-3">
                   {todaySchedule.slice(0, 6).map((slot, idx) => (
-                    <div key={slot._id || `${slot.day}-${slot.time}-${idx}`} className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+                    <div key={slot._id || `${slot.day}-${slot.time}-${idx}`} className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-white truncate">
                             {slot.subjectName || slot.subject?.name || slot.subject || "Lecture Slot"}
                           </p>
-                          <p className="text-xs text-slate-500 mt-1">
+                          <p className="text-xs font-medium text-slate-500 mt-1">
                             {slot.className || slot.classId?.name || slot.class || "Assigned Cohort"}
                           </p>
                         </div>
-                        <span className="px-2.5 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 text-[10px] font-black uppercase tracking-widest shrink-0">
+                        <span className="px-2.5 py-1 rounded-full border border-cyan-500/20 bg-cyan-500/10 text-cyan-400 text-[10px] font-black uppercase tracking-widest shrink-0">
                           {slot.time || "Scheduled"}
                         </span>
                       </div>
@@ -872,8 +869,8 @@ export default function TeacherDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="rounded-2xl bg-slate-950 border border-white/5 p-6 text-center">
-                  <p className="text-sm text-slate-400">No timetable items for {currentDay}.</p>
+                <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-6 text-center shadow-inner">
+                  <p className="text-sm font-medium text-slate-400">No timetable items for {currentDay}.</p>
                 </div>
               )}
             </SectionShell>
@@ -895,11 +892,11 @@ export default function TeacherDashboard() {
 
                 <InsightCard
                   title="Teaching Load"
-                  tone="indigo"
+                  tone="cyan"
                   body={`You are currently managing ${subjects.length} subject${subjects.length !== 1 ? "s" : ""} across ${classes.length} active cohort${classes.length !== 1 ? "s" : ""}, with ${lecturesToday} lecture${lecturesToday !== 1 ? "s" : ""} scheduled for today.`}
                 />
 
-                <div className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+                <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                   <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-3">Attention Subjects</p>
                   {topAttentionSubjects.length > 0 ? (
                     <div className="space-y-2">
@@ -907,11 +904,11 @@ export default function TeacherDashboard() {
                         <button
                           key={item.subject._id}
                           onClick={() => viewHistory(item.subject.classId?._id, item.subject._id, item.subject.name)}
-                          className="w-full rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] px-3 py-3 flex items-center justify-between gap-3 transition text-left"
+                          className="w-full rounded-xl border border-slate-700/50 bg-slate-800/30 hover:bg-slate-800/80 px-3 py-3 flex items-center justify-between gap-3 transition-colors text-left"
                         >
                           <div className="min-w-0">
-                            <p className="text-sm font-semibold text-white truncate">{item.subject.name}</p>
-                            <p className="text-xs text-slate-500 mt-1">{item.subject.classId?.name || "Assigned Cohort"}</p>
+                            <p className="text-sm font-bold text-white truncate">{item.subject.name}</p>
+                            <p className="text-xs font-medium text-slate-400 mt-1">{item.subject.classId?.name || "Assigned Cohort"}</p>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             <span className="text-xs font-black text-amber-400">{Math.round(item.value)}%</span>
@@ -923,7 +920,7 @@ export default function TeacherDashboard() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-slate-500">No actionable subject signals available yet.</p>
+                    <p className="text-sm font-medium text-slate-500">No actionable subject signals available yet.</p>
                   )}
                 </div>
               </div>
@@ -940,10 +937,10 @@ export default function TeacherDashboard() {
             >
               <div className="space-y-3">
                 {officeHours.map((slot, index) => (
-                  <div key={index} className="flex justify-between items-center gap-4 p-4 bg-slate-950 border border-white/5 rounded-2xl">
+                  <div key={index} className="flex justify-between items-center gap-4 p-4 bg-slate-950/70 border border-slate-800 rounded-2xl shadow-inner">
                     <div className="min-w-0">
                       <p className="font-bold text-white">{slot.day}</p>
-                      <p className="text-xs text-slate-400 mt-1 break-words">{slot.location}</p>
+                      <p className="text-xs font-medium text-slate-400 mt-1 break-words">{slot.location}</p>
                     </div>
                     <span className="px-3 py-1.5 bg-amber-500/10 text-amber-400 text-xs font-black tracking-widest border border-amber-500/20 rounded-lg shrink-0">
                       {slot.time}
@@ -968,7 +965,7 @@ export default function TeacherDashboard() {
           >
             <div className="space-y-3">
               {researchProjects.map((project, index) => (
-                <div key={index} className="p-4 bg-slate-950 border border-white/5 rounded-2xl">
+                <div key={index} className="p-4 bg-slate-950/70 border border-slate-800 rounded-2xl shadow-inner">
                   <div className="flex justify-between items-start gap-4 mb-2">
                     <p className="font-bold text-white text-sm leading-tight pr-4">{project.title}</p>
                     <span
@@ -982,7 +979,7 @@ export default function TeacherDashboard() {
                       {project.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500">{project.role}</p>
+                  <p className="text-xs font-medium text-slate-500">{project.role}</p>
                 </div>
               ))}
             </div>
@@ -993,37 +990,37 @@ export default function TeacherDashboard() {
             icon={<Icons.Sparkles />}
           >
             <div className="grid sm:grid-cols-2 gap-4">
-              <div className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+              <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Operational Summary</p>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm font-medium text-slate-300 leading-relaxed">
                   You are managing <span className="font-bold text-white">{subjects.length}</span> subject{subjects.length !== 1 ? "s" : ""} across{" "}
                   <span className="font-bold text-white">{classes.length}</span> cohort{classes.length !== 1 ? "s" : ""}.
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+              <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Attendance Radar</p>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm font-medium text-slate-300 leading-relaxed">
                   Monitored average attendance is <span className="font-bold text-white">{averageAttendance}%</span>.
                   {lowCoverageClasses > 0 ? (
-                    <span className="text-amber-400 font-semibold"> {lowCoverageClasses} group(s) may need attention.</span>
+                    <span className="text-amber-400 font-bold"> {lowCoverageClasses} group(s) may need attention.</span>
                   ) : (
-                    <span className="text-emerald-400 font-semibold"> All tracked groups appear healthy.</span>
+                    <span className="text-emerald-400 font-bold"> All tracked groups appear healthy.</span>
                   )}
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+              <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Today’s Load</p>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm font-medium text-slate-300 leading-relaxed">
                   You have <span className="font-bold text-white">{lecturesToday}</span> lecture{lecturesToday !== 1 ? "s" : ""} scheduled for{" "}
                   <span className="font-bold text-white">{currentDay}</span>.
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-slate-950 border border-white/5 p-4">
+              <div className="rounded-2xl bg-slate-950/70 border border-slate-800 p-4 shadow-inner">
                 <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Guidance Load</p>
-                <p className="text-sm text-slate-300 leading-relaxed">
+                <p className="text-sm font-medium text-slate-300 leading-relaxed">
                   You are currently assigned <span className="font-bold text-white">{advisingStudents}</span> mentee{advisingStudents !== 1 ? "s" : ""}.
                 </p>
               </div>
