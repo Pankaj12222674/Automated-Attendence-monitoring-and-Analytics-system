@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 
+const API = import.meta.env.VITE_API_URL;
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -33,7 +35,7 @@ export default function ClassStudents() {
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
-  const API = "http://localhost:8000/api";
+  const API = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!classId || !token) {
@@ -44,7 +46,7 @@ export default function ClassStudents() {
     const loadClassData = async () => {
       try {
         // 1. Get Students in Class
-        const studentsRes = await axios.get(`${API}/class/students/${classId}`, {
+        const studentsRes = await API.get(`/api/class/students/${classId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const studentList = studentsRes.data.students || [];
@@ -52,7 +54,7 @@ export default function ClassStudents() {
         setFilteredStudents(studentList);
 
         // 2. NEW: Get Attendance % for each student in this class
-        const analyticsRes = await axios.get(`${API}/attendance/class-analytics/${classId}`, {
+        const analyticsRes = await API.get(`/api/attendance/class-analytics/${classId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStudentAnalytics(analyticsRes.data || {});
