@@ -31,7 +31,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         {/* ================= DEFAULT ================= */}
         <Route path="/" element={<Navigate to="/login" replace />} />
@@ -46,7 +46,7 @@ function App() {
         <Route
           path="/student/dashboard"
           element={
-            <ProtectedRoute allowedRoles={["student"]}>
+            <ProtectedRoute allowedRoles={["student", "teacher"]}>
               <StudentDashboard />
             </ProtectedRoute>
           }
@@ -54,7 +54,7 @@ function App() {
         <Route
           path="/student/details"
           element={
-            <ProtectedRoute allowedRoles={["student"]}>
+            <ProtectedRoute allowedRoles={["student", "teacher"]}>
               <SubjectDetails />
             </ProtectedRoute>
           }
@@ -78,7 +78,7 @@ function App() {
         <Route
           path="/student/bursar"
           element={
-            <ProtectedRoute allowedRoles={["student"]}>
+            <ProtectedRoute allowedRoles={["student", "teacher"]}>
               <BursarPortal />
             </ProtectedRoute>
           }

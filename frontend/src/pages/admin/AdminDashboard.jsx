@@ -598,17 +598,17 @@ export default function AdminDashboard() {
       prev.map((f) =>
         f._id === feeId
           ? {
-              ...f,
-              status,
-              amountPaid:
-                status === "paid"
-                  ? f.totalAmount || f.amount || 0
-                  : status === "pending"
+            ...f,
+            status,
+            amountPaid:
+              status === "paid"
+                ? f.totalAmount || f.amount || 0
+                : status === "pending"
                   ? 0
                   : status === "partial"
-                  ? Math.max(1, Math.floor((f.totalAmount || f.amount || 0) / 2))
-                  : f.amountPaid,
-            }
+                    ? Math.max(1, Math.floor((f.totalAmount || f.amount || 0) / 2))
+                    : f.amountPaid,
+          }
           : f
       )
     );
@@ -718,10 +718,10 @@ export default function AdminDashboard() {
       <header className="sticky top-0 z-40 border-b border-slate-700/50 bg-slate-900/70 backdrop-blur-2xl">
         <div className="max-w-[98rem] mx-auto px-4 md:px-6 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 min-w-0">
-             <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.35)] shrink-0">
-               <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400 text-2xl font-black">
-                 SA
-               </div>
+            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.35)] shrink-0">
+              <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400 text-2xl font-black">
+                SA
+              </div>
             </div>
             <div className="min-w-0">
               <h1 className="text-white font-black text-xl tracking-tight truncate">
@@ -808,11 +808,10 @@ export default function AdminDashboard() {
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`inline-flex items-center gap-2 px-4 md:px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${
-                  activeTab === tab.key
-                    ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-transparent"
-                    : "text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50"
-                }`}
+                className={`inline-flex items-center gap-2 px-4 md:px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === tab.key
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-transparent"
+                  : "text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50"
+                  }`}
               >
                 {tab.icon}
                 {tab.label}
@@ -1176,15 +1175,15 @@ export default function AdminDashboard() {
               action={
                 <div className="flex flex-col md:flex-row gap-3">
                   <div className="relative">
-                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                        <Icons.Search />
-                     </span>
-                     <input
-                        placeholder="Search student..."
-                        value={studentSearch}
-                        onChange={(e) => setStudentSearch(e.target.value)}
-                        className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm w-full md:w-auto"
-                     />
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                      <Icons.Search />
+                    </span>
+                    <input
+                      placeholder="Search student..."
+                      value={studentSearch}
+                      onChange={(e) => setStudentSearch(e.target.value)}
+                      className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm w-full md:w-auto"
+                    />
                   </div>
                   <button
                     onClick={() => exportCSV("students", filteredStudents)}
@@ -1271,16 +1270,16 @@ export default function AdminDashboard() {
               subtitle="Search, review, and export faculty profiles."
               action={
                 <div className="flex flex-col md:flex-row gap-3">
-                   <div className="relative">
-                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                        <Icons.Search />
-                     </span>
-                     <input
-                        placeholder="Search faculty..."
-                        value={teacherSearch}
-                        onChange={(e) => setTeacherSearch(e.target.value)}
-                        className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm w-full md:w-auto"
-                     />
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
+                      <Icons.Search />
+                    </span>
+                    <input
+                      placeholder="Search faculty..."
+                      value={teacherSearch}
+                      onChange={(e) => setTeacherSearch(e.target.value)}
+                      className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm w-full md:w-auto"
+                    />
                   </div>
                   <button
                     onClick={() => exportCSV("teachers", filteredTeachers)}
@@ -1301,8 +1300,8 @@ export default function AdminDashboard() {
                       className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-5 shadow-lg hover:border-blue-500/30 transition-colors duration-300 flex flex-col justify-between"
                     >
                       <div>
-                         <p className="text-white font-bold text-lg truncate">{t.name}</p>
-                         <p className="text-xs text-slate-400 mt-1 font-mono truncate">{t.email}</p>
+                        <p className="text-white font-bold text-lg truncate">{t.name}</p>
+                        <p className="text-xs text-slate-400 mt-1 font-mono truncate">{t.email}</p>
                       </div>
 
                       <div className="mt-5 flex justify-end">
@@ -1602,7 +1601,7 @@ export default function AdminDashboard() {
               </div>
 
               <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-emerald-500/30 p-6 shadow-[0_0_20px_rgba(16,185,129,0.1)] relative overflow-hidden">
-                 <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
                 <p className="text-emerald-400/80 text-sm font-bold uppercase tracking-widest relative z-10">Collected</p>
                 <p className="text-3xl font-black text-emerald-400 mt-2 relative z-10">
                   ₹{feeSummary.paid.toLocaleString()}
@@ -1610,7 +1609,7 @@ export default function AdminDashboard() {
               </div>
 
               <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-rose-500/30 p-6 shadow-[0_0_20px_rgba(244,63,94,0.1)] relative overflow-hidden">
-                 <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl"></div>
                 <p className="text-rose-400/80 text-sm font-bold uppercase tracking-widest relative z-10">Pending</p>
                 <p className="text-3xl font-black text-rose-400 mt-2 relative z-10">
                   ₹{feeSummary.pending.toLocaleString()}
@@ -1629,13 +1628,12 @@ export default function AdminDashboard() {
                       className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-6 relative overflow-hidden shadow-lg hover:border-cyan-500/20 transition-colors"
                     >
                       <div
-                        className={`absolute -top-8 -right-8 w-28 h-28 blur-[50px] rounded-full ${
-                          f.status === "paid"
-                            ? "bg-emerald-500/30"
-                            : f.status === "partial"
+                        className={`absolute -top-8 -right-8 w-28 h-28 blur-[50px] rounded-full ${f.status === "paid"
+                          ? "bg-emerald-500/30"
+                          : f.status === "partial"
                             ? "bg-amber-500/30"
                             : "bg-rose-500/30"
-                        }`}
+                          }`}
                       />
 
                       <div className="relative z-10">
@@ -1648,37 +1646,36 @@ export default function AdminDashboard() {
                         </p>
 
                         <div className="mt-4 space-y-2">
-                           <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                              <p className="text-xs font-bold text-slate-500">Amount:</p>
-                              <p className="text-sm font-black text-white">₹{(f.amount || f.totalAmount || 0).toLocaleString()}</p>
-                           </div>
-                           
-                           <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                              <p className="text-xs font-bold text-slate-500">Paid:</p>
-                              <p className="text-sm font-black text-emerald-400">₹{(f.amountPaid || 0).toLocaleString()}</p>
-                           </div>
+                          <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                            <p className="text-xs font-bold text-slate-500">Amount:</p>
+                            <p className="text-sm font-black text-white">₹{(f.amount || f.totalAmount || 0).toLocaleString()}</p>
+                          </div>
 
-                           <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                              <p className="text-xs font-bold text-slate-500">Balance:</p>
-                              <p className="text-sm font-black text-rose-400">₹{Math.max((f.totalAmount || f.amount || 0) - (f.amountPaid || 0), 0).toLocaleString()}</p>
-                           </div>
+                          <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                            <p className="text-xs font-bold text-slate-500">Paid:</p>
+                            <p className="text-sm font-black text-emerald-400">₹{(f.amountPaid || 0).toLocaleString()}</p>
+                          </div>
+
+                          <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
+                            <p className="text-xs font-bold text-slate-500">Balance:</p>
+                            <p className="text-sm font-black text-rose-400">₹{Math.max((f.totalAmount || f.amount || 0) - (f.amountPaid || 0), 0).toLocaleString()}</p>
+                          </div>
                         </div>
 
                         <div className="flex justify-between items-center mt-3">
-                           <p className="text-xs font-medium text-slate-500">Due: {formatDate(f.dueDate)}</p>
-                           <p className="text-xs font-medium text-slate-500">Class: {f.className || "—"}</p>
+                          <p className="text-xs font-medium text-slate-500">Due: {formatDate(f.dueDate)}</p>
+                          <p className="text-xs font-medium text-slate-500">Class: {f.className || "—"}</p>
                         </div>
 
                         <span
-                          className={`inline-block mt-4 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-inner ${
-                            f.status === "paid"
-                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                              : f.status === "partial"
+                          className={`inline-block mt-4 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-inner ${f.status === "paid"
+                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            : f.status === "partial"
                               ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                               : f.status === "overdue"
-                              ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                              : "bg-slate-800/80 text-slate-300 border-slate-600"
-                          }`}
+                                ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                                : "bg-slate-800/80 text-slate-300 border-slate-600"
+                            }`}
                         >
                           {f.status}
                         </span>
@@ -1697,7 +1694,7 @@ export default function AdminDashboard() {
                           >
                             Set Partial
                           </button>
-                          
+
                           <button
                             onClick={() => updateFeeStatus(f._id, "pending")}
                             className="col-span-2 px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-300 text-[10px] uppercase tracking-widest font-black transition-all shadow-inner"

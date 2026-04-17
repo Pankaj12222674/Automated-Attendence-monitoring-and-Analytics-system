@@ -40,7 +40,11 @@ export default function BursarPortal() {
         method: "Credit Card",
       });
       alert("Payment successful. Your academic standing has been updated.");
-      window.location.reload(); // Refresh to show new balance
+      // Re-fetch invoices without full page reload
+      const res = await api.get("/api/fees/my-fees");
+      setInvoices(res.data.fees || []);
+      setSelectedInvoice(null);
+      setPayAmount("");
     } catch (err) {
       alert(err.response?.data?.message || "Transaction failed.");
     }
@@ -138,6 +142,7 @@ export default function BursarPortal() {
                 <input 
                   type="number" 
                   required 
+                  min={1}
                   max={selectedInvoice.totalAmount - selectedInvoice.amountPaid}
                   placeholder={`Max ₹${selectedInvoice.totalAmount - selectedInvoice.amountPaid}`}
                   className="w-full bg-slate-950 border border-slate-800 text-white p-4 rounded-xl focus:border-indigo-500 outline-none transition"

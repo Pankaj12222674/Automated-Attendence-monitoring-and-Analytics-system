@@ -124,7 +124,7 @@ function Login() {
     } catch (err) {
       setError(
         err.response?.data?.message ||
-          "Authentication failed. Please verify your credentials."
+        "Authentication failed. Please verify your credentials."
       );
     } finally {
       setLoading(false);
@@ -137,7 +137,7 @@ function Login() {
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none" />
       <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none" />
-      
+
       {/* Subtle Grid Overlay */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmurlCtncmlkKSIvPjwvc3ZnPg==')] opacity-50 pointer-events-none" />
 
@@ -209,7 +209,7 @@ function Login() {
           <div className="w-full max-w-md">
             {/* Glassmorphism Card */}
             <div className="bg-slate-900/70 border border-slate-700/50 shadow-2xl p-8 sm:p-10 rounded-[2.5rem] backdrop-blur-xl">
-              
+
               {/* Mobile Brand */}
               <div className="flex justify-center lg:hidden mb-8">
                 <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl">
@@ -297,7 +297,7 @@ function Login() {
                         className="peer appearance-none w-5 h-5 rounded border border-slate-600 bg-slate-900 checked:bg-cyan-500 checked:border-cyan-500 transition-all cursor-pointer"
                       />
                       <svg className="absolute w-3 h-3 text-white pointer-events-none opacity-0 peer-checked:opacity-100 transition-opacity" viewBox="0 0 14 14" fill="none">
-                        <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" stroke="currentColor"/>
+                        <path d="M3 8L6 11L11 3.5" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" stroke="currentColor" />
                       </svg>
                     </div>
                     <span className="group-hover:text-slate-300 transition-colors">Remember me</span>

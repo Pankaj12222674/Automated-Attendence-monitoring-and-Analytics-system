@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api"; // <-- Using the centralized axios instance
+import { buildFallbackAvatar, resolveProfileImage } from "../../utils/profileImage";
 
 const Icons = {
   Class: () => (
@@ -120,9 +121,7 @@ function cn(...classes) {
 }
 
 function getAvatar(profile) {
-  if (profile?.profileImage) return profile.profileImage;
-  const name = encodeURIComponent(profile?.name || "Professor");
-  return `https://ui-avatars.com/api/?name=${name}&background=0ea5e9&color=fff`;
+  return resolveProfileImage(profile?.profileImage, profile?.name || "Professor");
 }
 
 function getMetricValue(item) {
@@ -233,6 +232,11 @@ export default function TeacherDashboard() {
   const [refreshing, setRefreshing] = useState(false);
   const [pageError, setPageError] = useState("");
   const [query, setQuery] = useState("");
+  const [profileImageFailed, setProfileImageFailed] = useState(false);
+
+  useEffect(() => {
+    setProfileImageFailed(false);
+  }, [profile?.profileImage]);
 
   // kept compatible with your existing “university-level” data
   const [advisingStudents] = useState(12);
@@ -396,6 +400,15 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     loadDashboard();
+  }, []);  // Empty dependency to run on mount
+  
+  // Force refresh when coming back from other pages
+  useEffect(() => {
+    const handleFocus = () => {
+      loadDashboard({ silent: true });
+    };
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
   }, [loadDashboard]);
 
   const handleRefresh = useCallback(() => {
@@ -537,8 +550,11 @@ export default function TeacherDashboard() {
               <div className="relative group shrink-0">
                 <div className="absolute inset-0 bg-cyan-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
                 <img
-                  src={getAvatar(profile)}
+                  src={profileImageFailed
+                    ? buildFallbackAvatar(profile?.name || "Faculty")
+                    : getAvatar(profile)}
                   alt={`${profile?.name || "Faculty"} profile`}
+                  onError={() => setProfileImageFailed(true)}
                   className="relative w-32 h-32 rounded-3xl object-cover border-2 border-slate-700/80 shadow-2xl group-hover:scale-105 transition-transform duration-500"
                 />
                 <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-full border-[4px] border-[#0b0f19] flex items-center justify-center">

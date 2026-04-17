@@ -12,6 +12,7 @@ import {
   Bar,
 } from "recharts";
 import api from "../utils/api"; // <-- Using the centralized axios instance
+import { buildFallbackAvatar, resolveProfileImage } from "../../utils/profileImage";
 
 const Icons = {
   Book: () => (
@@ -228,6 +229,11 @@ export default function StudentDashboard() {
   const [timetable, setTimetable] = useState([]);
 
   const [pageError, setPageError] = useState("");
+  const [profileImageFailed, setProfileImageFailed] = useState(false);
+
+  useEffect(() => {
+    setProfileImageFailed(false);
+  }, [profile?.profileImage]);
 
   const firstName = useMemo(() => {
     return profile?.name?.split(" ")?.[0] || "Student";
@@ -295,7 +301,7 @@ export default function StudentDashboard() {
           throw new Error("Student ID missing from profile.");
         }
 
-        // Firing parallel requests using the refactored endpoints
+          // Firing parallel requests using the refactored endpoints
         const requests = [
           classId ? api.get(`/api/class/subjects/${classId}`, { signal }) : Promise.resolve(null),
           classId ? api.get(`/api/assignments/class/${classId}`, { signal }) : Promise.resolve(null),
@@ -303,17 +309,15 @@ export default function StudentDashboard() {
             ? fetchFirstSuccessful(
                 api,
                 [
-                  `/api/admin/student-timetable/${classId}`,
-                  `/api/student/timetable/${classId}`,
-                  `/api/admin/class-timetable/${classId}`,
-                  `/api/admin/teacher-timetable/${classId}`,
+                  `/api/class/student-timetable/${classId}`,
+                  `/api/admin/timetable/${classId}`,
                 ],
                 { signal }
               )
             : Promise.resolve(null),
           fetchFirstSuccessful(
             api,
-            ["/api/admin/announcements", "/api/announcements", "/api/student/announcements"],
+            ["/api/admin/announcements/public/all", "/api/announcements"],
             { signal }
           ),
           api.get(`/api/student/attendance/summary/${studentId}`, { signal }),
@@ -554,11 +558,11 @@ export default function StudentDashboard() {
               <div className="relative group perspective-1000 shrink-0">
                 <div className="absolute inset-0 bg-cyan-500 rounded-3xl blur-xl opacity-30 group-hover:opacity-60 transition-opacity duration-500"></div>
                 <img
-                  src={
-                    profile?.profileImage ||
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || "Student")}&background=0ea5e9&color=fff`
-                  }
+                  src={profileImageFailed
+                    ? buildFallbackAvatar(profile?.name || "Student")
+                    : resolveProfileImage(profile?.profileImage, profile?.name || "Student")}
                   alt={`${profile?.name || "Student"} profile`}
+                  onError={() => setProfileImageFailed(true)}
                   className="relative w-28 h-28 rounded-3xl object-cover border-2 border-slate-700/80 shadow-2xl group-hover:scale-105 group-hover:-translate-y-2 transition-transform duration-500 ease-out"
                 />
               </div>
@@ -671,7 +675,7 @@ export default function StudentDashboard() {
 
                 <div className="h-48 -mx-2 relative z-10 opacity-80 group-hover:opacity-100 transition-opacity duration-500">
                   {monthlyData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={192} minHeight={192}>
                       <AreaChart data={monthlyData}>
                         <defs>
                           <linearGradient id="colorPercent" x1="0" y1="0" x2="0" y2="1">
@@ -722,9 +726,9 @@ export default function StudentDashboard() {
                   <p className="text-xs text-slate-400">Subject-wise compliance distribution</p>
                 </div>
 
-                <div className="flex-1 min-h-[190px] -mx-2">
+                <div className="flex-1 min-h-[200px] -mx-2">
                   {subjectComparison.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer width="100%" height={200} minHeight={200}>
                       <BarChart data={subjectComparison}>
                         <defs>
                           <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
