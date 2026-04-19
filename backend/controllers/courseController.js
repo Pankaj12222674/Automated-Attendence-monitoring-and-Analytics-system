@@ -1,6 +1,8 @@
 import Course from "../models/Course.js";
 import Department from "../models/Department.js";
 import Program from "../models/Program.js";
+import Class from "../models/Class.js";
+import Subject from "../models/Subject.js";
 
 // Create a Master Course
 export const createCourse = async (req, res) => {
@@ -26,7 +28,29 @@ export const createCourse = async (req, res) => {
       isElective
     });
 
-    res.status(201).json({ message: "Master Course added to Catalog.", course: newCourse });
+    // Also inject this newly created Master Course as a 'Subject' into all EXISTING classes matching the Program & Semester
+    const matchingClasses = await Class.find({ programId, semester });
+    if (matchingClasses.length > 0) {
+      for (const cls of matchingClasses) {
+        // Create actual Subject mapped to each existing class/section
+        const createdSubject = await Subject.create({
+          name: newCourse.name,
+          code: newCourse.courseCode,
+          credits: newCourse.credits,
+          courseType: newCourse.isElective ? "elective" : "core",
+          departmentId: cls.departmentId || null,
+          classId: cls._id,
+          teacherId: cls.teacherId || null, // Assuming the class advisor/teacher or null
+          isActive: true
+        });
+
+        // Add created subject _id to the class's subject array
+        cls.subjects.push(createdSubject._id);
+        await cls.save();
+      }
+    }
+
+    res.status(201).json({ message: "Master Course added to Catalog and assigned to matching existing classes.", course: newCourse });
   } catch (error) {
     console.error("COURSE CREATION ERROR:", error);
     res.status(500).json({ message: "Error creating course." });
