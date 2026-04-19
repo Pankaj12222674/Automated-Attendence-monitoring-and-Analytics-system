@@ -5,18 +5,16 @@ import cloudinary from "../config/cloudinary.js";
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
-
     return {
       folder: "attendance_profiles",
       resource_type: "image",
-      allowed_formats: ["jpg", "jpeg", "png"]
+      type: "upload",
+      allowed_formats: ["jpg", "jpeg", "png"],
     };
-
   }
 });
 
 const fileFilter = (req, file, cb) => {
-
   const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 
   if (allowedTypes.includes(file.mimetype)) {
@@ -24,7 +22,6 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(new Error("Only JPG, JPEG, PNG images are allowed"), false);
   }
-
 };
 
 const upload = multer({

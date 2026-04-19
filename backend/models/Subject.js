@@ -82,7 +82,7 @@ const subjectSchema = new mongoose.Schema(
   teacherId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User", // The primary professor/instructor
-    required: true
+    default: null
   },
 
   /* ===============================

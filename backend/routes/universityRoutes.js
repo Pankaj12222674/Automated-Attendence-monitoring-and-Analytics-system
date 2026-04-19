@@ -5,6 +5,7 @@ import {
   getAllUniversityData,
   enrollMasterStudent
 } from "../controllers/universityController.js";
+import { createCourse, getCourses } from "../controllers/courseController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -17,6 +18,10 @@ router.post("/create-department", protect, createDepartment);
 
 // Admin: Create a new Degree Program (e.g., B.Tech CS)
 router.post("/create-program", protect, createProgram);
+
+// Admin/Teacher: Manage Master Courses
+router.post("/create-course", protect, createCourse);
+router.get("/courses", protect, getCourses);
 
 // Admin: Master Enroll a Student (Auto-generates RegNo, Password, and Semester 1 Fees)
 router.post("/enroll-student", protect, enrollMasterStudent);

@@ -26,6 +26,9 @@ import {
   getAdminSettings,
   updateAdminSettings,
   updateFeeStatus,
+
+  enterMarks,
+  getResults
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -76,6 +79,28 @@ router.get(
 router.post("/announcements", protect, authorize("admin"), sendAnnouncement);
 router.get("/announcements", protect, authorize("admin"), getAnnouncements);
 
+/* PUBLIC ANNOUNCEMENTS - FOR STUDENTS & TEACHERS */
+router.get("/announcements/public/all", protect, async (req, res) => {
+  try {
+    const Announcement = (await import("../models/Announcement.js")).default;
+    
+    // Get all announcements accessible to the current user
+    const userRole = req.user?.role;
+    
+    const announcements = await Announcement.find({
+      $or: [
+        { target: "all" },
+        { target: userRole }
+      ]
+    }).populate("sender", "name email").sort({ createdAt: -1 });
+    
+    res.json(announcements || []);
+  } catch (err) {
+    console.error("Public announcements error:", err.message);
+    res.status(500).json({ message: "Failed to fetch announcements" });
+  }
+});
+
 /* =====================================================
    FEE MANAGEMENT
 ===================================================== */
@@ -85,6 +110,12 @@ router.put("/fees/:feeId", protect, authorize("admin"), updateFeeStatus);
    AUDIT LOGS
 ===================================================== */
 router.get("/audit-logs", protect, authorize("admin"), getAuditLogs);
+
+/* =====================================================
+   RESULTS
+===================================================== */
+router.post("/results", protect, authorize("admin", "teacher"), enterMarks);
+router.get("/results", protect, authorize("admin", "teacher"), getResults);
 
 /* =====================================================
    SETTINGS

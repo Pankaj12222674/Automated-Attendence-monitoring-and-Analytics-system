@@ -32,4 +32,4 @@ required:true
 
 },{timestamps:true})
 
-export default mongoose.model("Timetable",timetableSchema)
+export default mongoose.model("Timetable",timetableSchema);

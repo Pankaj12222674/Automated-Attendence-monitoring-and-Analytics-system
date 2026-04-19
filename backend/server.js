@@ -14,6 +14,9 @@ import attendanceRoutes from "./routes/attendanceRoutes.js";
 import studentAttendanceRoutes from "./routes/studentAttendanceRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import universityRoutes from "./routes/universityRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
+import timetableRoutes from "./routes/timetableRoutes.js";
+import libraryRoutes from "./routes/libraryRoutes.js";
 
 
 dotenv.config();
@@ -46,6 +49,9 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/assignments", assignmentRoutes);
 app.use("/api/fees", feeRoutes);
 app.use("/api/university", universityRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/timetable", timetableRoutes);
+app.use("/api/library", libraryRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend server running...");
@@ -57,10 +63,12 @@ app.get("/", (req, res) => {
 
 app.use((err, req, res, next) => {
 
-  console.error("GLOBAL ERROR:", err);
+  console.error("GLOBAL ERROR:", err.message);
+  console.error("Stack:", err.stack);
 
   res.status(500).json({
-    message: err.message || "Server error"
+    message: err.message || "Server error",
+    error: process.env.NODE_ENV === "development" ? err : {}
   });
 
 });
@@ -71,8 +79,8 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 8000;
 
-console.log("Cloudinary Key:", process.env.CLOUDINARY_KEY);
+console.log("✅ MongoDB Cloudinary Key:", process.env.CLOUDINARY_KEY ? "SET" : "MISSING");
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });

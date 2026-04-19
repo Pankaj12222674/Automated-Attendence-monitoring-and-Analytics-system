@@ -6,6 +6,10 @@ import Attendance from "../models/Attendance.js";
 import Department from "../models/Department.js";
 import Program from "../models/Program.js";
 
+import AuditLog from "../models/AuditLog.js";
+import Setting from "../models/Setting.js";
+import Result from "../models/Result.js";
+
 // --------------------------------------------------
 // Optional model loaders (safe fallback if file missing)
 // --------------------------------------------------
@@ -13,12 +17,13 @@ let AnnouncementModelCache = undefined;
 let FeeModelCache = undefined;
 
 const memoryAnnouncements = [];
-const memoryAuditLogs = [];
-let memorySettings = {
-  universityName: "My University",
-  currentSession: "2025-2026",
-  attendanceThreshold: 75,
-  currency: "INR",
+
+const loadSetting = async () => {
+  let setting = await Setting.findOne();
+  if (!setting) {
+    setting = await Setting.create({});
+  }
+  return setting;
 };
 
 const loadAnnouncementModel = async () => {
@@ -57,17 +62,11 @@ const loadFeeModel = async () => {
 // Helpers
 // --------------------------------------------------
 const addAuditLog = (action, actor = "System", meta = {}) => {
-  memoryAuditLogs.unshift({
-    _id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+  AuditLog.create({
     action,
     actor,
     meta,
-    createdAt: new Date(),
-  });
-
-  if (memoryAuditLogs.length > 100) {
-    memoryAuditLogs.length = 100;
-  }
+  }).catch((err) => console.error("Failed to save audit log:", err));
 };
 
 const getActorName = (req) => {
@@ -300,7 +299,7 @@ export const getFullAdminData = async (req, res) => {
       },
       {
         $match: {
-          attendance: { $lt: memorySettings.attendanceThreshold || 75 },
+          attendance: { $lt: (await loadSetting()).attendanceThreshold },
         },
       },
     ]);
@@ -433,7 +432,7 @@ export const getFullAdminData = async (req, res) => {
         message: `Announcement sent to ${a.target || "all"}`,
         createdAt: a.createdAt,
       })),
-      ...memoryAuditLogs.slice(0, 5).map((log) => ({
+      ...(await AuditLog.find().sort({ createdAt: -1 }).limit(5)).map((log) => ({
         type: "audit",
         message: log.action,
         createdAt: log.createdAt,
@@ -951,7 +950,8 @@ export const updateFeeStatus = async (req, res) => {
 // ==================================================
 export const getAuditLogs = async (req, res) => {
   try {
-    res.json({ logs: memoryAuditLogs });
+    const logs = await AuditLog.find().sort({ createdAt: -1 }).limit(100);
+    res.json({ logs });
   } catch (err) {
     console.error("GET AUDIT LOGS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch audit logs" });
@@ -963,7 +963,8 @@ export const getAuditLogs = async (req, res) => {
 // ==================================================
 export const getAdminSettings = async (req, res) => {
   try {
-    res.json(memorySettings);
+    const settings = await loadSetting();
+    res.json(settings);
   } catch (err) {
     console.error("GET SETTINGS ERROR:", err);
     res.status(500).json({ message: "Failed to fetch settings" });
@@ -972,20 +973,106 @@ export const getAdminSettings = async (req, res) => {
 
 export const updateAdminSettings = async (req, res) => {
   try {
-    memorySettings = {
-      ...memorySettings,
-      ...req.body,
-    };
+    let settings = await Setting.findOne();
+    if (!settings) {
+      settings = new Setting();
+    }
+    
+    if (req.body.universityName) settings.universityName = req.body.universityName;
+    if (req.body.currentSession) settings.currentSession = req.body.currentSession;
+    if (req.body.attendanceThreshold) settings.attendanceThreshold = req.body.attendanceThreshold;
+    if (req.body.currency) settings.currency = req.body.currency;
+
+    await settings.save();
 
     addAuditLog("Updated admin settings", getActorName(req), req.body || {});
 
     res.json({
       message: "Settings updated successfully",
-      settings: memorySettings,
+      settings,
     });
   } catch (err) {
     console.error("UPDATE SETTINGS ERROR:", err);
     res.status(500).json({ message: "Failed to update settings" });
+  }
+};
+
+// ==================================================
+// RESULTS
+// ==================================================
+export const enterMarks = async (req, res) => {
+  try {
+    const { studentId, subjectId, marksObtained, totalMarks, remarks } = req.body;
+    if (!studentId || !subjectId || marksObtained === undefined) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const tMarks = totalMarks || 100;
+    const percentage = (marksObtained / tMarks) * 100;
+    let gradePoint = 0;
+    let grade = "F";
+
+    if (percentage >= 90) { gradePoint = 10; grade = "O"; }
+    else if (percentage >= 80) { gradePoint = 9; grade = "A+"; }
+    else if (percentage >= 70) { gradePoint = 8; grade = "A"; }
+    else if (percentage >= 60) { gradePoint = 7; grade = "B+"; }
+    else if (percentage >= 50) { gradePoint = 6; grade = "B"; }
+    else if (percentage >= 40) { gradePoint = 5; grade = "C"; }
+
+    const result = await Result.findOneAndUpdate(
+      { studentId, subjectId },
+      { 
+        marksObtained, 
+        totalMarks: tMarks, 
+        remarks,
+        grade,
+        gradePoint
+      },
+      { new: true, upsert: true }
+    );
+
+    // ==========================================
+    // Recalculate CGPA for the Student Automagically
+    // ==========================================
+    const allResults = await Result.find({ studentId }).populate("subjectId", "credits semester");
+    
+    let totalCreditPoints = 0;
+    let totalCredits = 0;
+
+    for (const r of allResults) {
+      if (r.subjectId && r.subjectId.credits) {
+        totalCreditPoints += (r.gradePoint * r.subjectId.credits);
+        // Only count credits if they passed (i.e. grade !== "F")
+        if (r.gradePoint > 0) {
+          totalCredits += r.subjectId.credits;
+        }
+      }
+    }
+
+    const cgpa = totalCredits > 0 ? (totalCreditPoints / totalCredits).toFixed(2) : 0;
+    await User.findByIdAndUpdate(studentId, { cgpa: parseFloat(cgpa), creditsEarned: totalCredits });
+
+    addAuditLog(`Entered marks for Student ${studentId} in Subject ${subjectId}`, getActorName(req));
+
+    res.json({ message: "Marks saved & CGPA updated mathematically", result, cgpa, creditsEarned: totalCredits });
+  } catch (err) {
+    console.error("ENTER MARKS ERROR:", err);
+    res.status(500).json({ message: "Failed to save marks" });
+  }
+};
+
+export const getResults = async (req, res) => {
+  try {
+    const { studentId, subjectId } = req.query;
+    const query = {};
+    if (studentId) query.studentId = studentId;
+    if (subjectId) query.subjectId = subjectId;
+
+    const results = await Result.find(query).populate("subjectId", "name code");
+    res.json({ results });
+  } catch (err) {
+    console.error("GET RESULTS ERROR:", err);
+    res.status(500).json({ message: "Failed to fetch results" });
   }
 };
 

@@ -7,7 +7,8 @@ import {
   getUserById,
   getProfile,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updateTeacherProfile
 } from "../controllers/authController.js";
 
 import { protect } from "../middleware/auth.js";
@@ -41,6 +42,7 @@ router.post("/reset-password", resetPassword);
 ============================ */
 
 router.get("/me", protect, getProfile);
+router.put("/me/teacher", protect, updateTeacherProfile);
 router.get("/me/:id", protect, getUserById);
 
 export default router;

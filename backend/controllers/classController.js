@@ -1,6 +1,7 @@
 import Class from "../models/Class.js";
 import Subject from "../models/Subject.js";
 import User from "../models/User.js";
+import Course from "../models/Course.js";
 
 /* =======================================
             CREATE CLASS (Cohort)
@@ -39,8 +40,34 @@ export const createClass = async (req, res) => {
       subjects: []
     });
 
+    // Automatically assign Master Courses as subjects for this class
+    if (programId && semester) {
+      const masterCourses = await Course.find({ programId, semester, isActive: true });
+      if (masterCourses.length > 0) {
+        const subjectsData = masterCourses.map(course => ({
+          name: course.name,
+          code: course.courseCode,
+          credits: course.credits,
+          courseType: course.isElective ? "elective" : "core",
+          departmentId: departmentId || null,
+          classId: newClass._id,
+          // A teacher must be assigned later, using the advisor as placeholder for now, or you can require 'dummy teacher' handling
+          teacherId: teacherId || null, 
+          isActive: true
+        }));
+
+        // Insert multiple subjects at once
+        const createdSubjects = await Subject.insertMany(subjectsData);
+        const subjectIds = createdSubjects.map(sub => sub._id);
+
+        // Update the New Class with these created subjects
+        newClass.subjects.push(...subjectIds);
+        await newClass.save();
+      }
+    }
+
     res.status(201).json({
-      message: "Cohort created successfully",
+      message: "Cohort created successfully with initial subjects auto-assigned.",
       class: newClass
     });
   } catch (err) {

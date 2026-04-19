@@ -6,10 +6,7 @@ const connectDB = async () => {
 
     const conn = await mongoose.connect(process.env.MONGO_URI,{
 
-      dbName:"attendance_system",
-
-      useNewUrlParser:true,
-      useUnifiedTopology:true
+      dbName:"attendance_system"
 
     });
 

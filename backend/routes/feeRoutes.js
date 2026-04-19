@@ -5,7 +5,7 @@ import {
   getMyFees,
   processPayment
 } from "../controllers/feeController.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 

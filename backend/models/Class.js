@@ -100,7 +100,7 @@ classSchema.pre("save", function(next){
 /* =========================
       DATABASE INDEXES
 ========================= */
-classSchema.index({ name: 1 });
+// classSchema.index({ name: 1 });
 classSchema.index({ teacherId: 1 });
 classSchema.index({ programId: 1, semester: 1 }); // New index for quick batch filtering
 

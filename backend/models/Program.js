@@ -40,7 +40,7 @@ const programSchema = new mongoose.Schema(
 
 // Indexes
 programSchema.index({ departmentId: 1 });
-programSchema.index({ name: 1 });
+// programSchema.index({ name: 1 });
 
 const Program = mongoose.model("Program", programSchema);
 

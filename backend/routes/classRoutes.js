@@ -133,6 +133,34 @@ authorize("teacher"),
 getClassesForTeacher
 );
 
+/* ======================================================
+   GET STUDENT TIMETABLE (by class)
+====================================================== */
+router.get(
+  "/student-timetable/:classId",
+  protect,
+  authorize("student", "teacher", "admin"),
+  async (req, res) => {
+    try {
+      const { classId } = req.params;
+
+      // Import Timetable model
+      const Timetable = (await import("../models/Timetable.js")).default;
+
+      const timetable = await Timetable.find({ classId })
+        .populate("subjectId", "name code")
+        .populate("teacherId", "name email")
+        .sort({ day: 1, startTime: 1 })
+        .lean();
+
+      res.json(timetable || []);
+    } catch (err) {
+      console.error("Student timetable error:", err.message);
+      res.status(500).json({ message: "Failed to fetch timetable" });
+    }
+  }
+);
+
 
 
 /* ======================================================
@@ -140,38 +168,70 @@ getClassesForTeacher
 ====================================================== */
 
 router.get(
-"/students/:classId",
-protect,
-authorize("teacher","admin"),
-async (req,res)=>{
+  "/students/:classId",
+  protect,
+  authorize("teacher", "admin"),
+  async (req, res) => {
+    try {
+      const { classId } = req.params;
 
-try{
+      // Method 1: Get students from Class.students array (assigned by admin)
+      const cls = await Class.findById(classId)
+        .populate({
+          path: "students",
+          select: "name email roll faceDescriptor"
+        });
 
-const cls = await Class.findById(req.params.classId)
-.populate({
-path:"students",
-select:"name email roll faceDescriptor"
-});
+      if (!cls) {
+        return res.status(404).json({
+          message: "Class not found"
+        });
+      }
 
-if(!cls){
-return res.status(404).json({
-message:"Class not found"
-});
-}
+      // Method 2: Also get students who registered with this classId (newly created)
+      const User = (await import("../models/User.js")).default;
+      const newStudents = await User.find({
+        classId: classId,
+        role: "student"
+      }).select("_id name email roll faceDescriptor").lean();
 
-res.json({
-students:cls.students
-});
+      // Combine both lists, removing duplicates
+      const studentIds = new Set();
+      const allStudents = [];
 
-}catch(err){
+      // Add students from Class.students array first
+      if (cls.students && Array.isArray(cls.students)) {
+        cls.students.forEach((student) => {
+          if (student && student._id) {
+            studentIds.add(student._id.toString());
+            allStudents.push(student);
+          }
+        });
+      }
 
-res.status(500).json({
-message:"Failed to fetch students"
-});
+      // Add newly registered students (not in the array yet)
+      newStudents.forEach((student) => {
+        const studentIdStr = student._id.toString();
+        if (!studentIds.has(studentIdStr)) {
+          allStudents.push(student);
+        }
+      });
 
-}
+      console.log(`✅ Retrieved ${allStudents.length} students for class ${classId}`);
+      console.log(`   - From Class.students: ${cls.students?.length || 0}`);
+      console.log(`   - From User records: ${newStudents.length}`);
 
-}
+      res.json({
+        students: allStudents
+      });
+
+    } catch (err) {
+      console.error("GET STUDENTS ERROR:", err.message);
+      res.status(500).json({
+        message: "Failed to fetch students"
+      });
+    }
+  }
 );
 
 export default router;

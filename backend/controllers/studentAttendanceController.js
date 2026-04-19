@@ -1,31 +1,54 @@
-import express from "express";
-import { 
-  getStudentSummary, 
-  getStudentDetails 
-} from "../controllers/studentAttendanceController.js";
+import Attendance from "../models/Attendance.js";
+import User from "../models/User.js";
 
-import { protect, authorize } from "../middleware/auth.js";
+/* ================================================
+   GET STUDENT SUMMARY (All subjects percentage)
+================================================ */
+export const getStudentSummary = async (req, res) => {
+  try {
+    const { studentId } = req.params;
 
-const router = express.Router();
+    const totalRecords = await Attendance.countDocuments({ studentId });
+    if (totalRecords === 0) {
+      return res.json({ totalPresent: 0, percentage: 0 });
+    }
 
-/* ===========================
-    GET SUMMARY FOR A STUDENT
-=========================== */
-router.get(
-  "/summary/:studentId",
-  protect,
-  authorize("student", "admin"),
-  getStudentSummary
-);
+    const presentRecords = await Attendance.countDocuments({
+      studentId,
+      status: { $in: ["present", "late"] },
+      isExcused: false,
+    });
 
-/* =======================================
-    GET DAY-WISE DETAILS FOR A SUBJECT
-======================================= */
-router.get(
-  "/details/:studentId/:subject",
-  protect,
-  authorize("student", "admin"),
-  getStudentDetails
-);
+    const percentage = Math.round((presentRecords / totalRecords) * 100);
 
-export default router;
+    res.json({ totalPresent: presentRecords, percentage });
+  } catch (err) {
+    console.error("STUDENT SUMMARY ERROR:", err.message);
+    res.status(500).json({ message: "Failed to fetch student summary" });
+  }
+};
+
+/* ================================================
+   GET DAY-WISE DETAILS FOR A SUBJECT
+================================================ */
+export const getStudentDetails = async (req, res) => {
+  try {
+    const { studentId, subject } = req.params;
+
+    const records = await Attendance.find({
+      studentId,
+    })
+      .populate("subjectId", "name")
+      .sort({ date: -1 })
+      .lean();
+
+    if (!records || records.length === 0) {
+      return res.json([]);
+    }
+
+    res.json(records);
+  } catch (err) {
+    console.error("STUDENT DETAILS ERROR:", err.message);
+    res.status(500).json({ message: "Failed to fetch student details" });
+  }
+};

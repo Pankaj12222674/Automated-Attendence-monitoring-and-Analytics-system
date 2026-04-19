@@ -54,10 +54,14 @@ export const registerUser = async (req, res) => {
       faceDescriptor = [];
     }
 
-    /* IMAGE PATH */
+    /* IMAGE PATH - CLOUDINARY */
     let imagePath = "";
     if (req.file) {
-      imagePath = req.file.path || req.file.secure_url || "";
+      // Cloudinary returns: secure_url, path, filename, etc.
+      imagePath = req.file.secure_url || req.file.path || "";
+      console.log(`✅ Profile image uploaded: ${imagePath}`);
+    } else {
+      console.log("⚠️ No profile image file in request");
     }
 
     /* UNIVERSITY ROLL NUMBER GENERATION (Students Only) */
@@ -84,6 +88,23 @@ export const registerUser = async (req, res) => {
       profileImage: imagePath,
       isApproved: approved,
     });
+
+    /* AUTO-ADD STUDENT TO CLASS IF PROVIDED */
+    if (role === "student" && classId) {
+      try {
+        const Class = (await import("../models/Class.js")).default;
+        const cls = await Class.findById(classId);
+        
+        if (cls && !cls.students.includes(user._id)) {
+          cls.students.push(user._id);
+          await cls.save();
+          console.log(`✅ Student ${user._id} added to class ${classId}`);
+        }
+      } catch (classErr) {
+        console.error("Error adding student to class:", classErr.message);
+        // Don't fail the registration if class update fails
+      }
+    }
 
     res.status(201).json({
       message:
@@ -180,7 +201,7 @@ export const getProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.json({
+    const responseData = {
       _id: user._id,
       id: user._id,
       name: user.name,
@@ -197,10 +218,56 @@ export const getProfile = async (req, res) => {
       designation: user.designation,
       cgpa: user.cgpa,
       currentSemester: user.currentSemester,
+      officeHours: user.officeHours,
+      researchProjects: user.researchProjects,
+      advisingStudents: user.advisingStudents
+    };
+
+    // Log profile retrieve for debugging
+    console.log(`✅ Profile retrieved for user ${user._id}, profileImage: ${user.profileImage ? "✓ present" : "✗ missing"}`);
+
+    res.json({
+      user: responseData,
     });
   } catch (err) {
     console.error("PROFILE ERROR:", err);
     res.status(500).json({ message: "Failed to load profile" });
+  }
+};
+
+/* =================================
+        UPDATE TEACHER PROFILE
+================================ */
+export const updateTeacherProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.role !== "teacher" && user.role !== "admin") {
+      return res.status(403).json({ message: "Not authorized as a teacher" });
+    }
+
+    if (req.body.officeHours !== undefined) user.officeHours = req.body.officeHours;
+    if (req.body.researchProjects !== undefined) user.researchProjects = req.body.researchProjects;
+    if (req.body.advisingStudents !== undefined) user.advisingStudents = req.body.advisingStudents;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      officeHours: updatedUser.officeHours,
+      researchProjects: updatedUser.researchProjects,
+      advisingStudents: updatedUser.advisingStudents
+    });
+  } catch (error) {
+    console.error("UPDATE TEACHER PROFILE ERROR:", error);
+    res.status(500).json({ message: "Server error in updating profile" });
   }
 };
 
@@ -315,4 +382,3 @@ export const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Failed to reset password" });
   }
 };
-``

@@ -106,6 +106,17 @@ const userSchema = new mongoose.Schema(
       location: String
     }
   ],
+  researchProjects: [
+    {
+      title: String,
+      status: String,
+      role: String
+    }
+  ],
+  advisingStudents: {
+    type: Number,
+    default: 12
+  },
 
   /* ===============================
         ATTENDANCE QUICK STATS
@@ -217,7 +228,7 @@ userSchema.methods.getResetPasswordToken = function(){
 /* =====================================
         INDEXES (OPTIMIZATION)
 ===================================== */
-userSchema.index({ email: 1 });
+// Remove redundant .index({ email: 1 }) because email has unique: true
 userSchema.index({ role: 1 });
 userSchema.index({ classId: 1 });
 userSchema.index({ programId: 1 }); // New Index for quick program lookups

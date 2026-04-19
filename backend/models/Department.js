@@ -32,7 +32,7 @@ const departmentSchema = new mongoose.Schema(
 );
 
 // Indexes for fast lookups
-departmentSchema.index({ name: 1 });
+// departmentSchema.index({ name: 1 });
 
 const Department = mongoose.model("Department", departmentSchema);
 

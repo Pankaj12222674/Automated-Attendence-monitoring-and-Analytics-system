@@ -14,7 +14,7 @@ const router = express.Router();
 router.get(
   "/summary/:studentId",
   protect,
-  authorize("student"),
+  authorize("student", "teacher", "admin"),
   getStudentSummary
 );
 
@@ -24,7 +24,7 @@ router.get(
 router.get(
   "/history/:studentId",
   protect,
-  authorize("student"),
+  authorize("student", "teacher", "admin"),
   getStudentAttendanceHistory
 );
 
@@ -34,7 +34,7 @@ router.get(
 router.get(
   "/analytics/:studentId",
   protect,
-  authorize("student"),
+  authorize("student", "teacher", "admin"),
   getStudentAnalytics
 );
 
