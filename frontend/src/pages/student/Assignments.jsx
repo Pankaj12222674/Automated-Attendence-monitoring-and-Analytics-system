@@ -99,7 +99,7 @@ export default function Assignments() {
     switch(status) {
       case "pending": return <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1"><Icons.Clock /> Pending</span>;
       case "missing": return <span className="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1"><Icons.Alert /> Missing</span>;
-      case "submitted": return <span className="bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1"><Icons.CheckCircle /> Submitted</span>;
+      case "submitted": return <span className="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1"><Icons.CheckCircle /> Submitted</span>;
       case "late": return <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1"><Icons.CheckCircle /> Submitted Late</span>;
       case "graded": return <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded text-[10px] font-black uppercase flex items-center gap-1"><Icons.CheckCircle /> Graded</span>;
       default: return null;
@@ -108,19 +108,20 @@ export default function Assignments() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30 overflow-hidden relative">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       
       {/* HEADER NAV */}
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40 shadow-xl">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/student/dashboard" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2">
+          <Link to="/student/dashboard" className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2">
             <Icons.ArrowLeft /> Return to Dashboard
           </Link>
           <div className="flex items-center gap-3">
@@ -144,17 +145,17 @@ export default function Assignments() {
             </h2>
             
             {pendingTasks.length === 0 ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center shadow-lg">
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-10 text-center shadow-lg">
                 <Icons.CheckCircle />
                 <p className="text-slate-400 mt-4">You are all caught up! No pending assignments.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {pendingTasks.map(task => (
-                  <div key={task._id} className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-lg hover:border-indigo-500/30 transition-colors group">
+                  <div key={task._id} className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-lg hover:border-cyan-500/40 transition-colors group">
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">{task.subjectId?.name}</p>
+                        <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest mb-1">{task.subjectId?.name}</p>
                         <h3 className="font-bold text-white text-lg leading-tight">{task.title}</h3>
                       </div>
                       {getStatusBadge(task.uiStatus)}
@@ -168,7 +169,7 @@ export default function Assignments() {
                       </div>
                       <button 
                         onClick={() => setSelectedTask(task)}
-                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-indigo-900/20 flex items-center gap-2"
+                        className="px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] text-xs font-bold transition shadow-lg shadow-cyan-900/20 flex items-center gap-2"
                       >
                         <Icons.Upload /> Submit Work
                       </button>
@@ -186,16 +187,16 @@ export default function Assignments() {
             </h2>
 
             {completedTasks.length === 0 ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center shadow-lg">
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-10 text-center shadow-lg">
                 <p className="text-slate-500">Your submitted assignments will appear here.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {completedTasks.map(task => (
-                  <div key={task._id} className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-lg">
+                  <div key={task._id} className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-lg">
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-1">{task.subjectId?.name}</p>
+                        <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest mb-1">{task.subjectId?.name}</p>
                         <h3 className="font-bold text-white text-lg leading-tight">{task.title}</h3>
                       </div>
                       {getStatusBadge(task.uiStatus)}
@@ -227,13 +228,13 @@ export default function Assignments() {
       {/* UPLOAD MODAL */}
       {selectedTask && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative animate-fadeUp">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-8 max-w-md w-full shadow-2xl relative animate-fadeUp">
             
             <button onClick={() => setSelectedTask(null)} className="absolute top-4 right-4 text-slate-400 hover:text-white">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
 
-            <div className="w-12 h-12 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-xl flex items-center justify-center mb-6">
+            <div className="w-12 h-12 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-xl flex items-center justify-center mb-6">
               <Icons.Document />
             </div>
 
@@ -247,7 +248,7 @@ export default function Assignments() {
                   type="url"
                   required
                   placeholder="https://docs.google.com/..."
-                  className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl focus:border-indigo-500 outline-none transition"
+                  className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3.5 rounded-xl focus:border-cyan-500 outline-none transition"
                   value={fileUrl}
                   onChange={(e) => setFileUrl(e.target.value)}
                 />
@@ -257,7 +258,7 @@ export default function Assignments() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-indigo-900/20 disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] font-bold transition-all shadow-lg shadow-cyan-900/20 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isSubmitting ? "Uploading..." : "Confirm Submission"}
               </button>

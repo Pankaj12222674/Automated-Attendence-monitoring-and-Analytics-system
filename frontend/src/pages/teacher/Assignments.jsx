@@ -164,17 +164,19 @@ export default function TeacherAssignments() {
   };
 
   if (!classId || !subjectId) {
-    return <div className="min-h-screen bg-[#0b0f19] text-white flex items-center justify-center">Error: Missing Course Context. Please access this portal via the Dashboard.</div>;
+    return <div className="min-h-screen bg-slate-950 overflow-hidden relative text-white flex items-center justify-center">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />Error: Missing Course Context. Please access this portal via the Dashboard.</div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans selection:bg-indigo-500/30">
+    <div className="overflow-hidden relative min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       
       {/* HEADER NAV */}
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40 shadow-xl">
         <div className="max-w-[90rem] mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <Link to="/teacher/dashboard" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2 mb-1">
+            <Link to="/teacher/dashboard" className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2 mb-1">
               <Icons.ArrowLeft /> Back to Portal
             </Link>
             <h1 className="text-xl font-bold text-white leading-tight">LMS Management</h1>
@@ -189,9 +191,9 @@ export default function TeacherAssignments() {
         
         {/* LEFT: CREATE ASSIGNMENT FORM (Takes up 4/12 cols) */}
         <div className="lg:col-span-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl sticky top-28">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-xl sticky top-28">
             <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-              <div className="bg-indigo-500/20 text-indigo-400 p-1.5 rounded-lg"><Icons.Plus /></div>
+              <div className="bg-cyan-500/20 text-cyan-400 p-1.5 rounded-lg"><Icons.Plus /></div>
               Publish Coursework
             </h2>
 
@@ -199,7 +201,7 @@ export default function TeacherAssignments() {
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Assignment Title</label>
                 <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl focus:border-indigo-500 outline-none transition"
+                  className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3.5 rounded-xl focus:border-cyan-500 outline-none transition"
                   placeholder="e.g. Midterm Essay Draft"
                 />
               </div>
@@ -207,7 +209,7 @@ export default function TeacherAssignments() {
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Prompt / Description</label>
                 <textarea required value={description} onChange={(e) => setDescription(e.target.value)} rows="4"
-                  className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl focus:border-indigo-500 outline-none transition resize-none"
+                  className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3.5 rounded-xl focus:border-cyan-500 outline-none transition resize-none"
                   placeholder="Provide instructions or attach links here..."
                 ></textarea>
               </div>
@@ -216,18 +218,18 @@ export default function TeacherAssignments() {
                 <div>
                   <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Due Date & Time</label>
                   <input type="datetime-local" required value={dueDate} onChange={(e) => setDueDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl focus:border-indigo-500 outline-none transition text-sm"
+                    className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3.5 rounded-xl focus:border-cyan-500 outline-none transition text-sm"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Total Marks</label>
                   <input type="number" required min="1" value={totalMarks} onChange={(e) => setTotalMarks(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl focus:border-indigo-500 outline-none transition"
+                    className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3.5 rounded-xl focus:border-cyan-500 outline-none transition"
                   />
                 </div>
               </div>
 
-              <button type="submit" disabled={isPublishing} className="w-full mt-4 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-indigo-900/20 disabled:opacity-50">
+              <button type="submit" disabled={isPublishing} className="w-full mt-4 py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] font-bold transition-all shadow-lg shadow-cyan-900/20 disabled:opacity-50">
                 {isPublishing ? "Distributing to Cohort..." : "Publish to LMS"}
               </button>
             </form>
@@ -244,9 +246,9 @@ export default function TeacherAssignments() {
           </div>
 
           {loading ? (
-             <div className="flex justify-center p-10"><div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div></div>
+             <div className="flex justify-center p-10"><div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div></div>
           ) : assignments.length === 0 ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center shadow-lg">
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-10 text-center shadow-lg">
               <p className="text-slate-500">You haven't published any coursework for this class yet.</p>
             </div>
           ) : (
@@ -254,7 +256,7 @@ export default function TeacherAssignments() {
               {assignments.map(task => {
                 const isPastDue = new Date() > new Date(task.dueDate);
                 return (
-                  <div key={task._id} className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-lg hover:border-indigo-500/30 transition-colors flex flex-col justify-between">
+                  <div key={task._id} className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-lg hover:border-cyan-500/30 transition-colors flex flex-col justify-between">
                     <div>
                       <div className="flex justify-between items-start mb-3">
                         <div className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest border ${isPastDue ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'}`}>
@@ -291,12 +293,12 @@ export default function TeacherAssignments() {
       {/* ========================================================= */}
       {selectedAssignment && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 sm:p-6">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-5xl h-full max-h-[90vh] shadow-2xl flex flex-col animate-fadeUp overflow-hidden">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl w-full max-w-5xl h-full max-h-[90vh] shadow-2xl flex flex-col animate-fadeUp overflow-hidden">
             
             {/* Modal Header */}
             <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-950/50">
               <div>
-                <span className="text-xs font-bold text-indigo-500 uppercase tracking-widest">Grading Portal</span>
+                <span className="text-xs font-bold text-cyan-500 uppercase tracking-widest">Grading Portal</span>
                 <h2 className="text-2xl font-black text-white mt-1">{selectedAssignment.title}</h2>
               </div>
               <button onClick={() => setSelectedAssignment(null)} className="p-2 bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 rounded-xl transition">
@@ -307,7 +309,7 @@ export default function TeacherAssignments() {
             {/* Submissions List */}
             <div className="flex-1 overflow-y-auto p-6">
               {loadingSubmissions ? (
-                <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div></div>
+                <div className="flex justify-center py-20"><div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div></div>
               ) : submissions.length === 0 ? (
                 <div className="text-center py-20 text-slate-500 font-medium">No students have submitted this assignment yet.</div>
               ) : (
@@ -329,7 +331,7 @@ export default function TeacherAssignments() {
                               <p className="font-bold text-white text-base">{sub.studentId?.name}</p>
                               <div className="flex items-center gap-2 mt-0.5">
                                 <span className="text-xs text-slate-500 font-mono">{sub.studentId?.roll}</span>
-                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${isLate ? 'bg-amber-500/20 text-amber-400' : 'bg-indigo-500/20 text-indigo-400'}`}>
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${isLate ? 'bg-amber-500/20 text-amber-400' : 'bg-cyan-500/20 text-cyan-400'}`}>
                                   {sub.status}
                                 </span>
                               </div>
@@ -337,7 +339,7 @@ export default function TeacherAssignments() {
                           </div>
 
                           {/* File Link */}
-                          <a href={sub.fileUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border border-indigo-500/20 rounded-xl text-xs font-bold transition w-max">
+                          <a href={sub.fileUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 px-4 py-2 bg-cyan-600/10 hover:bg-cyan-600/20 text-cyan-400 border border-cyan-500/20 rounded-xl text-xs font-bold transition w-max">
                             View Submission <Icons.ExternalLink />
                           </a>
                         </div>
@@ -352,7 +354,7 @@ export default function TeacherAssignments() {
                               max={selectedAssignment.totalMarks}
                               value={gradingData[sub._id]?.marksObtained || ""}
                               onChange={(e) => setGradingData({...gradingData, [sub._id]: { ...gradingData[sub._id], marksObtained: e.target.value }})}
-                              className={`w-full bg-slate-900 border p-2.5 rounded-lg focus:outline-none focus:border-indigo-500 text-sm font-bold ${isGraded ? 'border-emerald-500/30 text-emerald-400' : 'border-slate-700 text-white'}`}
+                              className={`w-full bg-slate-900 border p-2.5 rounded-lg focus:outline-none focus:border-cyan-500 text-sm font-bold ${isGraded ? 'border-emerald-500/30 text-emerald-400' : 'border-slate-700 text-white'}`}
                             />
                           </div>
                           <div className="w-full flex-1">
@@ -362,12 +364,12 @@ export default function TeacherAssignments() {
                               placeholder="Great analysis on point 3..."
                               value={gradingData[sub._id]?.feedback || ""}
                               onChange={(e) => setGradingData({...gradingData, [sub._id]: { ...gradingData[sub._id], feedback: e.target.value }})}
-                              className="w-full bg-slate-900 border border-slate-700 text-slate-300 p-2.5 rounded-lg focus:outline-none focus:border-indigo-500 text-sm"
+                              className="w-full bg-slate-900 border border-slate-700 text-slate-300 p-2.5 rounded-lg focus:outline-none focus:border-cyan-500 text-sm"
                             />
                           </div>
                           <button 
                             onClick={() => handleGradeSubmit(sub._id)}
-                            className={`w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2 ${isGraded ? 'bg-slate-800 text-emerald-400 border border-emerald-500/30 hover:bg-slate-700' : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-lg shadow-indigo-900/20'}`}
+                            className={`w-full sm:w-auto px-6 py-2.5 rounded-lg text-sm font-bold transition flex items-center justify-center gap-2 ${isGraded ? 'bg-slate-800 text-emerald-400 border border-emerald-500/30 hover:bg-slate-700' : 'bg-cyan-600 text-white hover:bg-cyan-700 shadow-lg shadow-cyan-900/20'}`}
                           >
                             {isGraded ? <><Icons.Check /> Update</> : "Save Grade"}
                           </button>

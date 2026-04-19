@@ -32,7 +32,7 @@ function ResetPassword() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:8000/api/auth/reset-password",
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/auth/reset-password`,
         {
           token,
           password

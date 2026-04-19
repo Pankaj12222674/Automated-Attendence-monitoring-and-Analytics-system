@@ -133,17 +133,18 @@ export default function StudentQRScanner() {
       case "success": return "bg-emerald-500/10 border-emerald-500/30 text-emerald-400";
       case "error": return "bg-rose-500/10 border-rose-500/30 text-rose-400";
       case "processing": return "bg-amber-500/10 border-amber-500/30 text-amber-400";
-      default: return "bg-indigo-500/10 border-indigo-500/30 text-indigo-400";
+      default: return "bg-cyan-500/10 border-cyan-500/30 text-cyan-400";
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] flex flex-col font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-slate-950 flex overflow-hidden relative flex-col font-sans selection:bg-cyan-500/30">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       
       {/* Top Navigation */}
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40 shadow-xl">
         <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/student/dashboard" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2">
+          <Link to="/student/dashboard" className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2">
             <Icons.ArrowLeft /> Cancel Scan
           </Link>
           <div className="flex items-center gap-2">
@@ -165,7 +166,7 @@ export default function StudentQRScanner() {
           </div>
 
           {/* GPS Geofence Status */}
-          <div className="flex items-center justify-center gap-2 mb-4 bg-slate-900 border border-slate-800 py-2 px-4 rounded-full w-max mx-auto shadow-lg">
+          <div className="flex items-center justify-center gap-2 mb-4 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 py-2 px-4 rounded-full w-max mx-auto shadow-lg">
             <Icons.MapPin />
             <span className={`text-xs font-bold font-mono ${gpsCoords ? 'text-emerald-400' : 'text-amber-400'}`}>
               {locationStr}
@@ -173,13 +174,13 @@ export default function StudentQRScanner() {
           </div>
 
           {/* Scanner HUD Wrapper */}
-          <div className="relative bg-slate-900 border border-slate-800 p-4 rounded-3xl shadow-2xl shadow-indigo-900/20">
+          <div className="relative bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 p-4 rounded-3xl shadow-2xl shadow-cyan-900/20">
             
             {/* Corner Targeting Brackets */}
-            <div className="absolute top-8 left-8 w-12 h-12 border-t-4 border-l-4 border-indigo-500 rounded-tl-xl z-10"></div>
-            <div className="absolute top-8 right-8 w-12 h-12 border-t-4 border-r-4 border-indigo-500 rounded-tr-xl z-10"></div>
-            <div className="absolute bottom-8 left-8 w-12 h-12 border-b-4 border-l-4 border-indigo-500 rounded-bl-xl z-10"></div>
-            <div className="absolute bottom-8 right-8 w-12 h-12 border-b-4 border-r-4 border-indigo-500 rounded-br-xl z-10"></div>
+            <div className="absolute top-8 left-8 w-12 h-12 border-t-4 border-l-4 border-cyan-500 rounded-tl-xl z-10"></div>
+            <div className="absolute top-8 right-8 w-12 h-12 border-t-4 border-r-4 border-cyan-500 rounded-tr-xl z-10"></div>
+            <div className="absolute bottom-8 left-8 w-12 h-12 border-b-4 border-l-4 border-cyan-500 rounded-bl-xl z-10"></div>
+            <div className="absolute bottom-8 right-8 w-12 h-12 border-b-4 border-r-4 border-cyan-500 rounded-br-xl z-10"></div>
 
             {/* The Actual Camera Feed */}
             <div className="rounded-2xl overflow-hidden bg-black relative aspect-square flex items-center justify-center">
@@ -187,8 +188,8 @@ export default function StudentQRScanner() {
               {/* Wait for GPS before showing camera */}
               {statusType === "loading" && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 z-20">
-                  <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mb-4"></div>
-                  <p className="text-xs font-bold text-indigo-400 uppercase tracking-widest">Awaiting Satellites</p>
+                  <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mb-4"></div>
+                  <p className="text-xs font-bold text-cyan-400 uppercase tracking-widest">Awaiting Satellites</p>
                 </div>
               )}
 
@@ -196,8 +197,8 @@ export default function StudentQRScanner() {
               
               {/* Scanning Overlay Effect */}
               {statusType === "scanning" && (
-                <div className="absolute inset-0 bg-indigo-500/10 pointer-events-none z-20">
-                  <div className="w-full h-1 bg-indigo-500 shadow-[0_0_15px_#6366f1] animate-[scan_2s_ease-in-out_infinite]"></div>
+                <div className="absolute inset-0 bg-cyan-500/10 pointer-events-none z-20">
+                  <div className="w-full h-1 bg-cyan-500 shadow-[0_0_15px_#6366f1] animate-[scan_2s_ease-in-out_infinite]"></div>
                 </div>
               )}
             </div>

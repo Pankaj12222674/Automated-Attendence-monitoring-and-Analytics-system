@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../utils/api"; // <-- Using the centralized axios instance
+import api from "../../api";
+import TimetableManager from "../../components/admin/TimetableManager";
+import LibraryManager from "../../components/admin/LibraryManager";
+import CourseCatalog from "../../components/admin/CourseCatalog";
 
 const Icons = {
   Dashboard: () => (
@@ -86,6 +89,21 @@ const Icons = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
     </svg>
   ),
+  Menu: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  ),
+  Dots: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+    </svg>
+  ),
+  Calendar: () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+    </svg>
+  )
 };
 
 const tabs = [
@@ -94,52 +112,45 @@ const tabs = [
   { key: "users", label: "Students", icon: <Icons.Users /> },
   { key: "faculty", label: "Faculty", icon: <Icons.Faculty /> },
   { key: "academics", label: "Academics", icon: <Icons.Book /> },
+    { key: "courses", label: "Master Courses", icon: <Icons.Book /> },
   { key: "attendance", label: "Attendance", icon: <Icons.TrendingUp /> },
+  { key: "library", label: "Library", icon: <Icons.Book /> },
   { key: "results", label: "Results", icon: <Icons.Report /> },
   { key: "fees", label: "Fees", icon: <Icons.Money /> },
   { key: "reports", label: "Reports", icon: <Icons.Report /> },
+  { key: "timetable", label: "Timetables", icon: <Icons.Calendar /> },
   { key: "announcements", label: "Announcements", icon: <Icons.Bell /> },
   { key: "audit", label: "Audit", icon: <Icons.ShieldCheck /> },
   { key: "settings", label: "Settings", icon: <Icons.Settings /> },
 ];
 
 const SectionCard = ({ title, subtitle, action, children, className = "" }) => (
-  <div
-    className={`bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] shadow-xl hover:border-cyan-500/20 transition-colors duration-500 ${className}`}
-  >
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 px-6 md:px-8 pt-6 md:pt-8 mb-5">
+  <div className={`bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl hover:border-cyan-500/30 transition-all duration-500 mb-6 ${className}`}>
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-700/50 px-6 py-4">
       <div>
-        <h3 className="text-white text-lg font-bold tracking-tight">{title}</h3>
-        {subtitle ? <p className="text-sm text-slate-400 mt-1">{subtitle}</p> : null}
+        <h3 className="text-white font-bold text-lg">{title}</h3>
+        {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
       </div>
-      {action}
+      {action && <div className="mt-3 md:mt-0">{action}</div>}
     </div>
-    <div className="px-6 md:px-8 pb-6 md:pb-8">{children}</div>
+    <div className="p-6">{children}</div>
   </div>
 );
 
 const EmptyState = ({ text }) => (
-  <div className="bg-slate-950/70 border border-slate-800 rounded-2xl p-8 text-center text-slate-400 shadow-inner">
+  <div className="bg-slate-800/30 border border-dashed border-slate-600 rounded-xl p-8 text-center text-slate-400 text-sm">
     {text}
   </div>
 );
 
-const StatTile = ({ label, value, icon, accent, color }) => (
-  <div
-    className={`bg-gradient-to-br ${accent} bg-slate-900/40 border border-slate-700/50 rounded-[2rem] p-6 shadow-xl hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(6,182,212,0.15)] transition-all duration-300`}
-  >
-    <div className="flex justify-between items-start">
-      <div>
-        <p className="text-[11px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
-          {label}
-        </p>
-        <p className="text-3xl md:text-4xl font-black text-white">{value}</p>
-      </div>
-      <div
-        className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-950/60 border border-white/10 shadow-inner ${color}`}
-      >
-        {icon}
-      </div>
+const StatTile = ({ label, value, icon, color }) => (
+  <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl p-5 flex items-center justify-between hover:border-cyan-500/30 transition-all duration-500">
+    <div>
+      <p className="text-xs text-slate-400 font-medium mb-1 uppercase tracking-wider">{label}</p>
+      <p className="text-2xl font-black text-white">{value}</p>
+    </div>
+    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${color} bg-opacity-10 backdrop-blur-sm border border-${color.split('-')[1]}/20`}>
+      <div className={color}>{icon}</div>
     </div>
   </div>
 );
@@ -152,6 +163,11 @@ const formatDate = (value) => {
     return value;
   }
 };
+
+// Common Input Style
+const inputClasses = "w-full rounded-xl bg-slate-800/50 border border-slate-700/50 px-4 py-2.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 text-sm placeholder-slate-500";
+// Common Button Style
+const btnClasses = "bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-sm font-bold py-2.5 px-5 rounded-xl transition-all shadow-lg hover:shadow-cyan-500/25";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -190,8 +206,11 @@ export default function AdminDashboard() {
   const [studentSearch, setStudentSearch] = useState("");
   const [teacherSearch, setTeacherSearch] = useState("");
   const [announcementTarget, setAnnouncementTarget] = useState("all");
+  const [resultSectionFilter, setResultSectionFilter] = useState("all");
 
   const [className, setClassName] = useState("");
+  const [classProgramId, setClassProgramId] = useState("");
+  const [classSemester, setClassSemester] = useState(1);
   const [subjectName, setSubjectName] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedTeacher, setSelectedTeacher] = useState("");
@@ -212,6 +231,15 @@ export default function AdminDashboard() {
   const [studentClass, setStudentClass] = useState("");
   const [studentProgram, setStudentProgram] = useState("");
 
+  const [marksState, setMarksState] = useState({
+    isOpen: false,
+    student: null,
+    subject: null,
+    marksObtained: "",
+    totalMarks: 100,
+    remarks: ""
+  });
+
   const [teacherName, setTeacherName] = useState("");
   const [teacherEmail, setTeacherEmail] = useState("");
   const [teacherDepartment, setTeacherDepartment] = useState("");
@@ -224,6 +252,8 @@ export default function AdminDashboard() {
     attendanceThreshold: 75,
     currency: "INR",
   });
+
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (!token) navigate("/login");
@@ -255,7 +285,6 @@ export default function AdminDashboard() {
 
   const loadAdminData = useCallback(async () => {
     if (!token) return;
-
     setLoading(true);
     setError("");
 
@@ -345,7 +374,6 @@ export default function AdminDashboard() {
         setSettings((prev) => ({ ...prev, ...(settingsRes.value.data || {}) }));
       }
 
-      // fallback stat normalization
       setStats((prev) => ({
         ...prev,
         totalStudents: prev.totalStudents || nextStudents.length,
@@ -374,68 +402,42 @@ export default function AdminDashboard() {
 
   const createDepartment = async () => {
     if (!departmentName.trim()) return alert("Enter department name");
-
     const res = await safeRequest(
-      () =>
-        api.post("/api/university/create-department", {
-          name: departmentName,
-          head: departmentHead || null,
-        }),
+      () => api.post("/api/university/create-department", { name: departmentName, head: departmentHead || null }),
       "Failed to create department"
     );
-
     if (res?.data?.dept) {
       setDepartments((prev) => [res.data.dept, ...prev]);
     } else {
       await loadAdminData();
     }
-
     setDepartmentName("");
     setDepartmentHead("");
     alert("Department created successfully");
   };
 
   const createProgram = async () => {
-    if (!programName.trim() || !programDept) {
-      return alert("Enter program name and select a department");
-    }
-
+    if (!programName.trim() || !programDept) return alert("Enter program name and select a department");
     const res = await safeRequest(
-      () =>
-        api.post("/api/university/create-program", {
-          name: programName,
-          departmentId: programDept,
-        }),
+      () => api.post("/api/university/create-program", { name: programName, departmentId: programDept }),
       "Failed to create program"
     );
-
     if (res?.data?.program) {
       setPrograms((prev) => [res.data.program, ...prev]);
     } else {
       await loadAdminData();
     }
-
     setProgramName("");
     setProgramDept("");
     alert("Program created successfully");
   };
 
   const addStudent = async () => {
-    if (!studentName || !studentEmail || !studentClass || !studentProgram) {
-      return alert("Please fill all student fields");
-    }
-
+    if (!studentName || !studentEmail || !studentClass || !studentProgram) return alert("Please fill all student fields");
     const res = await safeRequest(
-      () =>
-        api.post("/api/university/enroll-student", {
-          name: studentName,
-          email: studentEmail,
-          classId: studentClass,
-          programId: studentProgram,
-        }),
+      () => api.post("/api/university/enroll-student", { name: studentName, email: studentEmail, classId: studentClass, programId: studentProgram }),
       "Enrollment failed"
     );
-
     alert(`Student enrolled successfully. RegNo: ${res?.data?.student?.regNo || "Generated"}`);
     setStudentName("");
     setStudentEmail("");
@@ -445,26 +447,16 @@ export default function AdminDashboard() {
   };
 
   const addTeacher = async () => {
-    if (!teacherName || !teacherEmail || !teacherDepartment) {
-      return alert("Fill all teacher fields");
-    }
-
+    if (!teacherName || !teacherEmail || !teacherDepartment) return alert("Fill all teacher fields");
     const res = await safeRequest(
-      () =>
-        api.post("/api/admin/teachers", {
-          name: teacherName,
-          email: teacherEmail,
-          departmentId: teacherDepartment,
-        }),
+      () => api.post("/api/admin/teachers", { name: teacherName, email: teacherEmail, departmentId: teacherDepartment }),
       "Failed to create teacher"
     );
-
     if (res?.data?.teacher) {
       setTeachers((prev) => [res.data.teacher, ...prev]);
     } else {
       await loadAdminData();
     }
-
     setTeacherName("");
     setTeacherEmail("");
     setTeacherDepartment("");
@@ -473,33 +465,26 @@ export default function AdminDashboard() {
 
   const deleteTeacher = async (id) => {
     if (!window.confirm("Delete this teacher?")) return;
-
     await safeRequest(() => api.delete(`/api/admin/teachers/${id}`), "Failed to delete teacher");
-
     setTeachers((prev) => prev.filter((t) => t._id !== id));
   };
 
   const createClass = async () => {
-    if (!className.trim()) return alert("Enter class name");
-
-    await safeRequest(() => api.post("/api/class/create-class", { name: className }), "Failed to create class");
-
+    if (!className.trim() || !classProgramId || !classSemester) return alert("Enter class name, select a program, and enter a semester.");
+    await safeRequest(() => api.post("/api/class/create-class", { 
+      name: className, 
+      programId: classProgramId, 
+      semester: parseInt(classSemester) 
+    }), "Failed to create class");
     setClassName("");
+    setClassProgramId("");
+    setClassSemester(1);
     loadAdminData();
   };
 
   const assignTeacherToClass = async () => {
     if (!assignClass || !assignTeacher) return alert("Select both class and teacher");
-
-    await safeRequest(
-      () =>
-        api.put("/api/class/assign-teacher", {
-          classId: assignClass,
-          teacherId: assignTeacher,
-        }),
-      "Failed to assign teacher"
-    );
-
+    await safeRequest(() => api.put("/api/class/assign-teacher", { classId: assignClass, teacherId: assignTeacher }), "Failed to assign teacher");
     setAssignClass("");
     setAssignTeacher("");
     alert("Teacher assigned successfully");
@@ -507,20 +492,8 @@ export default function AdminDashboard() {
   };
 
   const createSubject = async () => {
-    if (!subjectName || !selectedClass || !selectedTeacher) {
-      return alert("Fill all subject fields");
-    }
-
-    await safeRequest(
-      () =>
-        api.post("/api/class/create-subject", {
-          name: subjectName,
-          classId: selectedClass,
-          teacherId: selectedTeacher,
-        }),
-      "Failed to create subject"
-    );
-
+    if (!subjectName || !selectedClass || !selectedTeacher) return alert("Fill all subject fields");
+    await safeRequest(() => api.post("/api/class/create-subject", { name: subjectName, classId: selectedClass, teacherId: selectedTeacher }), "Failed to create subject");
     setSubjectName("");
     setSelectedClass("");
     setSelectedTeacher("");
@@ -528,21 +501,8 @@ export default function AdminDashboard() {
   };
 
   const createTimetable = async () => {
-    if (!day || !time || !timeSubject || !timeClass) {
-      return alert("Please fill all timetable fields");
-    }
-
-    await safeRequest(
-      () =>
-        api.post("/api/admin/create-timetable", {
-          day,
-          time,
-          subjectId: timeSubject,
-          classId: timeClass,
-        }),
-      "Failed to create timetable"
-    );
-
+    if (!day || !time || !timeSubject || !timeClass) return alert("Please fill all timetable fields");
+    await safeRequest(() => api.post("/api/admin/create-timetable", { day, time, subjectId: timeSubject, classId: timeClass }), "Failed to create timetable");
     setDay("");
     setTime("");
     setTimeSubject("");
@@ -558,26 +518,40 @@ export default function AdminDashboard() {
 
   const rejectUser = async (id) => {
     if (!window.confirm("Reject this user request?")) return;
-
     await safeRequest(() => api.put(`/api/admin/reject/${id}`), "Failed to reject user");
     loadAdminData();
   };
 
   const sendAnnouncement = async () => {
     if (!newAnnouncement.trim()) return alert("Enter announcement message");
-
-    await safeRequest(
-      () =>
-        api.post("/api/admin/announcements", {
-          message: newAnnouncement,
-          target: announcementTarget,
-        }),
-      "Failed to send announcement"
-    );
-
+    await safeRequest(() => api.post("/api/admin/announcements", { message: newAnnouncement, target: announcementTarget }), "Failed to send announcement");
     setNewAnnouncement("");
     alert("Announcement sent successfully");
     loadAdminData();
+  };
+
+  const handleEnterMarks = (s, sub) => {
+    setMarksState({
+      isOpen: true,
+      student: s,
+      subject: sub,
+      marksObtained: "",
+      totalMarks: 100,
+      remarks: ""
+    });
+  };
+
+  const submitMarks = async () => {
+    if (marksState.marksObtained === "") return alert("Enter marks obtained");
+    await safeRequest(() => api.post("/api/admin/results", {
+      studentId: marksState.student._id,
+      subjectId: marksState.subject._id,
+      marksObtained: Number(marksState.marksObtained),
+      totalMarks: Number(marksState.totalMarks),
+      remarks: marksState.remarks
+    }), "Failed to save marks");
+    alert("Marks saved successfully");
+    setMarksState({ ...marksState, isOpen: false });
   };
 
   const saveSettings = async () => {
@@ -586,28 +560,14 @@ export default function AdminDashboard() {
   };
 
   const updateFeeStatus = async (feeId, status) => {
-    await safeRequest(
-      () =>
-        api.put(`/api/admin/fees/${feeId}`, {
-          status,
-        }),
-      "Failed to update fee status"
-    );
-
+    await safeRequest(() => api.put(`/api/admin/fees/${feeId}`, { status }), "Failed to update fee status");
     setFees((prev) =>
       prev.map((f) =>
         f._id === feeId
           ? {
             ...f,
             status,
-            amountPaid:
-              status === "paid"
-                ? f.totalAmount || f.amount || 0
-                : status === "pending"
-                  ? 0
-                  : status === "partial"
-                    ? Math.max(1, Math.floor((f.totalAmount || f.amount || 0) / 2))
-                    : f.amountPaid,
+            amountPaid: status === "paid" ? f.totalAmount || f.amount || 0 : status === "pending" ? 0 : status === "partial" ? Math.max(1, Math.floor((f.totalAmount || f.amount || 0) / 2)) : f.amountPaid,
           }
           : f
       )
@@ -616,15 +576,11 @@ export default function AdminDashboard() {
 
   const exportCSV = (filename, rows) => {
     if (!rows?.length) return alert("No data to export");
-
     const headers = Object.keys(rows[0]);
     const csv = [
       headers.join(","),
-      ...rows.map((row) =>
-        headers.map((field) => `"${String(row[field] ?? "").replace(/"/g, '""')}"`).join(",")
-      ),
+      ...rows.map((row) => headers.map((field) => `"${String(row[field] ?? "").replace(/"/g, '""')}"`).join(",")),
     ].join("\n");
-
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -636,1344 +592,714 @@ export default function AdminDashboard() {
 
   const filteredStudents = useMemo(() => {
     return students.filter(
-      (s) =>
-        s.name?.toLowerCase().includes(studentSearch.toLowerCase()) ||
-        s.email?.toLowerCase().includes(studentSearch.toLowerCase()) ||
-        s.roll?.toLowerCase().includes(studentSearch.toLowerCase())
+      (s) => s.name?.toLowerCase().includes(studentSearch.toLowerCase()) || s.email?.toLowerCase().includes(studentSearch.toLowerCase()) || s.roll?.toLowerCase().includes(studentSearch.toLowerCase())
     );
   }, [students, studentSearch]);
 
   const filteredTeachers = useMemo(() => {
-    return teachers.filter(
-      (t) =>
-        t.name?.toLowerCase().includes(teacherSearch.toLowerCase()) ||
-        t.email?.toLowerCase().includes(teacherSearch.toLowerCase())
-    );
+    return teachers.filter((t) => t.name?.toLowerCase().includes(teacherSearch.toLowerCase()) || t.email?.toLowerCase().includes(teacherSearch.toLowerCase()));
   }, [teachers, teacherSearch]);
 
   const feeSummary = useMemo(() => {
     const total = fees.reduce((sum, f) => sum + (f.amount || f.totalAmount || 0), 0);
-    const paid = fees
-      .filter((f) => f.status === "paid")
-      .reduce((sum, f) => sum + (f.amount || f.totalAmount || 0), 0);
-
-    return {
-      total,
-      paid,
-      pending: total - paid,
-    };
+    const paid = fees.filter((f) => f.status === "paid").reduce((sum, f) => sum + (f.amount || f.totalAmount || 0), 0);
+    return { total, paid, pending: total - paid };
   }, [fees]);
-
-  const quickActions = [
-    {
-      title: "Enroll Student",
-      subtitle: "Create student profile + fees",
-      tab: "users",
-      color: "from-emerald-500/20 to-teal-600/5 hover:border-emerald-500/30",
-    },
-    {
-      title: "Add Faculty",
-      subtitle: "Provision a teacher account",
-      tab: "faculty",
-      color: "from-blue-500/20 to-indigo-600/5 hover:border-blue-500/30",
-    },
-    {
-      title: "Create Program",
-      subtitle: "Expand university structure",
-      tab: "university",
-      color: "from-cyan-500/20 to-blue-600/5 hover:border-cyan-500/30",
-    },
-    {
-      title: "Schedule Lecture",
-      subtitle: "Add timetable block",
-      tab: "academics",
-      color: "from-amber-500/20 to-orange-600/5 hover:border-amber-500/30",
-    },
-  ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto w-14 h-14 rounded-full border-4 border-cyan-500/20 border-t-cyan-500 animate-spin" />
-          <p className="mt-5 text-sm uppercase tracking-[0.25em] text-cyan-400 font-bold animate-pulse">
-            Booting Command Center
-          </p>
-        </div>
+      <div className="min-h-screen bg-[#0a0f1c] flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]"></div>
+        <div className="w-12 h-12 border-4 border-slate-700 border-t-cyan-500 rounded-full animate-spin relative z-10"></div>
+        <p className="mt-4 text-cyan-400 font-bold tracking-widest uppercase relative z-10">Initializing Core...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 overflow-hidden relative selection:bg-cyan-500/20 font-sans">
-      {/* Background FX matching the SmartAttendance glassmorphism theme */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 animate-float-slow" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 animate-float-delayed" />
-        <div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 animate-float-slow" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmurlCtncmlkKSIvPjwvc3ZnPg==')] opacity-50 z-0" />
-      </div>
+    <div className="flex h-screen bg-[#0a0f1c] font-sans text-slate-300 overflow-hidden selection:bg-cyan-500/30 relative">
+      {/* Global Background Glows */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-700/50 bg-slate-900/70 backdrop-blur-2xl">
-        <div className="max-w-[98rem] mx-auto px-4 md:px-6 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 min-w-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 p-[1px] rounded-2xl shadow-[0_0_25px_rgba(6,182,212,0.35)] shrink-0">
-              <div className="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-cyan-400 text-2xl font-black">
-                SA
-              </div>
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-white font-black text-xl tracking-tight truncate">
-                {settings.universityName || "SmartAttendance"} • Admin OS
-              </h1>
-              <div className="flex flex-wrap items-center gap-3 mt-1">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-slate-400">
-                  Session {settings.currentSession}
-                </span>
-                <span className="px-2.5 py-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                  System Online
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 md:gap-3">
-            <button
-              onClick={loadAdminData}
-              disabled={busy}
-              className="px-4 py-2.5 rounded-xl border border-slate-600 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-sm font-bold transition disabled:opacity-60 shadow-inner"
-            >
-              <span className="inline-flex items-center gap-2">
-                <Icons.Refresh spinning={busy} /> <span className="hidden sm:inline">Refresh</span>
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                localStorage.clear();
-                navigate("/login");
-              }}
-              className="px-4 md:px-6 py-2.5 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-400 hover:border-rose-500/30 border border-slate-600 text-slate-200 text-sm font-bold transition shadow-inner"
-            >
-              Logout
-            </button>
-          </div>
+      {/* Sidebar */}
+      <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-900/40 backdrop-blur-2xl border-r border-slate-700/50 flex flex-col transition-all duration-300 z-20`}>
+        <div className="h-16 flex items-center justify-center border-b border-slate-700/50">
+          <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            {sidebarOpen ? <><Icons.ShieldCheck /> Admin Core</> : <Icons.ShieldCheck />}
+          </h1>
         </div>
-      </header>
-
-      <div className="max-w-[98rem] mx-auto px-4 md:px-6 py-6 md:py-8 relative z-10">
-        {/* Top banner */}
-        <div className="mb-6 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-6 md:p-8 shadow-2xl overflow-hidden relative">
-          <div className="absolute top-0 right-0 w-56 h-56 bg-cyan-500/10 rounded-full blur-[90px] pointer-events-none" />
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div>
-              <p className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs font-black uppercase tracking-[0.25em] text-cyan-400 mb-4 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-                <Icons.Spark /> Command Center
-              </p>
-              <h2 className="text-2xl md:text-4xl font-black text-white tracking-tight">
-                Advanced Administration Dashboard
-              </h2>
-              <p className="text-slate-400 max-w-3xl mt-3 text-sm md:text-base leading-relaxed font-medium">
-                Manage academic operations, enrollments, faculty, attendance trends, financial
-                records, and global announcements from one premium control surface.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 min-w-full lg:min-w-[32rem]">
-              {quickActions.map((item, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveTab(item.tab)}
-                  className={`text-left rounded-2xl p-4 border border-slate-700/50 bg-gradient-to-br bg-slate-900/40 hover:bg-slate-900/60 ${item.color} transition-all duration-300 shadow-lg`}
-                >
-                  <p className="text-white font-bold text-sm">{item.title}</p>
-                  <p className="text-slate-400 text-xs mt-1 font-medium">{item.subtitle}</p>
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          {sidebarOpen && 'Terminal'}
         </div>
-
-        {error && (
-          <div className="mb-6 rounded-2xl border border-rose-500/30 bg-rose-500/10 text-rose-300 px-5 py-4 font-medium shadow-[0_0_15px_rgba(244,63,94,0.1)]">
-            {error}
-          </div>
-        )}
-
-        {/* Tabs */}
-        <div className="mb-8 overflow-x-auto hide-scrollbar">
-          <div className="inline-flex gap-2 p-1.5 rounded-2xl bg-slate-900/40 border border-slate-700/50 backdrop-blur-xl shadow-inner">
+        <nav className="flex-1 overflow-y-auto pb-4 custom-scrollbar">
+          <ul className="space-y-2 px-3">
             {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`inline-flex items-center gap-2 px-4 md:px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${activeTab === tab.key
-                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)] border border-transparent"
-                  : "text-slate-400 hover:text-cyan-300 hover:bg-slate-800/50 border border-transparent hover:border-slate-700/50"
+              <li key={tab.key}>
+                <button
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`w-full flex items-center px-3 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${
+                    activeTab === tab.key ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.15)]" : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border border-transparent"
                   }`}
-              >
-                {tab.icon}
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* DASHBOARD */}
-        {activeTab === "dashboard" && (
-          <div className="space-y-8 animate-fadeUp">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
-              {[
-                {
-                  label: "Total Students",
-                  value: stats.totalStudents,
-                  icon: <Icons.Users />,
-                  accent: "from-cyan-500/10 to-blue-600/5",
-                  color: "text-cyan-400",
-                },
-                {
-                  label: "Total Faculty",
-                  value: stats.totalTeachers,
-                  icon: <Icons.Faculty />,
-                  accent: "from-blue-500/10 to-indigo-600/5",
-                  color: "text-blue-400",
-                },
-                {
-                  label: "Active Classes",
-                  value: stats.totalClasses,
-                  icon: <Icons.Class />,
-                  accent: "from-emerald-500/10 to-teal-600/5",
-                  color: "text-emerald-400",
-                },
-                {
-                  label: "Attendance",
-                  value: `${stats.overallAttendance || 0}%`,
-                  icon: <Icons.TrendingUp />,
-                  accent: "from-amber-500/10 to-orange-600/5",
-                  color: "text-amber-400",
-                },
-                {
-                  label: "Departments",
-                  value: stats.totalDepartments,
-                  icon: <Icons.University />,
-                  accent: "from-indigo-500/10 to-purple-600/5",
-                  color: "text-indigo-400",
-                },
-                {
-                  label: "Programs",
-                  value: stats.totalPrograms,
-                  icon: <Icons.Book />,
-                  accent: "from-purple-500/10 to-pink-600/5",
-                  color: "text-purple-400",
-                },
-                {
-                  label: "Pending Approvals",
-                  value: stats.pendingApprovals,
-                  icon: <Icons.Alert />,
-                  accent: "from-rose-500/10 to-red-600/5",
-                  color: "text-rose-400",
-                },
-                {
-                  label: "Fees Collected",
-                  value: `₹${Math.max(stats.collectedFees || 0, feeSummary.paid).toLocaleString()}`,
-                  icon: <Icons.Money />,
-                  accent: "from-emerald-500/10 to-green-600/5",
-                  color: "text-emerald-400",
-                },
-              ].map((card, i) => (
-                <StatTile key={i} {...card} />
-              ))}
-            </div>
-
-            <div className="grid lg:grid-cols-3 gap-6">
-              <SectionCard
-                title="Pending Access Approvals"
-                subtitle="Review and authorize new account requests."
-                action={
-                  <span className="px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-black shadow-inner">
-                    {pendingUsers.length} Pending
+                >
+                  <span className={`mr-3 ${activeTab === tab.key ? 'text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : 'text-slate-500'}`}>
+                    {tab.icon}
                   </span>
-                }
-              >
-                {pendingUsers.length === 0 ? (
-                  <EmptyState text="No pending requests." />
-                ) : (
-                  <div className="space-y-3">
-                    {pendingUsers.slice(0, 5).map((user) => (
-                      <div
-                        key={user._id}
-                        className="flex items-center justify-between gap-3 rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
-                      >
-                        <div className="min-w-0">
-                          <p className="font-bold text-white truncate">{user.name}</p>
-                          <p className="text-xs text-slate-500 font-mono truncate">{user.email}</p>
-                        </div>
+                  {sidebarOpen && <span>{tab.label}</span>}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
 
-                        <div className="flex gap-2 shrink-0">
-                          <button
-                            onClick={() => approveUser(user._id)}
-                            className="px-3 py-2 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/30 hover:border-emerald-500/50 text-emerald-400 text-xs font-black transition-colors"
-                          >
-                            Approve
-                          </button>
-
-                          <button
-                            onClick={() => rejectUser(user._id)}
-                            className="px-3 py-2 rounded-xl bg-rose-600/10 hover:bg-rose-600/20 border border-rose-500/30 hover:border-rose-500/50 text-rose-400 text-xs font-black transition-colors"
-                          >
-                            Reject
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
-
-              <SectionCard title="Critical Attendance Alerts" subtitle="Students below threshold requiring intervention.">
-                {lowAttendance.length === 0 ? (
-                  <EmptyState text="All students are above threshold." />
-                ) : (
-                  <div className="space-y-3">
-                    {lowAttendance.slice(0, 6).map((s) => (
-                      <div
-                        key={s._id}
-                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 flex justify-between items-center shadow-inner"
-                      >
-                        <div>
-                          <p className="font-bold text-white">{s.name}</p>
-                          <p className="text-xs text-slate-500">{s.email}</p>
-                        </div>
-
-                        <span className="px-3 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-black shadow-inner">
-                          {s.attendance}%
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
-
-              <SectionCard title="Recent Activity" subtitle="Latest operational events across the system.">
-                {recentActivities.length === 0 ? (
-                  <EmptyState text="No recent activity available." />
-                ) : (
-                  <div className="space-y-3">
-                    {recentActivities.slice(0, 6).map((log, i) => (
-                      <div
-                        key={i}
-                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
-                      >
-                        <p className="text-white text-sm font-medium">{log.message || "Activity logged"}</p>
-                        <p className="text-xs text-slate-500 mt-1">{formatDate(log.createdAt)}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
+      {/* Main Content wrapper */}
+      <div className="flex-1 flex flex-col overflow-hidden relative z-10">
+        {/* Header */}
+        <header className="h-16 bg-slate-900/40 backdrop-blur-xl border-b border-slate-700/50 flex items-center justify-between px-4 lg:px-6">
+          <div className="flex items-center gap-4">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-slate-400 hover:text-cyan-400 focus:outline-none transition-colors">
+              <Icons.Menu />
+            </button>
+            <div className="hidden md:flex items-center bg-slate-800/50 rounded-xl px-4 py-2 w-72 border border-slate-700/50 focus-within:border-cyan-500/50 focus-within:ring-1 focus-within:ring-cyan-500/50 transition-all">
+              <span className="text-slate-400"><Icons.Search /></span>
+              <input type="text" placeholder="Search system records..." className="bg-transparent border-none outline-none ml-2 text-sm w-full text-slate-200 placeholder-slate-500" />
             </div>
           </div>
-        )}
 
-        {/* UNIVERSITY */}
-        {activeTab === "university" && (
-          <div className="space-y-8 animate-fadeUp">
-            <div className="grid lg:grid-cols-2 gap-6">
-              <SectionCard title="Create Department" subtitle="Define a new academic department.">
-                <input
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                  placeholder="Department Name"
-                  value={departmentName}
-                  onChange={(e) => setDepartmentName(e.target.value)}
-                />
-
-                <select
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-6 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
-                  value={departmentHead}
-                  onChange={(e) => setDepartmentHead(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Head of Department (Optional)</option>
-                  {teachers.map((t) => (
-                    <option className="bg-slate-900" key={t._id} value={t._id}>
-                      {t.name}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  onClick={createDepartment}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
-                >
-                  Create Department
-                </button>
-              </SectionCard>
-
-              <SectionCard title="Create Program" subtitle="Add a new program under a department.">
-                <input
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                  placeholder="Program Name"
-                  value={programName}
-                  onChange={(e) => setProgramName(e.target.value)}
-                />
-
-                <select
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-6 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
-                  value={programDept}
-                  onChange={(e) => setProgramDept(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Department</option>
-                  {departments.map((d) => (
-                    <option className="bg-slate-900" key={d._id} value={d._id}>
-                      {d.name}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  onClick={createProgram}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300"
-                >
-                  Create Program
-                </button>
-              </SectionCard>
-            </div>
-
-            <div className="grid lg:grid-cols-2 gap-6">
-              <SectionCard
-                title="Departments"
-                subtitle="Current departmental structure."
-                action={
-                  <button
-                    onClick={() => exportCSV("departments", departments)}
-                    className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
-                  >
-                    Export CSV
-                  </button>
-                }
-              >
-                {departments.length === 0 ? (
-                  <EmptyState text="No departments created yet." />
-                ) : (
-                  <div className="grid gap-3">
-                    {departments.map((dept) => (
-                      <div
-                        key={dept._id}
-                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
-                      >
-                        <p className="text-white font-bold">{dept.name}</p>
-                        <p className="text-xs font-medium text-slate-500 mt-1">
-                          Programs:{" "}
-                          {
-                            programs.filter(
-                              (p) =>
-                                String(p.departmentId?._id || p.departmentId) === String(dept._id)
-                            ).length
-                          }
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
-
-              <SectionCard
-                title="Programs"
-                subtitle="All registered programs."
-                action={
-                  <button
-                    onClick={() => exportCSV("programs", programs)}
-                    className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
-                  >
-                    Export CSV
-                  </button>
-                }
-              >
-                {programs.length === 0 ? (
-                  <EmptyState text="No programs created yet." />
-                ) : (
-                  <div className="grid gap-3">
-                    {programs.map((program) => (
-                      <div
-                        key={program._id}
-                        className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
-                      >
-                        <p className="text-white font-bold">{program.name}</p>
-                        <p className="text-xs font-medium text-slate-500 mt-1">
-                          Department:{" "}
-                          {departments.find(
-                            (d) =>
-                              String(d._id) === String(program.departmentId?._id || program.departmentId)
-                          )?.name || "Unknown"}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
-            </div>
-          </div>
-        )}
-
-        {/* USERS */}
-        {activeTab === "users" && (
-          <div className="space-y-8 animate-fadeUp">
-            <SectionCard title="Enroll Student" subtitle="Create a student profile and attach it to a class and program.">
-              <div className="grid md:grid-cols-5 gap-4">
-                <input
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                  placeholder="Full Name"
-                  value={studentName}
-                  onChange={(e) => setStudentName(e.target.value)}
-                />
-
-                <input
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                  placeholder="University Email"
-                  value={studentEmail}
-                  onChange={(e) => setStudentEmail(e.target.value)}
-                />
-
-                <select
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
-                  value={studentClass}
-                  onChange={(e) => setStudentClass(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Class</option>
-                  {classes.map((c) => (
-                    <option className="bg-slate-900" key={c._id} value={c._id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
-                  value={studentProgram}
-                  onChange={(e) => setStudentProgram(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Program</option>
-                  {programs.map((p) => (
-                    <option className="bg-slate-900" key={p._id} value={p._id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  onClick={addStudent}
-                  className="rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300"
-                >
-                  Enroll
-                </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 border-l border-slate-700/50 pl-4">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-black text-sm shadow-lg shadow-cyan-500/20">
+                {settings.universityName.charAt(0)}
               </div>
-            </SectionCard>
-
-            <SectionCard
-              title="Student Directory"
-              subtitle="Search and export student records."
-              action={
-                <div className="flex flex-col md:flex-row gap-3">
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                      <Icons.Search />
-                    </span>
-                    <input
-                      placeholder="Search student..."
-                      value={studentSearch}
-                      onChange={(e) => setStudentSearch(e.target.value)}
-                      className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all text-sm w-full md:w-auto"
-                    />
-                  </div>
-                  <button
-                    onClick={() => exportCSV("students", filteredStudents)}
-                    className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 transition-colors shadow-inner"
-                  >
-                    Export CSV
-                  </button>
-                </div>
-              }
-            >
-              {filteredStudents.length === 0 ? (
-                <EmptyState text="No students found." />
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {filteredStudents.map((s) => (
-                    <div
-                      key={s._id}
-                      className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-5 shadow-lg hover:border-cyan-500/30 transition-colors duration-300"
-                    >
-                      <p className="font-bold text-white text-lg truncate">{s.name}</p>
-                      <p className="text-xs text-slate-400 mt-1 font-mono truncate">{s.email}</p>
-
-                      <div className="mt-4 grid grid-cols-2 gap-3 text-xs">
-                        <div className="rounded-xl bg-slate-950/70 p-3 border border-slate-800 shadow-inner">
-                          <p className="text-slate-500 font-medium">Reg No</p>
-                          <p className="text-cyan-400 font-bold mt-1 truncate">{s.roll || "N/A"}</p>
-                        </div>
-                        <div className="rounded-xl bg-slate-950/70 p-3 border border-slate-800 shadow-inner">
-                          <p className="text-slate-500 font-medium">Semester</p>
-                          <p className="text-white font-bold mt-1">{s.currentSemester || 1}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </SectionCard>
-          </div>
-        )}
-
-        {/* FACULTY */}
-        {activeTab === "faculty" && (
-          <div className="space-y-8 animate-fadeUp">
-            <SectionCard title="Add Teacher / Faculty" subtitle="Create a faculty profile and assign department.">
-              <div className="grid md:grid-cols-4 gap-4">
-                <input
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
-                  placeholder="Full Name"
-                  value={teacherName}
-                  onChange={(e) => setTeacherName(e.target.value)}
-                />
-
-                <input
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium"
-                  placeholder="Email"
-                  value={teacherEmail}
-                  onChange={(e) => setTeacherEmail(e.target.value)}
-                />
-
-                <select
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-medium appearance-none"
-                  value={teacherDepartment}
-                  onChange={(e) => setTeacherDepartment(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Department</option>
-                  {departments.map((d) => (
-                    <option className="bg-slate-900" key={d._id} value={d._id}>
-                      {d.name}
-                    </option>
-                  ))}
-                </select>
-
-                <button
-                  onClick={addTeacher}
-                  className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all duration-300"
-                >
-                  Add Faculty
-                </button>
+              <div className="hidden md:block text-xs">
+                <p className="font-bold text-white tracking-wide">Root Administrator</p>
+                <p className="text-cyan-400">System Override</p>
               </div>
-            </SectionCard>
+            </div>
+            <button title="Log Out" onClick={() => { localStorage.clear(); navigate("/login"); }} className="ml-2 bg-slate-800 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-slate-700/50 hover:border-rose-500/50 px-4 py-2 flex items-center gap-2 rounded-xl text-xs transition-all font-bold uppercase tracking-wider">
+              Abort
+            </button>
+          </div>
+        </header>
 
-            <SectionCard
-              title="Faculty Directory"
-              subtitle="Search, review, and export faculty profiles."
-              action={
-                <div className="flex flex-col md:flex-row gap-3">
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">
-                      <Icons.Search />
-                    </span>
-                    <input
-                      placeholder="Search faculty..."
-                      value={teacherSearch}
-                      onChange={(e) => setTeacherSearch(e.target.value)}
-                      className="bg-slate-950/70 border border-slate-700/50 pl-10 pr-4 py-2.5 rounded-xl text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm w-full md:w-auto"
-                    />
-                  </div>
-                  <button
-                    onClick={() => exportCSV("teachers", filteredTeachers)}
-                    className="bg-slate-800/80 hover:bg-slate-700 border border-slate-600 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-200 transition-colors shadow-inner"
-                  >
-                    Export CSV
+        {/* Scrollable Content Area */}
+        <main className="flex-1 overflow-auto p-4 lg:p-8 custom-scrollbar">
+          {error && (
+            <div className="mb-6 bg-rose-500/10 border border-rose-500/30 text-rose-400 px-4 py-3 rounded-xl text-sm relative backdrop-blur-sm">
+              <strong className="font-black tracking-wider uppercase mr-2">System Error:</strong> {error}
+            </div>
+          )}
+
+          {/* DASHBOARD TAB */}
+          {activeTab === "dashboard" && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 bg-slate-900/40 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-slate-700/50 hover:border-cyan-500/30 transition-colors duration-500">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/30 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                  <Icons.Dashboard />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black text-white tracking-wide">Command Center</h2>
+                  <p className="text-sm text-slate-400 mt-1">Real-time telemetry and institutional overview.</p>
+                </div>
+                <div className="sm:ml-auto">
+                  <button className={btnClasses + " flex items-center gap-2"} onClick={loadAdminData}>
+                    <Icons.Refresh spinning={busy} /> Sync Data
                   </button>
                 </div>
-              }
-            >
-              {filteredTeachers.length === 0 ? (
-                <EmptyState text="No faculty found." />
-              ) : (
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {filteredTeachers.map((t) => (
-                    <div
-                      key={t._id}
-                      className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-5 shadow-lg hover:border-blue-500/30 transition-colors duration-300 flex flex-col justify-between"
-                    >
+              </div>
+
+              {/* Top Stats Banner */}
+              <div className="bg-slate-900/40 backdrop-blur-xl rounded-2xl shadow-xl border border-slate-700/50 overflow-hidden">
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-white font-bold text-lg">Network Topology</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                    <div className="md:px-4 py-2 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-orange-100 text-orange-500 flex items-center justify-center"><Icons.Users /></div>
                       <div>
-                        <p className="text-white font-bold text-lg truncate">{t.name}</p>
-                        <p className="text-xs text-slate-400 mt-1 font-mono truncate">{t.email}</p>
-                      </div>
-
-                      <div className="mt-5 flex justify-end">
-                        <button
-                          onClick={() => deleteTeacher(t._id)}
-                          className="px-4 py-2 rounded-xl bg-rose-600/10 hover:bg-rose-600/20 border border-rose-500/30 hover:border-rose-500/50 text-rose-400 text-xs font-bold transition-colors shadow-inner"
-                        >
-                          Remove
-                        </button>
+                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Total Students</p>
+                        <div className="flex items-end gap-2">
+                          <p className="text-3xl font-bold text-white">{stats.totalStudents}</p>
+                          <span className="text-xs text-green-500 mb-1 flex items-center"><span className="text-[10px]">▲</span> Active</span>
+                        </div>
                       </div>
                     </div>
-                  ))}
+                    
+                    <div className="md:px-4 py-2 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center"><Icons.TrendingUp /></div>
+                      <div>
+                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Attendance Rate</p>
+                        <div className="flex items-end gap-2">
+                          <p className="text-3xl font-bold text-white">{stats.overallAttendance || 0}%</p>
+                          <span className="text-xs text-green-500 mb-1 flex items-center"><span className="text-[10px]">▲</span> Stable</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="md:px-4 py-2 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-green-100 text-green-500 flex items-center justify-center"><Icons.Money /></div>
+                      <div>
+                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Fees Collected</p>
+                        <div className="flex items-end gap-2">
+                          <p className="text-3xl font-bold text-green-500">₹{Math.max(stats.collectedFees || 0, feeSummary.paid).toLocaleString()}</p>
+                          <span className="text-xs text-blue-500 mb-1 flex items-center"><span className="text-[10px]">▲</span> Total</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              )}
-            </SectionCard>
-          </div>
-        )}
-
-        {/* ACADEMICS */}
-        {activeTab === "academics" && (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 animate-fadeUp">
-            <SectionCard title="Create Class / Cohort" subtitle="Provision a new class container.">
-              <input
-                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-5 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                placeholder="Class / Cohort Name"
-                value={className}
-                onChange={(e) => setClassName(e.target.value)}
-              />
-
-              <button
-                onClick={createClass}
-                className="w-full rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
-              >
-                Create Class
-              </button>
-            </SectionCard>
-
-            <SectionCard title="Assign Teacher to Class" subtitle="Link a faculty member to a cohort.">
-              <select
-                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium appearance-none"
-                value={assignClass}
-                onChange={(e) => setAssignClass(e.target.value)}
-              >
-                <option className="bg-slate-900" value="">Select Class</option>
-                {classes.map((c) => (
-                  <option className="bg-slate-900" key={c._id} value={c._id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium appearance-none"
-                value={assignTeacher}
-                onChange={(e) => setAssignTeacher(e.target.value)}
-              >
-                <option className="bg-slate-900" value="">Select Teacher</option>
-                {teachers.map((t) => (
-                  <option className="bg-slate-900" key={t._id} value={t._id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={assignTeacherToClass}
-                className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all duration-300"
-              >
-                Assign Faculty
-              </button>
-            </SectionCard>
-
-            <SectionCard title="Create Subject" subtitle="Attach a subject to class and faculty.">
-              <input
-                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium"
-                placeholder="Subject Name"
-                value={subjectName}
-                onChange={(e) => setSubjectName(e.target.value)}
-              />
-
-              <select
-                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-4 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium appearance-none"
-                value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
-              >
-                <option className="bg-slate-900" value="">Select Class</option>
-                {classes.map((c) => (
-                  <option className="bg-slate-900" key={c._id} value={c._id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white mb-5 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all font-medium appearance-none"
-                value={selectedTeacher}
-                onChange={(e) => setSelectedTeacher(e.target.value)}
-              >
-                <option className="bg-slate-900" value="">Select Teacher</option>
-                {teachers.map((t) => (
-                  <option className="bg-slate-900" key={t._id} value={t._id}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={createSubject}
-                className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all duration-300"
-              >
-                Create Subject
-              </button>
-            </SectionCard>
-
-            <SectionCard
-              title="Create Timetable Entry"
-              subtitle="Schedule a lecture or teaching slot."
-              className="xl:col-span-3"
-            >
-              <div className="grid md:grid-cols-5 gap-4">
-                <select
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium appearance-none"
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Day</option>
-                  {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((d) => (
-                    <option className="bg-slate-900" key={d} value={d}>
-                      {d}
-                    </option>
-                  ))}
-                </select>
-
-                <input
-                  type="time"
-                  className="rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                />
-
-                <select
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium appearance-none"
-                  value={timeClass}
-                  onChange={(e) => setTimeClass(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Class</option>
-                  {classes.map((c) => (
-                    <option className="bg-slate-900" key={c._id} value={c._id}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all font-medium appearance-none"
-                  value={timeSubject}
-                  onChange={(e) => setTimeSubject(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="">Select Subject</option>
-                  {subjects
-                    .filter((s) => String(s.classId?._id || s.classId) === String(timeClass))
-                    .map((s) => (
-                      <option className="bg-slate-900" key={s._id} value={s._id}>
-                        {s.name}
-                      </option>
-                    ))}
-                </select>
-
-                <button
-                  onClick={createTimetable}
-                  className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-black tracking-widest uppercase text-sm py-3.5 shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all duration-300"
-                >
-                  Save Entry
-                </button>
               </div>
-            </SectionCard>
-          </div>
-        )}
 
-        {/* ATTENDANCE */}
-        {activeTab === "attendance" && (
-          <div className="grid md:grid-cols-2 gap-6 animate-fadeUp">
-            <SectionCard title="Attendance Trend" subtitle="Monthly overview of attendance performance.">
-              {attendanceTrend.length === 0 ? (
-                <EmptyState text="No attendance data available." />
-              ) : (
-                <div className="space-y-5">
-                  {attendanceTrend.map((t, i) => (
-                    <div key={i} className="flex items-center gap-4">
-                      <span className="w-24 text-xs font-bold uppercase tracking-widest text-slate-400">
-                        {t.month}
-                      </span>
-
-                      <div className="flex-1 rounded-full h-3 bg-slate-950/70 border border-slate-800 shadow-inner overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-gradient-to-r from-cyan-600 to-blue-400 transition-all duration-1000"
-                          style={{ width: `${t.value}%` }}
-                        />
-                      </div>
-
-                      <span className="w-12 text-right text-cyan-400 font-black">
-                        {t.value}%
-                      </span>
+              {/* Two Column Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <SectionCard title="Secondary Metrics">
+                  <div className="grid grid-cols-2 gap-4">
+                    <StatTile label="Total Faculty" value={stats.totalTeachers} icon={<Icons.Faculty />} color="text-blue-500" />
+                    <StatTile label="Active Classes" value={stats.totalClasses} icon={<Icons.Class />} color="text-indigo-500" />
+                    <StatTile label="Departments" value={stats.totalDepartments} icon={<Icons.University />} color="text-purple-500" />
+                    <StatTile label="Programs" value={stats.totalPrograms} icon={<Icons.Book />} color="text-cyan-500" />
+                  </div>
+                </SectionCard>
+                
+                <SectionCard title="Pending Approvals & Alerts">
+                  <div className="mb-4">
+                    <p className="text-xs text-slate-400 uppercase tracking-widest font-semibold mb-2">Pending Users</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-4xl font-bold text-white">{stats.pendingApprovals}</p>
+                      <span className="text-sm text-red-500 font-medium">needs attention</span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </SectionCard>
-
-            <SectionCard
-              title="Students Below Threshold"
-              subtitle="Priority list for intervention and notifications."
-              action={
-                <button
-                  onClick={() => exportCSV("low_attendance", lowAttendance)}
-                  className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
-                >
-                  Export CSV
-                </button>
-              }
-            >
-              {lowAttendance.length === 0 ? (
-                <EmptyState text="No low attendance cases." />
-              ) : (
-                <div className="space-y-3">
-                  {lowAttendance.map((s) => (
-                    <div
-                      key={s._id}
-                      className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 flex justify-between items-center shadow-inner"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-white font-bold truncate">{s.name}</p>
-                        <p className="text-xs text-slate-500 font-mono truncate">{s.email}</p>
-                      </div>
-
-                      <span className="px-3 py-1.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-black shadow-inner shrink-0">
-                        {s.attendance}%
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </SectionCard>
-          </div>
-        )}
-
-        {/* RESULTS */}
-        {activeTab === "results" && (
-          <SectionCard
-            title="Results & Examination"
-            subtitle="Mark entry launch points by student and subject."
-            className="animate-fadeUp"
-          >
-            {students.length === 0 ? (
-              <EmptyState text="No student records available." />
-            ) : (
-              <div className="space-y-5">
-                {students.map((s) => (
-                  <div
-                    key={s._id}
-                    className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-6 hover:border-cyan-500/30 transition-colors duration-300"
-                  >
-                    <p className="text-white font-black text-xl flex items-center flex-wrap gap-3">
-                      {s.name}
-                      <span className="px-3 py-1 rounded-lg border border-slate-700 bg-slate-950/70 text-xs text-slate-400 font-mono shadow-inner">
-                        {s.email}
-                      </span>
-                    </p>
-
-                    <div className="flex flex-wrap gap-3 mt-5">
-                      {subjects.map((sub) => (
-                        <button
-                          key={sub._id}
-                          onClick={() => alert(`Open marks entry for ${s.name} - ${sub.name}`)}
-                          className="px-4 py-2.5 rounded-xl bg-slate-800/50 hover:bg-cyan-600/20 border border-slate-600 hover:border-cyan-500/50 text-xs font-bold uppercase tracking-widest text-slate-300 hover:text-cyan-400 transition-all shadow-inner"
-                        >
-                          Enter Marks: {sub.name}
-                        </button>
+                  </div>
+                  
+                  {pendingUsers.length === 0 ? (
+                    <EmptyState text="No pending requests." />
+                  ) : (
+                    <div className="space-y-2 mt-4">
+                      {pendingUsers.slice(0, 3).map((user) => (
+                        <div key={user._id} className="flex items-center justify-between py-2 border-b border-slate-700\/30 last:border-0">
+                          <div>
+                            <p className="text-sm font-semibold text-white">{user.name}</p>
+                            <p className="text-xs text-slate-400">{user.email}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={() => approveUser(user._id)} className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded hover:bg-green-200">Approve</button>
+                            <button onClick={() => rejectUser(user._id)} className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded hover:bg-red-200">Reject</button>
+                          </div>
+                        </div>
                       ))}
                     </div>
+                  )}
+                  <div className="mt-4 flex justify-center">
+                    <button className="bg-gray-800 text-white text-xs px-4 py-2 rounded-full font-medium" onClick={() => setActiveTab("users")}>View All Pending</button>
                   </div>
-                ))}
-              </div>
-            )}
-          </SectionCard>
-        )}
-
-        {/* FEES */}
-        {activeTab === "fees" && (
-          <div className="space-y-6 animate-fadeUp">
-            <div className="grid md:grid-cols-3 gap-5">
-              <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 p-6 shadow-xl">
-                <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Total Fees</p>
-                <p className="text-3xl font-black text-white mt-2">
-                  ₹{feeSummary.total.toLocaleString()}
-                </p>
-              </div>
-
-              <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-emerald-500/30 p-6 shadow-[0_0_20px_rgba(16,185,129,0.1)] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-full blur-2xl"></div>
-                <p className="text-emerald-400/80 text-sm font-bold uppercase tracking-widest relative z-10">Collected</p>
-                <p className="text-3xl font-black text-emerald-400 mt-2 relative z-10">
-                  ₹{feeSummary.paid.toLocaleString()}
-                </p>
-              </div>
-
-              <div className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-rose-500/30 p-6 shadow-[0_0_20px_rgba(244,63,94,0.1)] relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl"></div>
-                <p className="text-rose-400/80 text-sm font-bold uppercase tracking-widest relative z-10">Pending</p>
-                <p className="text-3xl font-black text-rose-400 mt-2 relative z-10">
-                  ₹{feeSummary.pending.toLocaleString()}
-                </p>
+                </SectionCard>
               </div>
             </div>
+          )}
 
-            <SectionCard title="Financial Ledger" subtitle="Update fee record statuses and review balances.">
-              {fees.length === 0 ? (
-                <EmptyState text="No fee records found." />
-              ) : (
-                <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {fees.map((f) => (
-                    <div
-                      key={f._id}
-                      className="rounded-[2rem] border border-slate-700/50 bg-slate-900/40 p-6 relative overflow-hidden shadow-lg hover:border-cyan-500/20 transition-colors"
-                    >
-                      <div
-                        className={`absolute -top-8 -right-8 w-28 h-28 blur-[50px] rounded-full ${f.status === "paid"
-                          ? "bg-emerald-500/30"
-                          : f.status === "partial"
-                            ? "bg-amber-500/30"
-                            : "bg-rose-500/30"
-                          }`}
-                      />
-
-                      <div className="relative z-10">
-                        <p className="text-white font-black text-lg truncate">
-                          {f.studentName || "Student"}
-                        </p>
-
-                        <p className="text-xs text-slate-400 mt-1 font-mono truncate">
-                          {f.studentEmail || ""}
-                        </p>
-
-                        <div className="mt-4 space-y-2">
-                          <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                            <p className="text-xs font-bold text-slate-500">Amount:</p>
-                            <p className="text-sm font-black text-white">₹{(f.amount || f.totalAmount || 0).toLocaleString()}</p>
-                          </div>
-
-                          <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                            <p className="text-xs font-bold text-slate-500">Paid:</p>
-                            <p className="text-sm font-black text-emerald-400">₹{(f.amountPaid || 0).toLocaleString()}</p>
-                          </div>
-
-                          <div className="flex justify-between items-center bg-slate-950/70 p-2 rounded-lg border border-slate-800">
-                            <p className="text-xs font-bold text-slate-500">Balance:</p>
-                            <p className="text-sm font-black text-rose-400">₹{Math.max((f.totalAmount || f.amount || 0) - (f.amountPaid || 0), 0).toLocaleString()}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex justify-between items-center mt-3">
-                          <p className="text-xs font-medium text-slate-500">Due: {formatDate(f.dueDate)}</p>
-                          <p className="text-xs font-medium text-slate-500">Class: {f.className || "—"}</p>
-                        </div>
-
-                        <span
-                          className={`inline-block mt-4 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border shadow-inner ${f.status === "paid"
-                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                            : f.status === "partial"
-                              ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                              : f.status === "overdue"
-                                ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                                : "bg-slate-800/80 text-slate-300 border-slate-600"
-                            }`}
-                        >
-                          {f.status}
-                        </span>
-
-                        <div className="mt-5 grid grid-cols-2 gap-2">
-                          <button
-                            onClick={() => updateFeeStatus(f._id, "paid")}
-                            className="px-3 py-2.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/20 hover:border-emerald-500/40 text-emerald-400 text-[10px] uppercase tracking-widest font-black transition-all"
-                          >
-                            Set Paid
-                          </button>
-
-                          <button
-                            onClick={() => updateFeeStatus(f._id, "partial")}
-                            className="px-3 py-2.5 rounded-xl bg-amber-600/10 hover:bg-amber-600/20 border border-amber-500/20 hover:border-amber-500/40 text-amber-400 text-[10px] uppercase tracking-widest font-black transition-all"
-                          >
-                            Set Partial
-                          </button>
-
-                          <button
-                            onClick={() => updateFeeStatus(f._id, "pending")}
-                            className="col-span-2 px-3 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-300 text-[10px] uppercase tracking-widest font-black transition-all shadow-inner"
-                          >
-                            Reset to Pending
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </SectionCard>
-          </div>
-        )}
-
-        {/* REPORTS */}
-        {activeTab === "reports" && (
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6 animate-fadeUp">
-            {[
-              { title: "Student Report", desc: "Export student records", rows: students, name: "students_report" },
-              { title: "Faculty Report", desc: "Export faculty records", rows: teachers, name: "faculty_report" },
-              { title: "Department Report", desc: "Export departments", rows: departments, name: "department_report" },
-              { title: "Program Report", desc: "Export programs", rows: programs, name: "program_report" },
-              { title: "Attendance Report", desc: "Export low attendance", rows: lowAttendance, name: "attendance_report" },
-              { title: "Fees Report", desc: "Export fees ledger", rows: fees, name: "fees_report" },
-            ].map((r, i) => (
-              <div
-                key={i}
-                className="rounded-[2rem] bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 p-6 shadow-xl hover:border-cyan-500/30 transition-colors group"
-              >
-                <h3 className="text-white font-bold text-lg group-hover:text-cyan-50 transition-colors">{r.title}</h3>
-                <p className="text-slate-400 font-medium text-sm mt-2 mb-6">{r.desc}</p>
-
-                <button
-                  onClick={() => exportCSV(r.name, r.rows)}
-                  className="w-full px-5 py-3 rounded-xl bg-slate-800/80 hover:bg-cyan-600/20 border border-slate-600 hover:border-cyan-500/50 text-slate-200 hover:text-cyan-400 text-sm font-black uppercase tracking-widest transition-all shadow-inner"
-                >
-                  Download CSV
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ANNOUNCEMENTS */}
-        {activeTab === "announcements" && (
-          <div className="grid lg:grid-cols-2 gap-6 animate-fadeUp">
-            <SectionCard title="Broadcast Announcement" subtitle="Send institution-wide or targeted notices.">
-              <textarea
-                rows={6}
-                className="w-full rounded-2xl bg-slate-950/50 border border-slate-700/50 px-4 py-4 text-white resize-none mb-4 outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                placeholder="Write announcement message..."
-                value={newAnnouncement}
-                onChange={(e) => setNewAnnouncement(e.target.value)}
-              />
-
-              <div className="grid md:grid-cols-[1fr_auto] gap-4">
-                <select
-                  className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
-                  value={announcementTarget}
-                  onChange={(e) => setAnnouncementTarget(e.target.value)}
-                >
-                  <option className="bg-slate-900" value="all">All Users</option>
-                  <option className="bg-slate-900" value="students">Students</option>
-                  <option className="bg-slate-900" value="teachers">Faculty</option>
-                  <option className="bg-slate-900" value="admins">Admins</option>
-                </select>
-
-                <button
-                  onClick={sendAnnouncement}
-                  className="rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm px-6 py-3.5 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
-                >
-                  Send Announcement
-                </button>
-              </div>
-            </SectionCard>
-
-            <SectionCard title="Announcement Feed" subtitle="Most recent institutional communications.">
-              {announcements.length === 0 ? (
-                <EmptyState text="No announcements available." />
-              ) : (
-                <div className="space-y-3">
-                  {announcements.map((item, idx) => (
-                    <div
-                      key={item._id || idx}
-                      className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner"
-                    >
-                      <div className="flex items-center justify-between gap-3 mb-2">
-                        <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black uppercase tracking-widest">
-                          {item.target || "all"}
-                        </span>
-                        <span className="text-xs font-medium text-slate-500">{formatDate(item.createdAt)}</span>
-                      </div>
-
-                      <p className="text-white text-sm font-medium leading-relaxed">
-                        {item.message || item.title || "Announcement"}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </SectionCard>
-          </div>
-        )}
-
-        {/* AUDIT */}
-        {activeTab === "audit" && (
-          <SectionCard
-            title="Audit Trail"
-            subtitle="System logs and accountability events."
-            className="animate-fadeUp"
-            action={
-              <button
-                onClick={() => exportCSV("audit_logs", auditLogs)}
-                className="px-4 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-sm font-bold text-slate-200 transition-colors shadow-inner"
-              >
-                Export CSV
-              </button>
-            }
-          >
-            {auditLogs.length === 0 ? (
-              <EmptyState text="No audit logs available." />
-            ) : (
-              <div className="space-y-3">
-                {auditLogs.map((log, idx) => (
-                  <div
-                    key={log._id || idx}
-                    className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner hover:border-cyan-500/20 transition-colors"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                      <div>
-                        <p className="text-white font-bold">{log.action || log.message || "Audit event"}</p>
-                        <p className="text-xs font-medium text-slate-500 mt-1">
-                          {log.actorName || log.user?.name || log.email || "System"} • {formatDate(log.createdAt)}
-                        </p>
-                      </div>
-
-                      <span className="px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-[10px] uppercase font-black tracking-widest text-slate-400 shadow-inner">
-                        {log.module || log.type || "general"}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </SectionCard>
-        )}
-
-        {/* SETTINGS */}
-        {activeTab === "settings" && (
-          <div className="grid lg:grid-cols-2 gap-6 animate-fadeUp">
-            <SectionCard title="Platform Settings" subtitle="Update institutional display and policy values.">
-              <div className="grid gap-5">
-                <div>
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
-                    University Name
-                  </label>
-                  <input
-                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                    value={settings.universityName}
-                    onChange={(e) =>
-                      setSettings((prev) => ({ ...prev, universityName: e.target.value }))
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
-                    Current Session
-                  </label>
-                  <input
-                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                    value={settings.currentSession}
-                    onChange={(e) =>
-                      setSettings((prev) => ({ ...prev, currentSession: e.target.value }))
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
-                    Attendance Threshold (%)
-                  </label>
-                  <input
-                    type="number"
-                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium"
-                    value={settings.attendanceThreshold}
-                    onChange={(e) =>
-                      setSettings((prev) => ({
-                        ...prev,
-                        attendanceThreshold: Number(e.target.value || 0),
-                      }))
-                    }
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">
-                    Currency
-                  </label>
-                  <select
-                    className="w-full rounded-xl bg-slate-950/50 border border-slate-700/50 px-4 py-3.5 text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all font-medium appearance-none"
-                    value={settings.currency}
-                    onChange={(e) =>
-                      setSettings((prev) => ({ ...prev, currency: e.target.value }))
-                    }
-                  >
-                    <option className="bg-slate-900" value="INR">INR</option>
-                    <option className="bg-slate-900" value="USD">USD</option>
-                    <option className="bg-slate-900" value="EUR">EUR</option>
+          {/* UNIVERSITY TAB */}
+          {activeTab === "university" && (
+            <div className="space-y-6">
+              <div className="grid lg:grid-cols-2 gap-6">
+                <SectionCard title="Create Department" subtitle="Define a new academic department.">
+                  <input className={inputClasses + " mb-3"} placeholder="Department Name" value={departmentName} onChange={(e) => setDepartmentName(e.target.value)} />
+                  <select className={inputClasses + " mb-4"} value={departmentHead} onChange={(e) => setDepartmentHead(e.target.value)}>
+                    <option value="">Head of Department (Optional)</option>
+                    {teachers.map((t) => (<option key={t._id} value={t._id}>{t.name}</option>))}
                   </select>
-                </div>
+                  <button onClick={createDepartment} className={btnClasses + " w-full"}>Create Department</button>
+                </SectionCard>
 
-                <button
-                  onClick={saveSettings}
-                  className="w-full mt-4 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black tracking-widest uppercase text-sm shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all duration-300"
-                >
-                  Save Global Settings
-                </button>
+                <SectionCard title="Create Program" subtitle="Add a new program under a department.">
+                  <input className={inputClasses + " mb-3"} placeholder="Program Name" value={programName} onChange={(e) => setProgramName(e.target.value)} />
+                  <select className={inputClasses + " mb-4"} value={programDept} onChange={(e) => setProgramDept(e.target.value)}>
+                    <option value="">Select Department</option>
+                    {departments.map((d) => (<option key={d._id} value={d._id}>{d.name}</option>))}
+                  </select>
+                  <button onClick={createProgram} className={btnClasses + " w-full bg-indigo-500 hover:bg-indigo-600"}>Create Program</button>
+                </SectionCard>
               </div>
-            </SectionCard>
 
-            <SectionCard title="System Overview" subtitle="Administrative configuration summary and reminders.">
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner">
-                  <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
-                    Current Session
-                  </p>
-                  <p className="text-white font-bold text-lg">{settings.currentSession}</p>
+              <div className="grid lg:grid-cols-2 gap-6">
+                <SectionCard title="Departments" subtitle="Current departmental structure." action={<button onClick={() => exportCSV("departments", departments)} className="text-xs bg-slate-800\/40 border border-gray-300 px-3 py-1 rounded">Export CSV</button>}>
+                  {departments.length === 0 ? <EmptyState text="No departments created yet." /> : (
+                    <div className="grid gap-3">
+                      {departments.map((dept) => (
+                        <div key={dept._id} className="border border-slate-700\/50 rounded p-4 bg-slate-800\/30 flex justify-between items-center">
+                          <p className="font-semibold text-white">{dept.name}</p>
+                          <span className="text-xs font-medium text-slate-400 bg-gray-200 px-2 py-1 rounded">
+                            Programs: {programs.filter((p) => String(p.departmentId?._id || p.departmentId) === String(dept._id)).length}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </SectionCard>
+
+                <SectionCard title="Programs" subtitle="All registered programs." action={<button onClick={() => exportCSV("programs", programs)} className="text-xs bg-slate-800\/40 border border-gray-300 px-3 py-1 rounded">Export CSV</button>}>
+                  {programs.length === 0 ? <EmptyState text="No programs created yet." /> : (
+                    <div className="grid gap-3">
+                      {programs.map((program) => (
+                        <div key={program._id} className="border border-slate-700\/50 rounded p-4 bg-slate-800\/30">
+                          <p className="font-semibold text-white">{program.name}</p>
+                          <p className="text-xs text-slate-400 mt-1">Department: {departments.find((d) => String(d._id) === String(program.departmentId?._id || program.departmentId))?.name || "Unknown"}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </SectionCard>
+              </div>
+            </div>
+          )}
+
+          {/* USERS TAB */}
+          {activeTab === "users" && (
+            <div className="space-y-6">
+              <SectionCard title="Enroll Student" subtitle="Create a student profile and attach it to a class and program.">
+                <div className="grid md:grid-cols-5 gap-3">
+                  <input className={inputClasses} placeholder="Full Name" value={studentName} onChange={(e) => setStudentName(e.target.value)} />
+                  <input className={inputClasses} placeholder="University Email" value={studentEmail} onChange={(e) => setStudentEmail(e.target.value)} />
+                  <select className={inputClasses} value={studentClass} onChange={(e) => setStudentClass(e.target.value)}>
+                    <option value="">Select Class</option>
+                    {classes.map((c) => (<option key={c._id} value={c._id}>{c.name}</option>))}
+                  </select>
+                  <select className={inputClasses} value={studentProgram} onChange={(e) => setStudentProgram(e.target.value)}>
+                    <option value="">Select Program</option>
+                    {programs.map((p) => (<option key={p._id} value={p._id}>{p.name}</option>))}
+                  </select>
+                  <button onClick={addStudent} className={btnClasses + " bg-green-500 hover:bg-green-600"}>Enroll</button>
                 </div>
+              </SectionCard>
 
-                <div className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner">
-                  <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
-                    Attendance Threshold
-                  </p>
-                  <p className="text-cyan-400 font-bold text-lg">{settings.attendanceThreshold}%</p>
+              <SectionCard title="Student Directory" subtitle="Search and export student records." action={
+                <div className="flex gap-2">
+                  <input placeholder="Search student..." value={studentSearch} onChange={(e) => setStudentSearch(e.target.value)} className={inputClasses + " w-auto"} />
+                  <button onClick={() => exportCSV("students", filteredStudents)} className="bg-slate-800\/40 text-slate-200 border border-gray-300 text-sm px-3 py-2 rounded hover:bg-gray-200">Export</button>
                 </div>
+              }>
+                {filteredStudents.length === 0 ? <EmptyState text="No students found." /> : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-slate-800\/30 border-y border-slate-700\/50 text-xs uppercase text-slate-400 font-semibold tracking-wider">
+                          <th className="py-3 px-4">Name</th>
+                          <th className="py-3 px-4">Email</th>
+                          <th className="py-3 px-4">Reg No</th>
+                          <th className="py-3 px-4">Semester</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {filteredStudents.map((s) => (
+                          <tr key={s._id} className="hover:bg-slate-800\/30">
+                            <td className="py-3 px-4 font-medium text-white">{s.name}</td>
+                            <td className="py-3 px-4 text-sm text-slate-300">{s.email}</td>
+                            <td className="py-3 px-4 text-sm text-blue-600 font-mono">{s.roll || "N/A"}</td>
+                            <td className="py-3 px-4 text-sm text-slate-300">{s.currentSemester || 1}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </SectionCard>
+            </div>
+          )}
 
-                <div className="rounded-2xl border border-slate-700/50 bg-slate-950/70 p-4 shadow-inner">
-                  <p className="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black mb-2">
-                    Reporting Currency
-                  </p>
-                  <p className="text-white font-bold text-lg">{settings.currency}</p>
+          {/* FACULTY TAB */}
+          {activeTab === "faculty" && (
+            <div className="space-y-6">
+              <SectionCard title="Add Teacher / Faculty" subtitle="Create a faculty profile and assign department.">
+                <div className="grid md:grid-cols-4 gap-3">
+                  <input className={inputClasses} placeholder="Full Name" value={teacherName} onChange={(e) => setTeacherName(e.target.value)} />
+                  <input className={inputClasses} placeholder="Email" value={teacherEmail} onChange={(e) => setTeacherEmail(e.target.value)} />
+                  <select className={inputClasses} value={teacherDepartment} onChange={(e) => setTeacherDepartment(e.target.value)}>
+                    <option value="">Select Department</option>
+                    {departments.map((d) => (<option key={d._id} value={d._id}>{d.name}</option>))}
+                  </select>
+                  <button onClick={addTeacher} className={btnClasses + " bg-indigo-500 hover:bg-indigo-600"}>Add Faculty</button>
                 </div>
+              </SectionCard>
 
-                <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-5 text-sm font-medium text-cyan-200/80 leading-relaxed shadow-inner">
-                  These settings are used across administrative displays and downstream modules.
-                  Saving updates here will keep the dashboard aligned with the active institutional configuration.
+              <SectionCard title="Faculty Directory" subtitle="Search, review, and export faculty profiles." action={
+                <div className="flex gap-2">
+                  <input placeholder="Search faculty..." value={teacherSearch} onChange={(e) => setTeacherSearch(e.target.value)} className={inputClasses + " w-auto"} />
+                  <button onClick={() => exportCSV("teachers", filteredTeachers)} className="bg-slate-800\/40 text-slate-200 border border-gray-300 text-sm px-3 py-2 rounded hover:bg-gray-200">Export</button>
+                </div>
+              }>
+                {filteredTeachers.length === 0 ? <EmptyState text="No faculty found." /> : (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredTeachers.map((t) => (
+                      <div key={t._id} className="border border-slate-700\/50 rounded-md p-4 bg-transparent shadow-sm flex flex-col justify-between">
+                        <div>
+                          <p className="font-semibold text-white">{t.name}</p>
+                          <p className="text-xs text-slate-400 mt-1">{t.email}</p>
+                        </div>
+                        <div className="mt-4 flex justify-end">
+                          <button onClick={() => deleteTeacher(t._id)} className="text-xs text-red-500 hover:bg-red-50 border border-red-200 px-3 py-1.5 rounded transition-colors">Remove</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+            </div>
+          )}
+
+          {/* ACADEMICS TAB */}
+          {activeTab === "courses" && (<div className="fade-in"><CourseCatalog /></div>)}
+
+          {activeTab === "academics" && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <SectionCard title="Create Class / Cohort" subtitle="Provision a new class container.">
+                <input className={inputClasses + " mb-3"} placeholder="Class / Cohort Name" value={className} onChange={(e) => setClassName(e.target.value)} />
+                <select className={inputClasses + " mb-3"} value={classProgramId} onChange={(e) => setClassProgramId(e.target.value)}>
+                  <option value="">Select Program</option>
+                  {programs.map((p) => (<option key={p._id} value={p._id}>{p.name}</option>))}
+                </select>
+                <input type="number" min="1" max="10" className={inputClasses + " mb-4"} placeholder="Semester (e.g. 1)" value={classSemester} onChange={(e) => setClassSemester(e.target.value)} />
+                <button onClick={createClass} className={btnClasses + " w-full bg-blue-900\/200 hover:bg-blue-600"}>Create Class</button>
+              </SectionCard>
+
+              <SectionCard title="Assign Teacher to Class" subtitle="Link a faculty member to a cohort.">
+                <select className={inputClasses + " mb-3"} value={assignClass} onChange={(e) => setAssignClass(e.target.value)}>
+                  <option value="">Select Class</option>
+                  {classes.map((c) => (<option key={c._id} value={c._id}>{c.name}</option>))}
+                </select>
+                <select className={inputClasses + " mb-4"} value={assignTeacher} onChange={(e) => setAssignTeacher(e.target.value)}>
+                  <option value="">Select Teacher</option>
+                  {teachers.map((t) => (<option key={t._id} value={t._id}>{t.name}</option>))}
+                </select>
+                <button onClick={assignTeacherToClass} className={btnClasses + " w-full bg-indigo-500 hover:bg-indigo-600"}>Assign Faculty</button>
+              </SectionCard>
+
+              {/* Subject creation is now automated via master course mapping in Create Class */}
+
+              <SectionCard title="Create Timetable Entry" subtitle="Schedule a lecture or teaching slot." className="lg:col-span-3">
+                <div className="grid md:grid-cols-5 gap-3">
+                  <select className={inputClasses} value={day} onChange={(e) => setDay(e.target.value)}>
+                    <option value="">Select Day</option>
+                    {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((d) => (<option key={d} value={d}>{d}</option>))}
+                  </select>
+                  <input type="time" className={inputClasses} value={time} onChange={(e) => setTime(e.target.value)} />
+                  <select className={inputClasses} value={timeClass} onChange={(e) => setTimeClass(e.target.value)}>
+                    <option value="">Select Class</option>
+                    {classes.map((c) => (<option key={c._id} value={c._id}>{c.name}</option>))}
+                  </select>
+                  <select className={inputClasses} value={timeSubject} onChange={(e) => setTimeSubject(e.target.value)}>
+                    <option value="">Select Subject</option>
+                    {subjects.filter((s) => String(s.classId?._id || s.classId) === String(timeClass)).map((s) => (<option key={s._id} value={s._id}>{s.name}</option>))}
+                  </select>
+                  <button onClick={createTimetable} className={btnClasses + " bg-orange-500 hover:bg-orange-600"}>Save Entry</button>
+                </div>
+              </SectionCard>
+            </div>
+          )}
+
+          {/* ATTENDANCE TAB */}
+          {activeTab === "attendance" && (
+            <div className="grid md:grid-cols-2 gap-6">
+              <SectionCard title="Attendance Trend" subtitle="Monthly overview of attendance performance.">
+                {attendanceTrend.length === 0 ? <EmptyState text="No attendance data available." /> : (
+                  <div className="space-y-4">
+                    {attendanceTrend.map((t, i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <span className="w-16 text-xs font-semibold text-slate-400 uppercase">{t.month}</span>
+                        <div className="flex-1 h-2 bg-slate-800\/40 rounded-full overflow-hidden">
+                          <div className="h-full bg-green-500" style={{ width: `${t.value}%` }} />
+                        </div>
+                        <span className="w-10 text-right text-sm font-bold text-slate-200">{t.value}%</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+
+              <SectionCard title="Students Below Threshold" subtitle="Priority list for intervention." action={<button onClick={() => exportCSV("low_attendance", lowAttendance)} className="text-xs bg-slate-800\/40 border border-gray-300 px-3 py-1 rounded">Export CSV</button>}>
+                {lowAttendance.length === 0 ? <EmptyState text="No low attendance cases." /> : (
+                  <div className="space-y-2">
+                    {lowAttendance.map((s) => (
+                      <div key={s._id} className="flex justify-between items-center py-2 border-b border-slate-700\/30 last:border-0">
+                        <div>
+                          <p className="font-semibold text-white text-sm">{s.name}</p>
+                          <p className="text-xs text-slate-400">{s.email}</p>
+                        </div>
+                        <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-bold">{s.attendance}%</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+            </div>
+          )}
+
+          {/* RESULTS TAB */}
+          {activeTab === "results" && (
+              <SectionCard title="Results & Examination" subtitle="Mark entry launch points by student enrolled section.">
+                {students.length === 0 ? <EmptyState text="No student records available." /> : (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">    
+                    {students.map((s) => (
+                      <div key={s._id} className="border border-slate-700\/50 bg-transparent rounded-md p-4 shadow-sm flex flex-col h-full">
+                        <p className="font-semibold text-white">{s.name}</p>    
+                        <p className="text-xs text-slate-400 mb-1">{s.email}</p>
+                        <p className="text-[10px] uppercase font-bold text-cyan-400 mb-4 bg-cyan-900/20 inline-block w-max px-2 py-0.5 rounded">
+                          {s.classId ? `Section: ${s.classId.name} | Sem: ${s.classId.semester || 1}` : "No Section Assigned"}
+                        </p>
+                        
+                        <div className="space-y-2 mt-auto">
+                          {subjects
+                            .filter((sub) => String(sub.classId?._id || sub.classId) === String(s.classId?._id || s.classId))
+                            .map((sub) => (
+                              <button key={sub._id} onClick={() => handleEnterMarks(s, sub)} className="w-full text-left text-xs bg-slate-800\/30 hover:bg-blue-900\/20 border border-slate-700\/50 hover:border-blue-300 text-slate-200 hover:text-blue-400 px-3 py-2 rounded transition-colors">        
+                                Enter Marks: {sub.name}
+                              </button>
+                            ))
+                          }
+                          {subjects.filter((sub) => String(sub.classId?._id || sub.classId) === String(s.classId?._id || s.classId)).length === 0 && (
+                             <p className="text-xs text-red-500 italic pt-2">No subjects mapped to this section.</p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+            )}
+
+          {/* FEES TAB */}
+          {activeTab === "fees" && (
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="bg-transparent border border-slate-700\/50 rounded p-5 shadow-sm text-center">
+                  <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">Total Fees</p>
+                  <p className="text-2xl font-bold text-white mt-1">₹{feeSummary.total.toLocaleString()}</p>
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded p-5 shadow-sm text-center">
+                  <p className="text-green-600 text-xs font-bold uppercase tracking-wider">Collected</p>
+                  <p className="text-2xl font-bold text-green-600 mt-1">₹{feeSummary.paid.toLocaleString()}</p>
+                </div>
+                <div className="bg-red-50 border border-red-200 rounded p-5 shadow-sm text-center">
+                  <p className="text-red-600 text-xs font-bold uppercase tracking-wider">Pending</p>
+                  <p className="text-2xl font-bold text-red-600 mt-1">₹{feeSummary.pending.toLocaleString()}</p>
                 </div>
               </div>
+
+              <SectionCard title="Financial Ledger" subtitle="Update fee record statuses and review balances.">
+                {fees.length === 0 ? <EmptyState text="No fee records found." /> : (
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {fees.map((f) => (
+                      <div key={f._id} className="border border-slate-700\/50 rounded-md p-4 bg-transparent shadow-sm flex flex-col justify-between">
+                        <div>
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <p className="font-semibold text-white">{f.studentName || "Student"}</p>
+                              <p className="text-xs text-slate-400">{f.studentEmail || ""}</p>
+                            </div>
+                            <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${f.status === 'paid' ? 'bg-green-100 text-green-700' : f.status === 'partial' ? 'bg-orange-100 text-orange-700' : f.status === 'overdue' ? 'bg-red-100 text-red-700' : 'bg-slate-800\/40 text-slate-200'}`}>
+                              {f.status}
+                            </span>
+                          </div>
+                          
+                          <div className="mt-4 mb-4 bg-slate-800\/30 rounded p-3 text-sm space-y-1 border border-slate-700\/30">
+                            <div className="flex justify-between"><span className="text-slate-400">Amount:</span> <span className="font-semibold text-white">₹{(f.amount || f.totalAmount || 0).toLocaleString()}</span></div>
+                            <div className="flex justify-between"><span className="text-slate-400">Paid:</span> <span className="font-semibold text-green-600">₹{(f.amountPaid || 0).toLocaleString()}</span></div>
+                            <div className="flex justify-between border-t border-slate-700\/50 pt-1 mt-1"><span className="text-slate-400">Balance:</span> <span className="font-semibold text-red-500">₹{Math.max((f.totalAmount || f.amount || 0) - (f.amountPaid || 0), 0).toLocaleString()}</span></div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <button onClick={() => updateFeeStatus(f._id, "paid")} className="flex-1 text-[10px] uppercase font-bold bg-green-50 hover:bg-green-100 text-green-600 border border-green-200 py-1.5 rounded transition-colors">Paid</button>
+                          <button onClick={() => updateFeeStatus(f._id, "partial")} className="flex-1 text-[10px] uppercase font-bold bg-orange-50 hover:bg-orange-100 text-orange-600 border border-orange-200 py-1.5 rounded transition-colors">Partial</button>
+                          <button onClick={() => updateFeeStatus(f._id, "pending")} className="flex-1 text-[10px] uppercase font-bold bg-slate-800\/30 hover:bg-slate-800\/40 text-slate-300 border border-slate-700\/50 py-1.5 rounded transition-colors">Reset</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+            </div>
+          )}
+
+          {/* REPORTS TAB */}
+          {activeTab === "reports" && (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { title: "Student Report", desc: "Export student records", rows: students, name: "students_report" },
+                { title: "Faculty Report", desc: "Export faculty records", rows: teachers, name: "faculty_report" },
+                { title: "Department Report", desc: "Export departments", rows: departments, name: "department_report" },
+                { title: "Program Report", desc: "Export programs", rows: programs, name: "program_report" },
+                { title: "Attendance Report", desc: "Export low attendance", rows: lowAttendance, name: "attendance_report" },
+                { title: "Fees Report", desc: "Export fees ledger", rows: fees, name: "fees_report" },
+              ].map((r, i) => (
+                <div key={i} className="bg-transparent border border-slate-700\/50 rounded p-5 shadow-sm text-center flex flex-col items-center">
+                  <div className="w-12 h-12 bg-blue-900\/20 text-blue-500 rounded-full flex items-center justify-center mb-3"><Icons.Report /></div>
+                  <h3 className="font-semibold text-white">{r.title}</h3>
+                  <p className="text-xs text-slate-400 mt-1 mb-4">{r.desc}</p>
+                  <button onClick={() => exportCSV(r.name, r.rows)} className="w-full text-xs font-semibold uppercase text-blue-600 border border-blue-200 hover:bg-blue-900\/20 py-2 rounded transition-colors">Download CSV</button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ANNOUNCEMENTS TAB */}
+          {activeTab === "announcements" && (
+            <div className="grid lg:grid-cols-2 gap-6">
+              <SectionCard title="Broadcast Announcement" subtitle="Send institution-wide notices.">
+                <textarea rows={4} className={inputClasses + " mb-3 resize-none"} placeholder="Write announcement message..." value={newAnnouncement} onChange={(e) => setNewAnnouncement(e.target.value)} />
+                <div className="flex gap-3">
+                  <select className={inputClasses} value={announcementTarget} onChange={(e) => setAnnouncementTarget(e.target.value)}>
+                    <option value="all">All Users</option>
+                    <option value="students">Students</option>
+                    <option value="teachers">Faculty</option>
+                    <option value="admins">Admins</option>
+                  </select>
+                  <button onClick={sendAnnouncement} className={btnClasses + " whitespace-nowrap"}>Send Notice</button>
+                </div>
+              </SectionCard>
+
+              <SectionCard title="Announcement Feed" subtitle="Recent communications.">
+                {announcements.length === 0 ? <EmptyState text="No announcements available." /> : (
+                  <div className="space-y-3">
+                    {announcements.map((item, idx) => (
+                      <div key={item._id || idx} className="border-l-4 border-blue-500 bg-slate-800\/30 p-3 rounded-r">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-[10px] font-bold uppercase text-blue-600 bg-blue-500/20 px-2 py-0.5 rounded">{item.target || "all"}</span>
+                          <span className="text-xs text-gray-400">{formatDate(item.createdAt)}</span>
+                        </div>
+                        <p className="text-sm text-slate-200">{item.message || item.title || "Announcement"}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </SectionCard>
+            </div>
+          )}
+
+          {/* AUDIT TAB */}
+          {activeTab === "audit" && (
+            <SectionCard title="Audit Trail" subtitle="System logs and accountability events." action={<button onClick={() => exportCSV("audit_logs", auditLogs)} className="text-xs bg-slate-800\/40 border border-gray-300 px-3 py-1 rounded">Export CSV</button>}>
+              {auditLogs.length === 0 ? <EmptyState text="No audit logs available." /> : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="bg-slate-800\/30 border-y border-slate-700\/50 text-slate-400">
+                        <th className="py-2 px-4">Action</th>
+                        <th className="py-2 px-4">User</th>
+                        <th className="py-2 px-4">Module</th>
+                        <th className="py-2 px-4">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {auditLogs.map((log, idx) => (
+                        <tr key={log._id || idx} className="hover:bg-slate-800\/30">
+                          <td className="py-2 px-4 text-white font-medium">{log.action || log.message || "Audit event"}</td>
+                          <td className="py-2 px-4 text-slate-300">{log.actorName || log.user?.name || log.email || "System"}</td>
+                          <td className="py-2 px-4"><span className="bg-gray-200 text-slate-300 text-[10px] uppercase font-bold px-2 py-0.5 rounded">{log.module || log.type || "general"}</span></td>
+                          <td className="py-2 px-4 text-slate-400 text-xs">{formatDate(log.createdAt)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </SectionCard>
-          </div>
-        )}
+          )}
+
+          {/* SETTINGS TAB */}
+          {activeTab === "settings" && (
+            <div className="grid lg:grid-cols-2 gap-6">
+              <SectionCard title="Platform Settings" subtitle="Update institutional display and policy values.">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">University Name</label>
+                    <input className={inputClasses} value={settings.universityName} onChange={(e) => setSettings((prev) => ({ ...prev, universityName: e.target.value }))} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">Current Session</label>
+                    <input className={inputClasses} value={settings.currentSession} onChange={(e) => setSettings((prev) => ({ ...prev, currentSession: e.target.value }))} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">Attendance Threshold (%)</label>
+                    <input type="number" className={inputClasses} value={settings.attendanceThreshold} onChange={(e) => setSettings((prev) => ({ ...prev, attendanceThreshold: Number(e.target.value || 0) }))} />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">Currency</label>
+                    <select className={inputClasses} value={settings.currency} onChange={(e) => setSettings((prev) => ({ ...prev, currency: e.target.value }))}>
+                      <option value="INR">INR</option>
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                    </select>
+                  </div>
+                  <button onClick={saveSettings} className={btnClasses + " w-full mt-2 bg-green-500 hover:bg-green-600"}>Save Settings</button>
+                </div>
+              </SectionCard>
+
+              <SectionCard title="System Overview" subtitle="Configuration summary.">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-800\/30 border border-slate-700\/50 rounded p-4 text-center">
+                    <p className="text-[10px] text-slate-400 uppercase font-bold">Current Session</p>
+                    <p className="text-lg font-semibold text-white mt-1">{settings.currentSession}</p>
+                  </div>
+                  <div className="bg-slate-800\/30 border border-slate-700\/50 rounded p-4 text-center">
+                    <p className="text-[10px] text-slate-400 uppercase font-bold">Attendance Threshold</p>
+                    <p className="text-lg font-semibold text-blue-600 mt-1">{settings.attendanceThreshold}%</p>
+                  </div>
+                  <div className="bg-slate-800\/30 border border-slate-700\/50 rounded p-4 text-center">
+                    <p className="text-[10px] text-slate-400 uppercase font-bold">Currency</p>
+                    <p className="text-lg font-semibold text-white mt-1">{settings.currency}</p>
+                  </div>
+                </div>
+                <div className="mt-4 bg-blue-900\/20 text-blue-400 p-3 rounded text-sm border border-blue-500\/30">
+                  Changing these values will immediately affect how data is presented globally across the dashboard.
+                </div>
+              </SectionCard>
+            </div>
+          )}
+
+          {activeTab === "timetable" && (
+            <TimetableManager classes={classes} subjects={subjects} teachers={teachers} />
+          )}
+
+          {activeTab === "library" && (
+            <div className="animate-fadeIn">
+              <LibraryManager />
+            </div>
+          )}
+        </main>
       </div>
 
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            @keyframes float-slow {
-              0%, 100% { transform: translateY(0px) scale(1); }
-              50% { transform: translateY(-30px) scale(1.05); }
-            }
-            @keyframes float-delayed {
-              0%, 100% { transform: translateY(0px) scale(1); }
-              50% { transform: translateY(40px) scale(0.95); }
-            }
-            @keyframes fadeUp {
-              0% { opacity: 0; transform: translateY(16px); }
-              100% { opacity: 1; transform: translateY(0); }
-            }
-            .animate-float-slow { animation: float-slow 10s ease-in-out infinite; }
-            .animate-float-delayed { animation: float-delayed 12s ease-in-out infinite 2s; }
-            .animate-fadeUp { animation: fadeUp .45s ease-out both; }
-            .hide-scrollbar::-webkit-scrollbar { display: none; }
-            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-          `,
-        }}
-      />
+      {/* Marks Entry Modal */}
+      {marksState.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-transparent rounded-lg p-6 w-96 shadow-xl">
+            <h2 className="text-lg font-bold text-white mb-2">Enter Marks</h2>
+            <p className="text-sm text-slate-300 mb-4">
+              Student: <span className="font-semibold">{marksState.student?.name}</span> <br/>
+              Subject: <span className="font-semibold">{marksState.subject?.name}</span>
+            </p>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Marks Obtained</label>
+                <input type="number" className={inputClasses} value={marksState.marksObtained} onChange={(e) => setMarksState({ ...marksState, marksObtained: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Total Marks</label>
+                <input type="number" className={inputClasses} value={marksState.totalMarks} onChange={(e) => setMarksState({ ...marksState, totalMarks: e.target.value })} />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Remarks</label>
+                <textarea rows={2} className={inputClasses + " resize-none"} value={marksState.remarks} onChange={(e) => setMarksState({ ...marksState, remarks: e.target.value })} />
+              </div>
+            </div>
+            <div className="flex gap-3 mt-6">
+              <button className="flex-1 bg-gray-200 text-slate-200 py-2 rounded font-medium text-sm hover:bg-gray-300" onClick={() => setMarksState({ ...marksState, isOpen: false })}>Cancel</button>
+              <button className="flex-1 bg-blue-900\/200 text-white py-2 rounded font-medium text-sm hover:bg-blue-600" onClick={submitMarks}>Save</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

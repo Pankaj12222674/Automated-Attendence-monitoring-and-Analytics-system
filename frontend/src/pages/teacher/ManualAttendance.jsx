@@ -153,20 +153,22 @@ export default function ManualAttendance() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-slate-950 flex overflow-hidden relative items-center justify-center">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
+        <div className="w-12 h-12 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-32">
+    <div className="overflow-hidden relative min-h-screen bg-slate-950 text-slate-200 pb-32">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       
       {/* HEADER */}
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <button onClick={() => navigate(-1)} className="text-sm font-medium text-indigo-400 hover:text-indigo-300 mb-1 flex items-center gap-1">
+            <button onClick={() => navigate(-1)} className="text-sm font-medium text-cyan-400 hover:text-cyan-300 mb-1 flex items-center gap-1">
               ← Back to Portal
             </button>
             <h1 className="text-xl font-bold text-white leading-tight">Record Attendance</h1>
@@ -175,7 +177,7 @@ export default function ManualAttendance() {
           <button 
             onClick={submitAttendance}
             disabled={saving}
-            className="hidden md:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold transition shadow-lg shadow-indigo-500/20 disabled:opacity-70"
+            className="hidden md:flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-white px-6 py-2.5 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 disabled:opacity-70"
           >
             <Icons.Save /> {saving ? "Saving..." : "Save Register"}
           </button>
@@ -185,12 +187,12 @@ export default function ManualAttendance() {
       <div className="max-w-4xl mx-auto px-6 pt-8">
 
         {/* CONTROLS (Date & Session Type) */}
-        <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl mb-8 flex flex-col md:flex-row gap-6">
+        <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 p-6 rounded-3xl mb-8 flex flex-col md:flex-row gap-6">
           <div className="flex-1">
             <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Academic Date</label>
             <input
               type="date"
-              className="w-full bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition"
+              className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3 rounded-xl focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
@@ -198,7 +200,7 @@ export default function ManualAttendance() {
           <div className="flex-1">
             <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Session Type</label>
             <select
-              className="w-full bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition"
+              className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3 rounded-xl focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition"
               value={sessionType}
               onChange={(e) => setSessionType(e.target.value)}
             >
@@ -225,9 +227,9 @@ export default function ManualAttendance() {
             <span className="text-2xl font-black text-rose-500">{counts.absent}</span>
             <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider mt-1">Absent</span>
           </div>
-          <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl flex flex-col items-center justify-center">
-            <span className="text-2xl font-black text-indigo-400">{counts.excused}</span>
-            <span className="text-[10px] font-bold text-indigo-300 uppercase tracking-wider mt-1">Excused</span>
+          <div className="bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl flex flex-col items-center justify-center">
+            <span className="text-2xl font-black text-cyan-400">{counts.excused}</span>
+            <span className="text-[10px] font-bold text-cyan-300 uppercase tracking-wider mt-1">Excused</span>
           </div>
           
           {/* Quick Action Overrides */}
@@ -244,7 +246,7 @@ export default function ManualAttendance() {
         {/* STUDENT LIST */}
         <div className="space-y-3">
           {students.length === 0 && (
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-10 text-center text-slate-500">
+            <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-10 text-center text-slate-500">
               No students are registered in this cohort.
             </div>
           )}
@@ -256,7 +258,7 @@ export default function ManualAttendance() {
               <div 
                 key={s._id} 
                 className={`flex flex-col md:flex-row items-start md:items-center justify-between p-4 rounded-2xl border transition-colors ${
-                  data.isExcused ? 'bg-indigo-900/20 border-indigo-500/30' :
+                  data.isExcused ? 'bg-cyan-900/20 border-cyan-500/30' :
                   data.status === 'present' ? 'bg-slate-900 border-slate-800' :
                   data.status === 'late' ? 'bg-amber-900/10 border-amber-500/20' :
                   'bg-rose-900/10 border-rose-500/20'
@@ -300,7 +302,7 @@ export default function ManualAttendance() {
                     onClick={() => toggleExcused(s._id)}
                     className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                       data.isExcused 
-                        ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg shadow-indigo-500/20' 
+                        ? 'bg-cyan-600 text-white border-cyan-500 shadow-lg shadow-cyan-500/20' 
                         : 'bg-slate-950 text-slate-500 border-slate-800 hover:bg-slate-900'
                     }`}
                     title="Mark as University Excused Absence (e.g. Medical)"
@@ -320,7 +322,7 @@ export default function ManualAttendance() {
         <button 
           onClick={submitAttendance}
           disabled={saving}
-          className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3.5 rounded-xl font-bold transition shadow-lg shadow-indigo-500/20 disabled:opacity-70"
+          className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-white px-6 py-3.5 rounded-xl font-bold transition shadow-lg shadow-cyan-500/20 disabled:opacity-70"
         >
           <Icons.Save /> {saving ? "Saving Records..." : "Save Register"}
         </button>

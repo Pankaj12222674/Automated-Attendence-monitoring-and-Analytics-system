@@ -220,6 +220,7 @@ export default function StudentDashboard() {
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [subjectComparison, setSubjectComparison] = useState([]);
+  const [advancedAnalytics, setAdvancedAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -322,6 +323,7 @@ export default function StudentDashboard() {
           ),
           api.get(`/api/student/attendance/summary/${studentId}`, { signal }),
           api.get(`/api/student/attendance/history/${studentId}`, { signal }),
+          api.get(`/api/attendance/analytics/advanced?studentId=${studentId}`, { signal }),
           api.get(`/api/student/attendance/analytics/${studentId}`, { signal }),
           api.get(`/api/fees/my-fees`, { signal }),
         ];
@@ -333,6 +335,7 @@ export default function StudentDashboard() {
           announcementsRes,
           summaryRes,
           historyRes,
+          advancedAnalyticsRes,
           analyticsRes,
           feesRes,
         ] = await Promise.allSettled(requests);
@@ -412,6 +415,14 @@ export default function StudentDashboard() {
           setMonthlyData([]);
           setSubjectComparison([]);
           console.error("Attendance analytics failed", analyticsRes.reason);
+        }
+
+        // Advanced Analytics
+        if (advancedAnalyticsRes.status === "fulfilled") {
+          setAdvancedAnalytics(advancedAnalyticsRes.value.data.data || null);
+        } else {
+          setAdvancedAnalytics(null);
+          console.error("Advanced analytics failed", advancedAnalyticsRes.reason);
         }
 
         // Fees
@@ -598,6 +609,15 @@ export default function StudentDashboard() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full xl:w-auto">
+              <div className="rounded-3xl p-5 bg-slate-950/70 border border-slate-700/50 backdrop-blur-md flex flex-col justify-center min-w-[170px] shadow-inner">
+                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-1">Current CGPA</p>
+                <div className="flex items-end gap-2 text-white">
+                  <p className="text-3xl font-black">{profile?.cgpa ? parseFloat(profile.cgpa).toFixed(2) : "N/A"}</p>
+                  <p className="text-xs font-bold text-slate-400 mb-1">/ 10.0</p>
+                </div>
+                <p className="text-xs font-medium text-slate-400 mt-2">{profile?.creditsEarned || 0} Credits Earned</p>
+              </div>
+
               <button
                 onClick={() => navigate("/student/qr-scan")}
                 className="group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 rounded-3xl p-5 flex flex-col items-center justify-center min-w-[170px] transform hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(6,182,212,0.4)] border border-transparent hover:border-white/20"
@@ -764,6 +784,40 @@ export default function StudentDashboard() {
                 </div>
               </div>
             </div>
+
+            {/* ADVANCED ANALYTICS (PREDICTIONS) */}
+            {advancedAnalytics && advancedAnalytics.subjectWise?.length > 0 && (
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-[2rem] p-6 shadow-xl mb-10 overflow-hidden relative group">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-50"></div>
+                
+                <div className="relative z-10 mb-6">
+                  <h2 className="text-xl font-black text-white flex items-center gap-2">
+                    <Icons.TrendingUp /> Smart Attendance Prognosis
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">Algorithm predicting classes needed for 75% threshold.</p>
+                </div>
+
+                <div className="relative z-10 grid gap-4 grid-cols-1 md:grid-cols-2">
+                  {advancedAnalytics.subjectWise.map((stat, index) => (
+                    <div key={stat.subjectCode || index} className={`border rounded-xl p-4 flex flex-col justify-between ${stat.isBelowThreshold ? 'border-rose-500/30 bg-rose-500/5' : 'border-emerald-500/30 bg-emerald-500/5'}`}>
+                      <div className="flex justify-between">
+                        <span className="font-bold text-white max-w-[70%] truncate" title={stat.subjectName}>{stat.subjectName}</span>
+                        <span className={`font-black ${stat.isBelowThreshold ? 'text-rose-400' : 'text-emerald-400'}`}>{stat.percentage}%</span>
+                      </div>
+                      
+                      <div className="mt-3 flex items-center justify-between text-xs">
+                        <div className="text-slate-400">
+                          {stat.present} / {stat.total} Sessions
+                        </div>
+                        <div className={`px-3 py-1 rounded-full font-bold uppercase tracking-wider ${stat.isBelowThreshold ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/20 text-emerald-300'}`}>
+                          {stat.statusLabel}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Modules */}
             <div>

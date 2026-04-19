@@ -146,7 +146,7 @@ function matchBySubject(item, subject) {
 function StatCard({ icon, label, value, subtext, accent = "cyan" }) {
   const accentMap = {
     cyan: "from-cyan-500/20 to-blue-500/5 border-cyan-500/20 text-cyan-300",
-    blue: "from-blue-500/20 to-indigo-500/5 border-blue-500/20 text-blue-300",
+    blue: "from-blue-500/20 to-cyan-500/5 border-blue-500/20 text-blue-300",
     emerald: "from-emerald-500/20 to-teal-500/5 border-emerald-500/20 text-emerald-300",
     amber: "from-amber-500/20 to-orange-500/5 border-amber-500/20 text-amber-300",
     rose: "from-rose-500/20 to-red-500/5 border-rose-500/20 text-rose-300",
@@ -238,16 +238,11 @@ export default function TeacherDashboard() {
     setProfileImageFailed(false);
   }, [profile?.profileImage]);
 
-  // kept compatible with your existing “university-level” data
-  const [advisingStudents] = useState(12);
-  const [researchProjects] = useState([
-    { title: "Deep Learning in Predictive Academics", status: "In Progress", role: "Lead Investigator" },
-    { title: "Quantum Computing Algorithms", status: "Published", role: "Co-Author" },
-  ]);
-  const [officeHours] = useState([
-    { day: "Tuesday", time: "14:00 - 16:00", location: "Block C, Room 402" },
-    { day: "Thursday", time: "10:00 - 12:00", location: "Virtual (Zoom)" },
-  ]);
+  // profile update settings
+  const [advisingStudents, setAdvisingStudents] = useState(0);
+  const [researchProjects, setResearchProjects] = useState([]);
+  const [officeHours, setOfficeHours] = useState([]);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   const currentDay = useMemo(
     () => new Date().toLocaleString("en-US", { weekday: "long" }),
@@ -333,6 +328,10 @@ export default function TeacherDashboard() {
 
         const user = userRes.data.user || userRes.data;
         setProfile(user);
+        
+        setAdvisingStudents(user.advisingStudents || 0);
+        setResearchProjects(user.researchProjects || []);
+        setOfficeHours(user.officeHours || []);
 
         const teacherId = user?._id || user?.id;
         if (!teacherId) {
@@ -485,6 +484,7 @@ export default function TeacherDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30 overflow-hidden relative">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       {/* Floating 3D Background Orbs & Grid */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" />
@@ -588,10 +588,18 @@ export default function TeacherDashboard() {
             </div>
 
             <div className="grid sm:grid-cols-2 xl:grid-cols-1 gap-4">
-              <div className="rounded-[1.75rem] p-5 bg-slate-950/70 border border-slate-700/50 backdrop-blur-md shadow-inner">
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Faculty Alias</p>
-                <p className="text-xl font-black text-white">{facultyFirstName}</p>
-                <p className="text-xs font-medium text-slate-400 mt-1">Command access authenticated</p>
+              <div className="rounded-[1.75rem] p-5 bg-slate-950/70 border border-slate-700/50 backdrop-blur-md shadow-inner flex flex-col justify-between">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.22em] text-slate-500 mb-2">Faculty Alias</p>
+                  <p className="text-xl font-black text-white">{facultyFirstName}</p>
+                  <p className="text-xs font-medium text-slate-400 mt-1">Command access authenticated</p>
+                </div>
+                <button
+                  onClick={() => setIsEditingProfile(true)}
+                  className="mt-4 px-4 py-2 bg-cyan-600/10 hover:bg-cyan-600 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-inner"
+                >
+                  Edit Profile
+                </button>
               </div>
 
               <div className="rounded-[1.75rem] p-5 bg-slate-950/70 border border-slate-700/50 backdrop-blur-md shadow-inner">
@@ -652,7 +660,6 @@ export default function TeacherDashboard() {
               right={
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <Icons.Search />
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
                       <Icons.Search />
                     </span>
@@ -1073,6 +1080,205 @@ export default function TeacherDashboard() {
           `,
         }}
       />
+
+      {/* Edit Profile Modal */}
+      {isEditingProfile && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-slate-900 border border-slate-700/50 rounded-[2rem] p-8 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-black text-white">Edit Profile Details</h2>
+              <button
+                onClick={() => setIsEditingProfile(false)}
+                className="text-slate-400 hover:text-white transition-colors text-2xl"
+                type="button"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                try {
+                  await api.put("/api/auth/me/teacher", {
+                    advisingStudents,
+                    researchProjects,
+                    officeHours,
+                  });
+                  setIsEditingProfile(false);
+                  loadDashboard({ silent: true });
+                } catch (err) {
+                  console.error("Profile update failed:", err);
+                  alert("Failed to update profile");
+                }
+              }}
+              className="space-y-6"
+            >
+              {/* Advising Students */}
+              <div>
+                <label className="block text-sm font-bold text-white mb-2">Advising Students</label>
+                <input
+                  type="number"
+                  value={advisingStudents}
+                  onChange={(e) => setAdvisingStudents(parseInt(e.target.value) || 0)}
+                  min="0"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/70 border border-slate-700/50 text-white focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all outline-none"
+                />
+              </div>
+
+              {/* Research Projects */}
+              <div>
+                <label className="block text-sm font-bold text-white mb-2">Research Projects</label>
+                <div className="space-y-3">
+                  {researchProjects.map((project, idx) => (
+                    <div key={idx} className="flex gap-3 items-start border border-slate-700/30 p-4 rounded-xl bg-slate-800/30">
+                      <div className="flex-1 space-y-3">
+                        <input
+                          type="text"
+                          placeholder="Project Title"
+                          value={project.title || ""}
+                          onChange={(e) => {
+                            const updated = [...researchProjects];
+                            updated[idx].title = e.target.value;
+                            setResearchProjects(updated);
+                          }}
+                          className="w-full px-4 py-2 rounded-lg bg-slate-900 border border-slate-600/50 text-white text-sm focus:border-cyan-500 outline-none"
+                          required
+                        />
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <input
+                            type="text"
+                            placeholder="Role"
+                            value={project.role || ""}
+                            onChange={(e) => {
+                              const updated = [...researchProjects];
+                              updated[idx].role = e.target.value;
+                              setResearchProjects(updated);
+                            }}
+                            className="flex-1 px-4 py-2 rounded-lg bg-slate-900 border border-slate-600/50 text-white text-sm focus:border-cyan-500 outline-none"
+                          />
+                          <select
+                            value={project.status || ""}
+                            onChange={(e) => {
+                              const updated = [...researchProjects];
+                              updated[idx].status = e.target.value;
+                              setResearchProjects(updated);
+                            }}
+                            className="sm:w-40 px-4 py-2 rounded-lg bg-slate-900 border border-slate-600/50 text-white text-sm focus:border-cyan-500 outline-none"
+                          >
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Published">Published</option>
+                            <option value="In Progress">In Progress</option>
+                          </select>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setResearchProjects(researchProjects.filter((_, i) => i !== idx))}
+                        className="px-3 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 rounded-lg text-xs font-bold transition-colors h-full flex items-center justify-center"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setResearchProjects([...researchProjects, { title: "", role: "", status: "Ongoing" }])}
+                    className="w-full py-2 bg-emerald-600/10 hover:bg-emerald-600 border border-emerald-500/30 text-emerald-400 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all border-dashed"
+                  >
+                    + Add Research Project
+                  </button>
+                </div>
+              </div>
+
+              {/* Office Hours */}
+              <div>
+                <label className="block text-sm font-bold text-white mb-2">Office Hours</label>
+                <div className="space-y-3">
+                  {officeHours.map((slot, idx) => (
+                    <div key={idx} className="flex gap-3 items-start border border-slate-700/30 p-4 rounded-xl bg-slate-800/30">
+                      <div className="flex-1 space-y-3">
+                        <select
+                          value={slot.day || ""}
+                          onChange={(e) => {
+                            const updated = [...officeHours];
+                            updated[idx].day = e.target.value;
+                            setOfficeHours(updated);
+                          }}
+                          className="w-full px-4 py-2 rounded-lg bg-slate-900 border border-slate-600/50 text-white text-sm focus:border-cyan-500 outline-none"
+                        >
+                          <option value="">Select Day...</option>
+                          <option value="Monday">Monday</option>
+                          <option value="Tuesday">Tuesday</option>
+                          <option value="Wednesday">Wednesday</option>
+                          <option value="Thursday">Thursday</option>
+                          <option value="Friday">Friday</option>
+                          <option value="Saturday">Saturday</option>
+                        </select>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <input
+                            type="text"
+                            placeholder="Time (e.g., 10:00 AM - 12:00 PM)"
+                            value={slot.time || ""}
+                            onChange={(e) => {
+                              const updated = [...officeHours];
+                              updated[idx].time = e.target.value;
+                              setOfficeHours(updated);
+                            }}
+                            className="flex-1 px-4 py-2 rounded-lg bg-slate-900 border border-slate-600/50 text-white text-sm focus:border-cyan-500 outline-none"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Location"
+                            value={slot.location || ""}
+                            onChange={(e) => {
+                              const updated = [...officeHours];
+                              updated[idx].location = e.target.value;
+                              setOfficeHours(updated);
+                            }}
+                            className="flex-1 px-4 py-2 rounded-lg bg-slate-900 border border-slate-600/50 text-white text-sm focus:border-cyan-500 outline-none"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setOfficeHours(officeHours.filter((_, i) => i !== idx))}
+                        className="px-3 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 rounded-lg text-xs font-bold transition-colors h-full flex items-center justify-center"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setOfficeHours([...officeHours, { day: "", time: "", location: "" }])}
+                    className="w-full py-2 bg-cyan-600/10 hover:bg-cyan-600 border border-cyan-500/30 text-cyan-400 hover:text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all border-dashed"
+                  >
+                    + Add Office Hours
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-slate-700/50 flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setIsEditingProfile(false)}
+                  className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl font-bold transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl font-bold transition-colors shadow-lg shadow-cyan-500/20"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

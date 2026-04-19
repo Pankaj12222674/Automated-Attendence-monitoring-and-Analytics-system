@@ -143,7 +143,7 @@ export default function GenerateQR() {
           </div>
           <div className="h-4 bg-slate-900 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-indigo-500 transition-all duration-1000 ease-linear"
+              className="h-full bg-cyan-500 transition-all duration-1000 ease-linear"
               style={{ width: `${(timeLeft / REFRESH_INTERVAL) * 100}%` }}
             ></div>
           </div>
@@ -164,17 +164,18 @@ export default function GenerateQR() {
         STANDARD INSTRUCTOR UI
   =============================== */
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans selection:bg-indigo-500/30 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-slate-950 overflow-hidden relative text-slate-200 pb-20 font-sans selection:bg-cyan-500/30 flex flex-col items-center justify-center p-6">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       
-      <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-2xl bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         
         {/* Background glow */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-[100px]"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-[100px]"></div>
 
         {/* Header */}
         <div className="flex justify-between items-start mb-8 relative z-10">
           <div>
-            <button onClick={() => navigate("/teacher/dashboard")} className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2 mb-4">
+            <button onClick={() => navigate("/teacher/dashboard")} className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2 mb-4">
               <Icons.ArrowLeft /> Exit Generator
             </button>
             <h1 className="text-3xl font-black text-white tracking-tight">Secure Check-In</h1>
@@ -187,7 +188,7 @@ export default function GenerateQR() {
           <div className="space-y-6 relative z-10">
             
             {/* Geofence Status */}
-            <div className="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-center gap-3">
+            <div className="bg-slate-950/70 border border-slate-700/50 shadow-inner p-4 rounded-2xl flex items-center gap-3">
               <div className={`p-2 rounded-xl ${gpsCoords ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}`}>
                 <Icons.MapPin />
               </div>
@@ -201,7 +202,7 @@ export default function GenerateQR() {
             <div className="mb-6">
               <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Session Type</label>
               <select
-                className="w-full bg-slate-950 border border-slate-800 text-white p-4 rounded-2xl focus:border-indigo-500 outline-none transition"
+                className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-4 rounded-2xl focus:border-cyan-500 outline-none transition"
                 value={sessionType}
                 onChange={(e) => setSessionType(e.target.value)}
               >
@@ -213,14 +214,14 @@ export default function GenerateQR() {
             </div>
 
             {/* Warning Note */}
-            <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl text-sm text-indigo-300 font-medium">
+            <div className="bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-2xl text-sm text-cyan-300 font-medium">
               Note: The cryptographic QR code will automatically rotate every {REFRESH_INTERVAL} seconds to prevent unauthorized proxy scanning.
             </div>
 
             <button
               onClick={startSession}
               disabled={!gpsCoords}
-              className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] text-white rounded-2xl font-bold text-lg transition-all shadow-lg shadow-cyan-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Initialize Live Session
             </button>
@@ -236,7 +237,7 @@ export default function GenerateQR() {
                 <img src={qrImage} alt="Live QR" className="w-64 h-64 object-contain" />
               ) : (
                 <div className="w-64 h-64 flex items-center justify-center">
-                  <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+                  <div className="w-10 h-10 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
                 </div>
               )}
             </div>
@@ -245,11 +246,11 @@ export default function GenerateQR() {
             <div className="w-full max-w-sm mb-8">
               <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
                 <span>Token Refresh</span>
-                <span className={timeLeft <= 3 ? "text-rose-400" : "text-indigo-400"}>{timeLeft}s</span>
+                <span className={timeLeft <= 3 ? "text-rose-400" : "text-cyan-400"}>{timeLeft}s</span>
               </div>
               <div className="h-2 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
                 <div 
-                  className={`h-full transition-all duration-1000 ease-linear ${timeLeft <= 3 ? "bg-rose-500" : "bg-indigo-500"}`}
+                  className={`h-full transition-all duration-1000 ease-linear ${timeLeft <= 3 ? "bg-rose-500" : "bg-cyan-500"}`}
                   style={{ width: `${(timeLeft / REFRESH_INTERVAL) * 100}%` }}
                 ></div>
               </div>

@@ -203,13 +203,14 @@ const FaceAttendance = () => {
         RENDER UI
   =============================== */
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 font-sans selection:bg-indigo-500/30 flex flex-col">
+    <div className="min-h-screen bg-slate-950 overflow-hidden relative text-slate-200 font-sans selection:bg-cyan-500/30 flex flex-col">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       
       {/* Header */}
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40 shadow-xl">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <div>
-            <Link to="/teacher/dashboard" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2 mb-1">
+            <Link to="/teacher/dashboard" className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2 mb-1">
               <Icons.ArrowLeft /> Exit Scanner
             </Link>
             <h1 className="text-xl font-bold text-white leading-tight">Biometric Capture</h1>
@@ -230,7 +231,7 @@ const FaceAttendance = () => {
         {/* LEFT COLUMN: Controls & List */}
         <div className="w-full lg:w-80 flex flex-col gap-6">
           
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-xl">
             <h2 className="text-lg font-bold text-white mb-4">Scanner Configuration</h2>
             
             {/* Session Type Selection */}
@@ -238,7 +239,7 @@ const FaceAttendance = () => {
               <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Session Type</label>
               <select
                 disabled={isCameraActive}
-                className="w-full bg-slate-950 border border-slate-800 text-white p-3.5 rounded-xl focus:border-indigo-500 outline-none transition disabled:opacity-50"
+                className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-3.5 rounded-xl focus:border-cyan-500 outline-none transition disabled:opacity-50"
                 value={sessionType}
                 onChange={(e) => setSessionType(e.target.value)}
               >
@@ -250,14 +251,14 @@ const FaceAttendance = () => {
             </div>
 
             {loadingMsg ? (
-              <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-center">
-                <div className="w-6 h-6 border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto mb-3"></div>
-                <p className="text-xs font-bold text-indigo-400">{loadingMsg}</p>
+              <div className="p-4 bg-cyan-500/10 border border-cyan-500/20 rounded-xl text-center">
+                <div className="w-6 h-6 border-2 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-3"></div>
+                <p className="text-xs font-bold text-cyan-400">{loadingMsg}</p>
               </div>
             ) : !isCameraActive ? (
               <button
                 onClick={startCamera}
-                className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-indigo-900/20 flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] font-bold transition-all shadow-lg shadow-cyan-900/20 flex items-center justify-center gap-2"
               >
                 <Icons.FaceScan /> Initialize Optics
               </button>
@@ -272,7 +273,7 @@ const FaceAttendance = () => {
           </div>
 
           {/* Scanned Students List */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl flex-1 flex flex-col">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-xl flex-1 flex flex-col">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-bold text-white">Verified Roster</h2>
               <span className="text-xs font-bold bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded-md">{markedStudents.length}</span>
@@ -296,13 +297,13 @@ const FaceAttendance = () => {
         </div>
 
         {/* RIGHT COLUMN: Camera HUD */}
-        <div className="flex-1 bg-slate-900 border border-slate-800 p-4 rounded-3xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="flex-1 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 p-4 rounded-3xl shadow-xl flex flex-col items-center justify-center relative overflow-hidden">
           
           {/* Target Brackets UI */}
-          <div className="absolute top-8 left-8 w-16 h-16 border-t-4 border-l-4 border-indigo-500/50 rounded-tl-2xl z-10 pointer-events-none hidden sm:block"></div>
-          <div className="absolute top-8 right-8 w-16 h-16 border-t-4 border-r-4 border-indigo-500/50 rounded-tr-2xl z-10 pointer-events-none hidden sm:block"></div>
-          <div className="absolute bottom-8 left-8 w-16 h-16 border-b-4 border-l-4 border-indigo-500/50 rounded-bl-2xl z-10 pointer-events-none hidden sm:block"></div>
-          <div className="absolute bottom-8 right-8 w-16 h-16 border-b-4 border-r-4 border-indigo-500/50 rounded-br-2xl z-10 pointer-events-none hidden sm:block"></div>
+          <div className="absolute top-8 left-8 w-16 h-16 border-t-4 border-l-4 border-cyan-500/50 rounded-tl-2xl z-10 pointer-events-none hidden sm:block"></div>
+          <div className="absolute top-8 right-8 w-16 h-16 border-t-4 border-r-4 border-cyan-500/50 rounded-tr-2xl z-10 pointer-events-none hidden sm:block"></div>
+          <div className="absolute bottom-8 left-8 w-16 h-16 border-b-4 border-l-4 border-cyan-500/50 rounded-bl-2xl z-10 pointer-events-none hidden sm:block"></div>
+          <div className="absolute bottom-8 right-8 w-16 h-16 border-b-4 border-r-4 border-cyan-500/50 rounded-br-2xl z-10 pointer-events-none hidden sm:block"></div>
 
           <div className="relative bg-black rounded-2xl overflow-hidden w-full max-w-[720px] aspect-video sm:aspect-auto sm:h-[560px] shadow-2xl flex items-center justify-center">
             

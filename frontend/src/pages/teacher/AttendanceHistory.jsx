@@ -190,11 +190,12 @@ export default function AttendanceHistory() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0b0f19] text-slate-200 flex flex-col items-center justify-center">
+      <div className="overflow-hidden relative min-h-screen bg-slate-950 text-slate-200 flex flex-col items-center justify-center">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
         <div className="relative w-20 h-20">
-          <div className="absolute inset-0 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
         </div>
-        <p className="text-indigo-400 font-medium mt-6 tracking-widest uppercase text-sm animate-pulse">
+        <p className="text-cyan-400 font-medium mt-6 tracking-widest uppercase text-sm animate-pulse">
           Loading Attendance Archive...
         </p>
       </div>
@@ -202,11 +203,12 @@ export default function AttendanceHistory() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans selection:bg-indigo-500/30 overflow-hidden relative">
+    <div className="min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30 overflow-hidden relative">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       {/* Ambient background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-float-slow"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[150px] mix-blend-screen animate-float-delayed"></div>
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/20 rounded-full blur-[120px] mix-blend-screen animate-float-slow"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[150px] mix-blend-screen animate-float-delayed"></div>
       </div>
 
       {/* Top Bar */}
@@ -251,11 +253,11 @@ export default function AttendanceHistory() {
 
         {/* Hero */}
         <div className="relative mb-8 rounded-[2.25rem] p-8 md:p-10 overflow-hidden bg-gradient-to-br from-slate-900 to-[#12182b] border-t border-l border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-indigo-500/5 to-transparent pointer-events-none"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-cyan-500/5 to-transparent pointer-events-none"></div>
 
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
             <div>
-              <p className="text-indigo-400 text-sm font-black uppercase tracking-[0.22em] mb-3">
+              <p className="text-cyan-400 text-sm font-black uppercase tracking-[0.22em] mb-3">
                 Attendance Archive
               </p>
               <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight">
@@ -317,7 +319,7 @@ export default function AttendanceHistory() {
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-5">
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-400 mb-2">
+                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-cyan-400 mb-2">
                         Session {index + 1}
                       </p>
                       <h3 className="text-xl font-black text-white">

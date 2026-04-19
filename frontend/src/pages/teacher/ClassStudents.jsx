@@ -89,7 +89,8 @@ export default function ClassStudents() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0b0f1a] flex items-center justify-center text-white">
+      <div className="min-h-screen bg-slate-950 flex overflow-hidden relative items-center justify-center text-white">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
           <p>Loading students and attendance data...</p>
@@ -99,9 +100,10 @@ export default function ClassStudents() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f1a] text-slate-200 pb-20">
+    <div className="overflow-hidden relative min-h-screen bg-slate-950 text-slate-200 pb-20">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
       {/* Sticky Header */}
-      <div className="sticky top-0 bg-[#111827]/95 backdrop-blur-md border-b border-white/10 z-50">
+      <div className="sticky top-0 bg-slate-900/70 backdrop-blur-md border-b border-white/10 z-50">
         <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -132,13 +134,13 @@ export default function ClassStudents() {
             placeholder="Search by name or roll number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-[#1e293b] border border-white/10 pl-12 py-4 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 border border-white/10 pl-12 py-4 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
           />
         </div>
 
         {/* Students Table */}
-        <div className="bg-[#1e293b] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
-          <div className="p-6 border-b border-white/10 bg-[#111827] flex justify-between items-center">
+        <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+          <div className="p-6 border-b border-white/10 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 flex justify-between items-center">
             <h2 className="font-semibold text-xl">Class Students</h2>
             <span className="text-xs uppercase tracking-widest text-slate-400">Attendance Percentage</span>
           </div>
@@ -167,7 +169,7 @@ export default function ClassStudents() {
                     const percent = studentAnalytics[student._id]?.percentage || 0;
 
                     return (
-                      <tr key={student._id} className="hover:bg-white/5 transition-colors group">
+                      <tr key={student._id} className="hover:bg-cyan-500/10 transition-colors group">
                         <td className="px-8 py-6 font-mono text-slate-300">{student.roll || "—"}</td>
                         <td className="px-8 py-6 font-medium text-white flex items-center gap-3">
                           <div className="w-9 h-9 bg-slate-700 rounded-2xl flex items-center justify-center">

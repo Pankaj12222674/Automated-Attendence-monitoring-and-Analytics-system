@@ -95,7 +95,7 @@ function getMethodBadge(method) {
 
   if (m === "qr") {
     return (
-      <span className="flex items-center gap-1 px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-lg text-xs font-bold">
+      <span className="flex items-center gap-1 px-3 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-lg text-xs font-bold">
         <Icons.Qr /> QR Scan
       </span>
     );
@@ -103,7 +103,7 @@ function getMethodBadge(method) {
 
   if (m === "face") {
     return (
-      <span className="flex items-center gap-1 px-3 py-1 bg-violet-500/10 text-violet-400 border border-violet-500/20 rounded-lg text-xs font-bold">
+      <span className="flex items-center gap-1 px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-lg text-xs font-bold">
         <Icons.Face /> Biometric
       </span>
     );
@@ -119,7 +119,7 @@ function getMethodBadge(method) {
 function getStatusPill(status, isExcused) {
   if (isExcused) {
     return (
-      <span className="px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md text-[10px] font-black uppercase tracking-widest">
+      <span className="px-3 py-1 bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 rounded-md text-[10px] font-black uppercase tracking-widest">
         Excused
       </span>
     );
@@ -153,7 +153,7 @@ function StatCard({ label, value, tone = "slate" }) {
     slate: "bg-slate-900 border-slate-800 text-white text-slate-500",
     emerald: "bg-emerald-500/5 border-emerald-500/10 text-emerald-400 text-emerald-500/70",
     amber: "bg-amber-500/5 border-amber-500/10 text-amber-400 text-amber-500/70",
-    indigo: "bg-indigo-500/5 border-indigo-500/10 text-indigo-400 text-indigo-500/70",
+    indigo: "bg-cyan-500/5 border-cyan-500/10 text-cyan-400 text-cyan-400/70",
     rose: "bg-rose-500/5 border-rose-500/10 text-rose-400 text-rose-500/70",
   };
 
@@ -318,9 +318,9 @@ export default function SubjectDetails() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#0b0f19]">
-        <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
-        <p className="text-indigo-400 mt-4 font-medium text-sm tracking-widest uppercase">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950">
+        <div className="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div>
+        <p className="text-cyan-400 mt-4 font-medium text-sm tracking-widest uppercase">
           Fetching Course Audit...
         </p>
       </div>
@@ -329,7 +329,7 @@ export default function SubjectDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#0b0f19] text-center px-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-center px-6">
         <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 px-6 py-5 text-rose-300 max-w-xl">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Icons.Alert />
@@ -338,7 +338,7 @@ export default function SubjectDetails() {
           <p className="text-sm">{error}</p>
         </div>
 
-        <Link to="/student/dashboard" className="mt-5 text-sm text-indigo-400 underline">
+        <Link to="/student/dashboard" className="mt-5 text-sm text-cyan-400 underline">
           Return to Dashboard
         </Link>
       </div>
@@ -346,13 +346,13 @@ export default function SubjectDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30">
       {/* HEADER NAV */}
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40 shadow-xl">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
           <button
             onClick={() => navigate("/student/dashboard")}
-            className="text-sm font-bold text-indigo-400 hover:text-indigo-300 transition flex items-center gap-2"
+            className="text-sm font-bold text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2"
           >
             <Icons.ArrowLeft />
             Return to Central Portal
@@ -370,13 +370,13 @@ export default function SubjectDetails() {
 
       <div className="max-w-6xl mx-auto px-6 pt-8">
         {/* HERO COURSE INFO */}
-        <div className="bg-gradient-to-r from-slate-900 to-[#12182b] border border-white/5 rounded-3xl p-8 mb-8 relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-indigo-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4"></div>
+        <div className="bg-gradient-to-r from-slate-900/60 to-slate-950/60 backdrop-blur-2xl border-slate-700/50 border border-white/5 rounded-3xl p-8 mb-8 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-cyan-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4"></div>
 
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div>
               <div className="flex items-center gap-3 mb-2 flex-wrap">
-                <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 px-3 py-1 rounded-lg text-xs font-black tracking-widest uppercase">
+                <span className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 px-3 py-1 rounded-lg text-xs font-black tracking-widest uppercase">
                   {courseInfo?.code || "CRS-TBA"}
                 </span>
                 <span className="bg-slate-800 text-slate-400 border border-slate-700 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest">
@@ -416,7 +416,7 @@ export default function SubjectDetails() {
         </div>
 
         {/* PROGRESS BAR */}
-        <div className="mb-8 bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-lg">
+        <div className="mb-8 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 p-6 rounded-3xl shadow-lg">
           <div className="flex justify-between text-sm font-bold text-slate-400 mb-3 gap-4 flex-wrap">
             <span>Minimum Requirement: 75%</span>
             <span>Current: {percent}%</span>
@@ -444,7 +444,7 @@ export default function SubjectDetails() {
         </div>
 
         {/* INTERACTIVE CHART */}
-        <div className="mb-10 bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-lg">
+        <div className="mb-10 bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 p-6 rounded-3xl shadow-lg">
           <div className="flex justify-between items-center gap-4 mb-6 flex-wrap">
             <h2 className="text-lg font-bold text-white">Chronological Attendance Log</h2>
             <span className="text-xs font-bold bg-slate-800 text-slate-400 px-3 py-1 rounded-lg">
@@ -498,7 +498,7 @@ export default function SubjectDetails() {
         </div>
 
         {/* DETAILED RECORDS TABLE */}
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl shadow-lg overflow-hidden">
+        <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl shadow-lg overflow-hidden">
           <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50 gap-4 flex-wrap">
             <h2 className="text-lg font-bold text-white">Detailed Session Audit</h2>
             <span className="text-xs font-bold bg-slate-800 text-slate-400 px-3 py-1 rounded-lg">

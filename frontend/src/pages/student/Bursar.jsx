@@ -53,20 +53,21 @@ export default function BursarPortal() {
   const totalBalance = invoices.reduce((acc, inv) => acc + (inv.totalAmount - inv.amountPaid), 0);
   const hasHold = invoices.some(inv => inv.academicHold);
 
-  if (loading) return <div className="min-h-screen bg-[#0b0f19] flex items-center justify-center"><div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div></div>;
+  if (loading) return <div className="min-h-screen bg-slate-950 flex items-center justify-center"><div className="w-12 h-12 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin"></div></div>;
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-slate-200 pb-20 font-sans">
-      <div className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
+    <div className="min-h-screen bg-slate-950 text-slate-200 pb-20 font-sans selection:bg-cyan-500/30 overflow-hidden relative">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-slow" /><div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-70 pointer-events-none animate-float-delayed" /><div className="absolute top-[30%] left-[40%] w-[30%] h-[30%] bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50 pointer-events-none animate-float-slow" />
+      <div className="bg-slate-900/70 backdrop-blur-2xl border-b border-slate-700/50 sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/student/dashboard" className="text-sm font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-2"><Icons.ArrowLeft /> Portal Home</Link>
+          <Link to="/student/dashboard" className="text-sm font-bold text-cyan-400 hover:text-cyan-300 flex items-center gap-2"><Icons.ArrowLeft /> Portal Home</Link>
           <span className="text-sm font-medium text-slate-400">Student Financial Center</span>
         </div>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 pt-10">
         {/* FINANCIAL STANDING HERO */}
-        <div className="bg-gradient-to-br from-slate-900 to-[#12182b] border border-white/5 rounded-3xl p-8 mb-10 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8">
+        <div className="bg-gradient-to-br from-slate-900/60 to-slate-950/60 backdrop-blur-2xl border-slate-700/50 border border-white/5 rounded-3xl p-8 mb-10 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-8">
           <div>
             <h1 className="text-4xl font-black text-white mb-2">Account Summary</h1>
             <p className="text-slate-400">Manage your tuition, installments, and academic standing.</p>
@@ -89,10 +90,10 @@ export default function BursarPortal() {
           <div className="lg:col-span-2 space-y-6">
             <h2 className="text-xl font-bold text-white flex items-center gap-2"><Icons.Receipt /> Pending Invoices</h2>
             {invoices.filter(i => i.status !== 'paid').map(inv => (
-              <div key={inv._id} className="bg-slate-900 border border-slate-800 rounded-3xl p-6 hover:border-indigo-500/30 transition shadow-lg">
+              <div key={inv._id} className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 hover:border-cyan-500/40 transition shadow-lg">
                 <div className="flex justify-between items-start mb-6">
                   <div>
-                    <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest bg-indigo-500/10 px-2 py-1 rounded">{inv.feeType}</span>
+                    <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-2 py-1 rounded">{inv.feeType}</span>
                     <h3 className="text-xl font-bold text-white mt-2">Semester {inv.semester} Fees</h3>
                     <p className="text-sm text-slate-500 mt-1">Due Date: {new Date(inv.dueDate).toLocaleDateString()}</p>
                   </div>
@@ -103,7 +104,7 @@ export default function BursarPortal() {
                 </div>
                 <button 
                   onClick={() => setSelectedInvoice(inv)}
-                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] font-bold transition flex items-center justify-center gap-2"
                 >
                   <Icons.CreditCard /> Process Installment
                 </button>
@@ -112,11 +113,11 @@ export default function BursarPortal() {
           </div>
 
           {/* PAYMENT HISTORY LEDGER */}
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl h-fit">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-6 shadow-xl h-fit">
             <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2"><Icons.History /> Transaction Ledger</h2>
             <div className="space-y-4">
               {invoices.flatMap(inv => inv.paymentHistory).sort((a,b) => new Date(b.date) - new Date(a.date)).map((pay, idx) => (
-                <div key={idx} className="flex justify-between items-center p-3 bg-slate-950 border border-slate-800 rounded-2xl">
+                <div key={idx} className="flex justify-between items-center p-3 bg-slate-950/70 border border-slate-700/50 shadow-inner rounded-2xl">
                   <div>
                     <p className="text-sm font-bold text-slate-300">₹{pay.amount.toLocaleString()}</p>
                     <p className="text-[10px] text-slate-500 uppercase">{pay.method}</p>
@@ -133,7 +134,7 @@ export default function BursarPortal() {
       {/* PAYMENT MODAL */}
       {selectedInvoice && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+          <div className="bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-xl hover:border-cyan-500/30 transition-colors duration-500 rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
             <button onClick={() => setSelectedInvoice(null)} className="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
             <h2 className="text-2xl font-black text-white mb-6">Make a Payment</h2>
             <form onSubmit={handlePayment} className="space-y-6">
@@ -145,7 +146,7 @@ export default function BursarPortal() {
                   min={1}
                   max={selectedInvoice.totalAmount - selectedInvoice.amountPaid}
                   placeholder={`Max ₹${selectedInvoice.totalAmount - selectedInvoice.amountPaid}`}
-                  className="w-full bg-slate-950 border border-slate-800 text-white p-4 rounded-xl focus:border-indigo-500 outline-none transition"
+                  className="w-full bg-slate-950/70 border border-slate-700/50 shadow-inner text-white p-4 rounded-xl focus:border-cyan-500 outline-none transition"
                   value={payAmount}
                   onChange={(e) => setPayAmount(e.target.value)}
                 />
