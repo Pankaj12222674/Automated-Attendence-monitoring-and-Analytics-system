@@ -975,7 +975,18 @@ export default function AdminDashboard() {
                 <button onClick={assignTeacherToClass} className={btnClasses + " w-full bg-indigo-500 hover:bg-indigo-600"}>Assign Faculty</button>
               </SectionCard>
 
-              {/* Subject creation is now automated via master course mapping in Create Class */}
+              <SectionCard title="Add Subject to Section" subtitle="Manually assign an extra course or elective to a specific class.">
+                <input className={inputClasses + " mb-3"} placeholder="Subject Name (e.g. Adv. AI)" value={subjectName} onChange={(e) => setSubjectName(e.target.value)} />
+                <select className={inputClasses + " mb-3"} value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+                  <option value="">Select Section/Class</option>
+                  {classes.map((c) => (<option key={c._id} value={c._id}>{c.name}</option>))}
+                </select>
+                <select className={inputClasses + " mb-4"} value={selectedTeacher} onChange={(e) => setSelectedTeacher(e.target.value)}>
+                  <option value="">Assign Faculty/Teacher</option>
+                  {teachers.map((t) => (<option key={t._id} value={t._id}>{t.name}</option>))}
+                </select>
+                <button onClick={createSubject} className={btnClasses + " w-full bg-emerald-600 hover:bg-emerald-500"}>+ Add Subject</button>
+              </SectionCard>
 
               <SectionCard title="Create Timetable Entry" subtitle="Schedule a lecture or teaching slot." className="lg:col-span-3">
                 <div className="grid md:grid-cols-5 gap-3">
