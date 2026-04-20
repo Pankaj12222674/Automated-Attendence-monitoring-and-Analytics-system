@@ -1,6 +1,7 @@
 import Timetable from "../models/Timetable.js";
 import Class from "../models/Class.js";
 import User from "../models/User.js";
+import Subject from "../models/Subject.js";
 
 // @desc    Get all timetable entries (with optional filtering by classId or teacherId)
 // @route   GET /api/timetable
@@ -128,6 +129,13 @@ export const generateAutoTimetable = async (req, res) => {
     // Now that generation is successful, safely remove the old timetable entries for this class
     await Timetable.deleteMany({ classId });
     const createdEntries = await Timetable.insertMany(newEntries);
+
+    // Sync the assigned teacher to the Subject document so it appears on the Teacher Dashboard
+    for (const sub of subjectsData) {
+      if (sub.subjectId && sub.teacherId) {
+        await Subject.findByIdAndUpdate(sub.subjectId, { teacherId: sub.teacherId });
+      }
+    }
 
     res.status(201).json({
       success: true,

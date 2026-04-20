@@ -1,0 +1,1 @@
+import connectDB from './config/db.js'; import Subject from './models/Subject.js'; import 'dotenv/config'; connectDB().then(async () = const s = await Subject.find().populate('classId teacherId', 'name semester'); console.log(JSON.stringify(s, null, 2)); process.exit(0); });  
