@@ -182,7 +182,7 @@ export default function LibraryManager() {
               </div>
 
               <div className="flex justify-end space-x-3 pt-4 border-t border-slate-700/30">
-                <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 bg-slate-800/40 text-white hover:bg-gray-200 text-slate-200 rounded text-sm font-medium transition-colors">
+                <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 bg-slate-800/40 hover:bg-gray-200 text-slate-200 rounded text-sm font-medium transition-colors">
                   Cancel
                 </button>
                 <button type="submit" disabled={adding} className={btnClasses}>

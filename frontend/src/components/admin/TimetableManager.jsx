@@ -200,7 +200,7 @@ export default function TimetableManager({ classes, subjects, teachers }) {
             </div>
 
             <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-700/30">
-              <button onClick={addSubjectSlot} className={btnClasses + " bg-slate-800/40 text-white text-slate-200 hover:bg-gray-200 border border-slate-700/50"}>
+              <button onClick={addSubjectSlot} className={btnClasses + " bg-slate-800/40 text-slate-200 hover:bg-gray-200 border border-slate-700/50"}>
                 + Add Subject
               </button>
               <button onClick={handleGenerate} className={btnClasses + " bg-blue-500 hover:bg-blue-600 ml-auto"}>
@@ -224,7 +224,7 @@ export default function TimetableManager({ classes, subjects, teachers }) {
             <option value="">All Classes...</option>
             {classes.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
           </select>
-          <button onClick={fetchTimetable} className={btnClasses + " bg-slate-800/40 text-white text-slate-200 hover:bg-gray-200 border border-slate-700/50"}>
+          <button onClick={fetchTimetable} className={btnClasses + " bg-slate-800/40 text-slate-200 hover:bg-gray-200 border border-slate-700/50"}>
             Refresh
           </button>
         </div>
