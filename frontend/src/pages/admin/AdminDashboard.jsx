@@ -76,7 +76,7 @@ const Icons = {
   ),
   Refresh: ({ spinning = false }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M20 20v-5h-5M5.636 18.364A9 9 0 1020 12" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
     </svg>
   ),
   Spark: () => (
@@ -612,7 +612,7 @@ export default function AdminDashboard() {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-[120px]"></div>
         <div className="w-12 h-12 border-4 border-slate-700 border-t-cyan-500 rounded-full animate-spin relative z-10"></div>
-        <p className="mt-4 text-cyan-400 font-bold tracking-widest uppercase relative z-10">Initializing Core...</p>
+        <p className="mt-4 text-cyan-400 font-bold tracking-widest uppercase relative z-10">Loading...</p>
       </div>
     );
   }
@@ -627,7 +627,7 @@ export default function AdminDashboard() {
       <aside className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-slate-900/40 backdrop-blur-2xl border-r border-slate-700/50 flex flex-col transition-all duration-300 z-20`}>
         <div className="h-16 flex items-center justify-center border-b border-slate-700/50">
           <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            {sidebarOpen ? <><Icons.ShieldCheck /> Admin Core</> : <Icons.ShieldCheck />}
+            {sidebarOpen ? <><Icons.ShieldCheck /> Smart Attendance</> : <Icons.ShieldCheck />}
           </h1>
         </div>
         <div className="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
@@ -819,7 +819,7 @@ export default function AdminDashboard() {
                     <option value="">Select Department</option>
                     {departments.map((d) => (<option key={d._id} value={d._id}>{d.name}</option>))}
                   </select>
-                  <button onClick={createProgram} className={btnClasses + " w-full bg-indigo-500 hover:bg-indigo-600"}>Create Program</button>
+                  <button onClick={createProgram} className={btnClasses + " w-full"}>Create Program</button>
                 </SectionCard>
               </div>
 

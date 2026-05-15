@@ -91,7 +91,7 @@ const Icons = {
   ),
   Refresh: ({ spinning = false }) => (
     <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${spinning ? "animate-spin" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M20 20v-5h-5M5.636 18.364A9 9 0 1020 12" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
     </svg>
   ),
   Alert: () => (
@@ -139,7 +139,9 @@ function matchBySubject(item, subject) {
     item?.subjectId?._id === subjectId ||
     item?.subject === subjectName ||
     item?.subjectName === subjectName ||
-    item?.name === subjectName
+    item?.name === subjectName ||
+    item?.classId === subject?.classId?._id ||
+    item?.classId === subject?.classId
   );
 }
 
@@ -476,7 +478,7 @@ export default function TeacherDashboard() {
           <div className="absolute inset-0 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
         </div>
         <p className="text-cyan-400 font-medium mt-6 tracking-widest uppercase text-sm animate-pulse">
-          Initializing Faculty Command V2...
+          Loading...
         </p>
       </div>
     );
@@ -706,8 +708,10 @@ export default function TeacherDashboard() {
                         ? Math.max(0, Math.min(100, Math.round(subjectAttendance)))
                         : null;
 
+                    const markedToday = subjectAnalytics?.markedToday === true;
+
                     const healthTone =
-                      typeof safePercent !== "number"
+                      !markedToday
                         ? "pending"
                         : safePercent >= 85
                         ? "excellent"
@@ -765,7 +769,7 @@ export default function TeacherDashboard() {
                                 healthTone === "pending" && "text-slate-400"
                               )}
                             >
-                              {typeof safePercent === "number" ? `${safePercent}%` : "Pending"}
+                              {markedToday ? "Marked" : "Pending"}
                             </p>
                           </div>
 
@@ -873,7 +877,7 @@ export default function TeacherDashboard() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-white truncate">
-                            {slot.subjectName || slot.subject?.name || slot.subject || "Lecture Slot"}
+                            {slot.subjectId?.name || slot.subjectName || slot.subject?.name || slot.subject || "Lecture Slot"}
                           </p>
                           <p className="text-xs font-medium text-slate-500 mt-1">
                             {slot.className || slot.classId?.name || slot.class || "Assigned Cohort"}

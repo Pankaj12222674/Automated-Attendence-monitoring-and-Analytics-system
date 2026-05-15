@@ -95,12 +95,7 @@ const Icons = {
       viewBox="0 0 24 24"
       stroke="currentColor"
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M4 4v5h5M20 20v-5h-5M5.636 18.364A9 9 0 1020 12"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
     </svg>
   ),
   Bell: () => (
@@ -496,7 +491,7 @@ export default function StudentDashboard() {
           <div className="absolute inset-0 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full animate-spin"></div>
         </div>
         <p className="text-cyan-400 font-medium mt-6 tracking-widest uppercase text-sm animate-pulse">
-          Initializing 3D Matrix...
+          Loading...
         </p>
       </div>
     );
