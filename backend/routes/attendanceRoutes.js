@@ -147,20 +147,67 @@ router.get("/teacher/classes", protect, async (req, res) => {
     const teacherId = req.user._id;
     console.log("👤 Teacher ID:", teacherId);
 
-    // Find all classes where this teacher is assigned
-    console.log("🔍 Querying classes for teacher:", teacherId);
+    // Find all classes and subjects for this teacher
+    console.log("🔍 Querying classes & subjects for teacher:", teacherId);
     const classes = await Class.find({ teacherId }).lean();
-    console.log(`✅ Found ${classes?.length || 0} classes`);
+    
+    // Using dynamic import for Subject to avoid potential circular dependencies
+    const SubjectModel = (await import("../models/Subject.js")).default;
+    const subjects = await SubjectModel.find({ teacherId }).populate("classId", "name").lean();
+    
+    console.log(`✅ Found ${classes?.length || 0} classes and ${subjects?.length || 0} subjects`);
 
-    if (!classes || classes.length === 0) {
-      console.log("⚠️ No classes found for this teacher, returning empty array");
+    if ((!classes || classes.length === 0) && (!subjects || subjects.length === 0)) {
+      console.log("⚠️ No classes or subjects found for this teacher, returning empty array");
       return res.json([]);
     }
 
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
     const analytics = [];
 
+    // 1. Process Subjects (Primary matching for dashboard cards)
+    for (let sub of subjects) {
+      try {
+        console.log(`  📊 Processing subject: ${sub._id} (${sub.name})`);
+        
+        const baseQuery = { subjectId: sub._id }; 
+
+        const total = await Attendance.countDocuments(baseQuery);
+        const present = await Attendance.countDocuments({
+          ...baseQuery,
+          status: { $in: ["present", "late"] },
+        });
+
+        const markedToday = await Attendance.exists({
+          ...baseQuery,
+          date: { $gte: startOfDay, $lte: endOfDay }
+        });
+
+        analytics.push({
+          subjectId: sub._id,
+          classId: sub.classId?._id,
+          subjectName: sub.name || "Unnamed Subject",
+          className: sub.classId?.name || "Unnamed Class",
+          total,
+          present,
+          percentage: total > 0 ? Math.round((present / total) * 100) : 0,
+          markedToday: !!markedToday
+        });
+      } catch (err) {
+        console.error(`  ⚠️ Error processing subject ${sub._id}:`, err.message);
+      }
+    }
+
+    // 2. Process Classes (Fallback for non-subject specific advisor roles)
     for (let cls of classes) {
       try {
+        // Skip if we already produced a record that strictly matches this class 
+        // (to avoid over representation, though dashboard matchBySubject prefers subjectId)
+        
         console.log(`  📊 Processing class: ${cls._id} (${cls.name})`);
         
         const total = await Attendance.countDocuments({ classId: cls._id });
@@ -169,12 +216,18 @@ router.get("/teacher/classes", protect, async (req, res) => {
           status: { $in: ["present", "late"] },
         });
 
+        const markedToday = await Attendance.exists({
+          classId: cls._id,
+          date: { $gte: startOfDay, $lte: endOfDay }
+        });
+
         analytics.push({
           classId: cls._id,
           className: cls.name || "Unnamed Class",
           total,
           present,
           percentage: total > 0 ? Math.round((present / total) * 100) : 0,
+          markedToday: !!markedToday
         });
       } catch (classErr) {
         console.error(`  ⚠️ Error processing class ${cls._id}:`, classErr.message);

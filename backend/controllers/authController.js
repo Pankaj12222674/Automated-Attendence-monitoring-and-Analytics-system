@@ -71,8 +71,19 @@ export const registerUser = async (req, res) => {
       roll = `U${year}-${Math.floor(1000 + Math.random() * 9000)}`;
     }
 
-    /* ADMIN AUTO APPROVED */
-    const approved = role === "admin";
+    /* ADMIN APPROVAL LOGIC */
+    let approved = false;
+    if (role === "admin") {
+      // Check if any admin already exists
+      const existingAdmin = await User.findOne({ role: "admin" });
+      if (!existingAdmin) {
+        // First admin gets auto-approved
+        approved = true;
+      } else {
+        // Subsequent admins require approval
+        approved = false;
+      }
+    }
 
     const user = await User.create({
       name,
@@ -108,8 +119,10 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({
       message:
-        role === "admin"
-          ? "Admin registered successfully"
+        role === "admin" && approved
+          ? "Primary admin registered successfully"
+          : role === "admin" && !approved
+          ? "Registration successful. Waiting for prev admin approval"
           : "Registration successful. Waiting for university admin approval",
       userId: user._id,
     });

@@ -80,7 +80,6 @@ export const getPendingUsers = async (req, res) => {
   try {
     const users = await User.find({
       isApproved: false,
-      role: { $ne: "admin" },
     })
       .select("-password")
       .sort({ createdAt: -1 });
@@ -192,7 +191,7 @@ export const getAdminStats = async (req, res) => {
       Class.countDocuments(),
       Department.countDocuments().catch(() => 0),
       Program.countDocuments().catch(() => 0),
-      User.countDocuments({ isApproved: false, role: { $ne: "admin" } }),
+      User.countDocuments({ isApproved: false }),
     ]);
 
     const attendanceStats = await Attendance.aggregate([
